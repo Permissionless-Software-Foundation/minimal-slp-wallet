@@ -5,22 +5,18 @@
 
 'use strict'
 
-const UtilLib = require('./lib/util')
-const myLib = new UtilLib()
+const BCHJS = require("@chris.troutner/bch-js")
 
-// The main entry function for the program.
-async function mainFunction() {
-  try {
-    const addr = "bitcoincash:qp3sn6vlwz28ntmf3wmyra7jqttfx7z6zgtkygjhc7"
-    console.log(`addr: ${addr}`)
+class MinimalBCHWallet {
+  constructor(hdPrivateKeyOrMnemonic, advancedOptions) {
+    this.advancedOptions = (advancedOptions || {})
 
-    const bchData = await myLib.getBchData(addr)
+    this.HdPath = this.advancedOptions.HdPath || `m/44'/245'/0'/0/0`;
 
-    console.log(`bchData: ${JSON.stringify(bchData,null,2)}`)
-  } catch(err) {
-    console.error(`Error in main program: `, err)
-  }
+    this.create(hdPrivateKeyOrMnemonic);
+
+    // Encapsulae the bchjs library.
+    this.BCHJS = BCHJS
 }
 
-// Start the program.
-mainFunction()
+module.exports = MinimalBCHWallet
