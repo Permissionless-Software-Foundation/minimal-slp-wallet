@@ -10,7 +10,7 @@
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coverage:report": "nyc --reporter=html mocha --exit"
+    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit"
   },
   "keywords": [
     "bitcoin",
@@ -32,7 +32,8 @@
   "repository": "Permissionless-Software-Foundation/minimal-bch-wallet",
   "dependencies": {
     "@chris.troutner/bch-js": "^3.1.2",
-    "apidoc": "^0.23.0"
+    "apidoc": "^0.23.0",
+    "crypto-js": "^4.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
