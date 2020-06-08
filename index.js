@@ -74,9 +74,18 @@ class MinimalBCHWallet {
   }
 
   async getBalance (bchAddress) {
-    const balances = await this.bchjs.Electrumx.balance(bchAddress || this.cashAddress)
+    const addr = bchAddress || this.cashAddress
+    const balances = await this.bchjs.Electrumx.balance(addr)
 
     return balances.balance.confirmed + balances.balance.unconfirmed
+  }
+
+  async getTransactions (bchAddress) {
+    const addr = bchAddress || this.cashAddress
+    const data = await this.bchjs.Electrumx.transactions(addr)
+
+    const transactions = data.transactions.map(x => x.tx_hash)
+    return transactions
   }
 }
 

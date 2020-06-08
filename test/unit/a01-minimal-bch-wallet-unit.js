@@ -190,4 +190,27 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(balance, 1000)
     })
   })
+
+  describe('#getTransactions', () => {
+    it('should get transactions', async () => {
+      // Mock live network calls
+      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves({
+        success: true,
+        transactions: [
+          {
+            height: 603416,
+            tx_hash:
+              'eef683d236d88e978bd406419f144057af3fe1b62ef59162941c1a9f05ded62c'
+          }
+        ]
+      })
+
+      const addr = 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
+
+      const transactions = await uut.getTransactions(addr)
+      // console.log(`transactions: ${JSON.stringify(transactions, null, 2)}`)
+
+      assert.isArray(transactions)
+    })
+  })
 })
