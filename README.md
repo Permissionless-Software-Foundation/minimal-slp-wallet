@@ -1,7 +1,7 @@
 # minimal-bch-wallet
 
 This is a minalist Bitcoin Cash (BCH) wallet for use with front end web apps.
-It's forked from the [Simple Bitcoin Wallet](https://www.npmjs.com/package/simple-bitcoin-wallet) developed by [Honest.cash](https://honest.cash). It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-ipfs-web-wallet).
+It's forked from the [Simple Bitcoin Wallet](https://www.npmjs.com/package/simple-bitcoin-wallet) developed by [Honest.cash](https://honest.cash). It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-ipfs-web-wallet) and [bch-js](https://www.npmjs.com/package/@chris.troutner/bch-js) provided by [FullStack.cash](https://fullstack.cash)
 
 The default derivation path for the wallet keypair is m/44'/245'/0'/0/0.
 
@@ -29,6 +29,7 @@ const BchWallet = require("minimal-bch-wallet");
 ### Create new wallets
 ```js
 const bchWallet = new BchWallet();
+await bchWallet.walletInfo
 
 // 12 words seed phrase for the wallet
 console.log(bchWallet.mnemonic);
