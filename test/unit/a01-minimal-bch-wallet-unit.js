@@ -171,4 +171,23 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.notProperty(uut, 'mnemonicEncrypted')
     })
   })
+
+  describe('#getBalance', () => {
+    it('should return combined balance', async () => {
+      // Mock live network call.
+      sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves({
+        success: true,
+        balance: {
+          confirmed: 1000,
+          unconfirmed: 0
+        }
+      })
+
+      const addr = 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
+
+      const balance = await uut.getBalance(addr)
+
+      assert.equal(balance, 1000)
+    })
+  })
 })

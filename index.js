@@ -72,6 +72,12 @@ class MinimalBCHWallet {
   encrypt (mnemonic, password) {
     return this.crypto.AES.encrypt(mnemonic, password).toString()
   }
+
+  async getBalance (bchAddress) {
+    const balances = await this.bchjs.Electrumx.balance(bchAddress || this.cashAddress)
+
+    return balances.balance.confirmed + balances.balance.unconfirmed
+  }
 }
 
 module.exports = MinimalBCHWallet
