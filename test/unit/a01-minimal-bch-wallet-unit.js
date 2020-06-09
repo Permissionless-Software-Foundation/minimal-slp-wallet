@@ -51,7 +51,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
     it('should create a new wallet without encrypted mnemonic', async () => {
       const uut = new MinimalBCHWallet()
       await uut.walletInfo
-      // console.log('uut: ', uut)
+      console.log('uut: ', uut)
 
       assert.property(uut, 'mnemonic')
       assert.isString(uut.mnemonic)
