@@ -56,7 +56,10 @@ describe('#SendBCH', () => {
     })
 
     it('should sort UTXOs in descending order', () => {
-      const utxos = uut.sortUtxosBySize(mockData.exampleUtxos01.utxos, 'DESCENDING')
+      const utxos = uut.sortUtxosBySize(
+        mockData.exampleUtxos01.utxos,
+        'DESCENDING'
+      )
       // console.log('utxos: ', utxos)
 
       const lastElem = utxos.length - 1
@@ -65,21 +68,90 @@ describe('#SendBCH', () => {
     })
   })
 
-  describe('#createTransaction', () => {
-    it('should do something', async () => {
-      sandbox
-        .stub(uut.bchjs.Electrumx, 'utxo')
-        .resolves(mockData.exampleUtxos02)
-
+  describe('#getNecessaryUtxosAndChange', () => {
+    it('should return UTXOs to achieve single output', () => {
       const outputs = [
         {
           address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
-          amountSat: 1000
+          amountSat: 600
         }
       ]
 
-      const utxos = await uut.createTransaction(outputs, mockData.mockWallet)
-      // console.log('utxos: ', utxos)
+      const { necessaryUtxos, change } = uut.getNecessaryUtxosAndChange(
+        outputs,
+        mockData.exampleUtxos02.utxos
+      )
+      // console.log('necessaryUtxos: ', necessaryUtxos)
+      // console.log('change: ', change)
+
+      assert.isArray(necessaryUtxos)
+      assert.equal(necessaryUtxos.length, 2)
+      assert.isNumber(change)
+    })
+
+    it('should return UTXOs to achieve multiple outputs', () => {
+      const outputs = [
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 12523803
+        },
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 2000
+        }
+      ]
+
+      const { necessaryUtxos, change } = uut.getNecessaryUtxosAndChange(
+        outputs,
+        mockData.exampleUtxos01.utxos
+      )
+      // console.log('necessaryUtxos: ', necessaryUtxos)
+      // console.log('change: ', change)
+
+      assert.isArray(necessaryUtxos)
+      assert.equal(necessaryUtxos.length, 3)
+      assert.isNumber(change)
+    })
+
+    it('should throw an error if not enough BCH', () => {
+      try {
+        const outputs = [
+          {
+            address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+            amountSat: 12525803
+          },
+          {
+            address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+            amountSat: 2000
+          }
+        ]
+
+        uut.getNecessaryUtxosAndChange(outputs, mockData.exampleUtxos01.utxos)
+
+        assert.equal(true, false, 'Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+
+        assert.include(err.message, 'Insufficient balance')
+      }
     })
   })
+
+  // describe('#createTransaction', () => {
+  //   it('should do something', async () => {
+  //     sandbox
+  //       .stub(uut.bchjs.Electrumx, 'utxo')
+  //       .resolves(mockData.exampleUtxos02)
+  //
+  //     const outputs = [
+  //       {
+  //         address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+  //         amountSat: 1000
+  //       }
+  //     ]
+  //
+  //     const utxos = await uut.createTransaction(outputs, mockData.mockWallet)
+  //     // console.log('utxos: ', utxos)
+  //   })
+  // })
 })
