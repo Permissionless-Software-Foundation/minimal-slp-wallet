@@ -1,10 +1,11 @@
 const mockWallet = {
-  mnemonic: 'panel insane wrong volume better desk funny walnut bitter unable scare mixx',
+  mnemonic: 'panel insane wrong volume better desk funny walnut bitter unable scare mix',
   cashAddress: 'bitcoincash:qqwsylce7r5ufe4mfc94xkd56t30ncnanq3v9m0kjj',
   address: 'bitcoincash:qqwsylce7r5ufe4mfc94xkd56t30ncnanq3v9m0kjj',
   legacyAddress: '13ePb2HkD8a8NcM2YtsezsRfsEUfuvHKbz',
   slpAddress: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
-  privateKey: 'KwPVaC4ui2NiKnJc8kkdSi5L47WeUupVBYf672pKhjZw4r4y2Mp9'
+  privateKey: 'KwPVaC4ui2NiKnJc8kkdSi5L47WeUupVBYf672pKhjZw4r4y2Mp9',
+  hdPath: "m/44'/245'/0'/0/0"
 }
 
 // Example of output of bch-js.Electrumx.utxo()

@@ -137,6 +137,17 @@ describe('#SendBCH', () => {
     })
   })
 
+  describe('#getKeyPairFromMnemonic', () => {
+    it('should generate a key pair', async () => {
+      const keyPair = await uut.getKeyPairFromMnemonic(mockData.mockWallet)
+      // console.log(`keyPair: ${JSON.stringify(keyPair, null, 2)}`)
+
+      // Ensure the output has the expected properties.
+      assert.property(keyPair, 'compressed')
+      assert.property(keyPair, 'network')
+    })
+  })
+
   // describe('#createTransaction', () => {
   //   it('should do something', async () => {
   //     sandbox
