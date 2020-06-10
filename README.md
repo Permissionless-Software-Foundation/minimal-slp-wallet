@@ -98,7 +98,7 @@ console.log(tx.txid);
 ```
 
 
-### getBalance(bchAddress)
+### Get Wallet Balance
 Gets balance (confirmed + unconfirmed) for an BCH address
 
 ```js
@@ -107,6 +107,17 @@ const myBalance = await simpleWallet.getBalance();
 
 // will get a balance for any address
 const balanceOfOtherAddress = await simpleWallet.getBalance("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
+```
+
+### Get Wallet Transaction History
+Get an array of TXIDs of the transactions involving this wallet.
+
+```js
+// will get transaction history for simpleWallet.cashAddress
+const myTransactions = await simpleWallet.getTransactions();
+
+// will get transaction history for any address
+const txHistoryOfOtherAddress = await simpleWallet.getTransactions("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
 ```
 
 
