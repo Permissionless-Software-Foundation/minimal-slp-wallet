@@ -43,6 +43,21 @@ describe('#SendBCH', () => {
 
       assert.equal(fee, 408)
     })
+
+    it('should throw an error for bad input', () => {
+      try {
+        const fee = uut.calculateFee('a', 'b', 'c')
+        console.log('fee: ', fee)
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(
+          err.message,
+          'Invalid input. Fee could not be calculated'
+        )
+      }
+    })
   })
 
   describe('#sortUtxosBySize', () => {
@@ -148,21 +163,108 @@ describe('#SendBCH', () => {
     })
   })
 
-  // describe('#createTransaction', () => {
-  //   it('should do something', async () => {
-  //     sandbox
-  //       .stub(uut.bchjs.Electrumx, 'utxo')
-  //       .resolves(mockData.exampleUtxos02)
-  //
-  //     const outputs = [
-  //       {
-  //         address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
-  //         amountSat: 1000
-  //       }
-  //     ]
-  //
-  //     const utxos = await uut.createTransaction(outputs, mockData.mockWallet)
-  //     // console.log('utxos: ', utxos)
-  //   })
-  // })
+  describe('#createTransaction', () => {
+    it('should throw an error if UTXOs can not be retrieved', async () => {
+      try {
+        sandbox.stub(uut.bchjs.Electrumx, 'utxo').resolves({ success: false })
+
+        const outputs = [
+          {
+            address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+            amountSat: 1000
+          }
+        ]
+
+        await uut.createTransaction(outputs, mockData.mockWallet)
+
+        assert.equal(true, false, 'Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'Could not retrieve UTXO data')
+      }
+    })
+
+    it('should ignore change if below the dust limit', async () => {
+      sandbox
+        .stub(uut.bchjs.Electrumx, 'utxo')
+        .resolves(mockData.exampleUtxos02)
+
+      const outputs = [
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 800
+        }
+      ]
+
+      const { hex, txid } = await uut.createTransaction(
+        outputs,
+        mockData.mockWallet
+      )
+
+      assert.isString(hex)
+      assert.isString(txid)
+    })
+
+    it('should add change output if above the dust limit', async () => {
+      sandbox
+        .stub(uut.bchjs.Electrumx, 'utxo')
+        .resolves(mockData.exampleUtxos01)
+
+      const outputs = [
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 625
+        }
+      ]
+
+      const { hex, txid } = await uut.createTransaction(
+        outputs,
+        mockData.mockWallet
+      )
+      // console.log('hex: ', hex)
+      // console.log('txid: ', txid)
+
+      assert.isString(hex)
+      assert.isString(txid)
+    })
+  })
+
+  describe('#sendBch', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const hex =
+        '0200000002abdb671501c19d11c35473aa84547f7f3b301d6924d6c8f419a26616dc486ea3010000006b4830450221009833f7bbecd7ba4c193f1edd693e42b337cd295b7e530cab3b2210f46c6cebe102200b65bf9b9bc66992c09cb1a40a2c84b629ba48c066b9f3cc5fe713a898051b6d41210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffffcc198a396570aebd10605cdde223356c0d8f92133560c52013ae5d43dccccf53010000006a47304402207bd190fce11a0cbf8dd8d0d987bcdd428168312f217ec61d018c3198014a786a02200b0ac3db775ea708eb9a76a9fa84fe9a68a0553408b143f52c220313cc2ecbd241210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff0271020000000000001976a914543dc8f7c91721da06da8c3941f79e26cfbce67288ac6c030000000000001976a9141d027f19f0e9c4e6bb4e0b5359b4d2e2f9e27d9888ac00000000'
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      // Mock live network calls.
+      sandbox.stub(uut, 'createTransaction').resolves(hex)
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        .resolves(txid)
+
+      const output = await uut.sendBch()
+
+      assert.equal(output, txid)
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        const hex =
+          '0200000002abdb671501c19d11c35473aa84547f7f3b301d6924d6c8f419a26616dc486ea3010000006b4830450221009833f7bbecd7ba4c193f1edd693e42b337cd295b7e530cab3b2210f46c6cebe102200b65bf9b9bc66992c09cb1a40a2c84b629ba48c066b9f3cc5fe713a898051b6d41210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffffcc198a396570aebd10605cdde223356c0d8f92133560c52013ae5d43dccccf53010000006a47304402207bd190fce11a0cbf8dd8d0d987bcdd428168312f217ec61d018c3198014a786a02200b0ac3db775ea708eb9a76a9fa84fe9a68a0553408b143f52c220313cc2ecbd241210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff0271020000000000001976a914543dc8f7c91721da06da8c3941f79e26cfbce67288ac6c030000000000001976a9141d027f19f0e9c4e6bb4e0b5359b4d2e2f9e27d9888ac00000000'
+
+        // Mock live network calls.
+        sandbox.stub(uut, 'createTransaction').resolves(hex)
+        sandbox
+          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+          .throws(new Error('error message'))
+
+        await uut.sendBch()
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
+    })
+  })
 })
