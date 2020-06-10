@@ -11,99 +11,118 @@ const sinon = require('sinon')
 
 // Unit under test
 const MinimalBCHWallet = require('../../index')
-const uut = new MinimalBCHWallet()
+// const uut = new MinimalBCHWallet()
+let uut
 
 describe('#index.js - Minimal BCH Wallet', () => {
   let sandbox
 
   // Restore the sandbox before each test.
-  beforeEach(() => (sandbox = sinon.createSandbox()))
+  beforeEach(async () => {
+    sandbox = sinon.createSandbox()
+
+    uut = new MinimalBCHWallet()
+    await uut.walletInfoPromise
+  })
+
   afterEach(() => sandbox.restore())
 
   describe('#create', () => {
     it('should create a new wallet with no input', async () => {
-      await uut.create()
-      // console.log('uut: ', uut)
+      const walletInfoPromise = uut.create()
+      await walletInfoPromise
+      // console.log('walletInfo: ', uut.walletInfo)
 
-      assert.property(uut, 'mnemonic')
-      assert.isString(uut.mnemonic)
-      assert.isNotEmpty(uut.mnemonic)
+      assert.property(uut, 'walletInfo')
+      assert.property(uut, 'walletInfoPromise')
+      assert.property(uut, 'walletInfoCreated')
+      assert.equal(uut.walletInfoCreated, true)
 
-      assert.property(uut, 'privateKey')
-      assert.isString(uut.privateKey)
-      assert.isNotEmpty(uut.privateKey)
+      assert.property(uut.walletInfo, 'mnemonic')
+      assert.isString(uut.walletInfo.mnemonic)
+      assert.isNotEmpty(uut.walletInfo.mnemonic)
 
-      assert.property(uut, 'cashAddress')
-      assert.isString(uut.cashAddress)
-      assert.isNotEmpty(uut.cashAddress)
+      assert.property(uut.walletInfo, 'privateKey')
+      assert.isString(uut.walletInfo.privateKey)
+      assert.isNotEmpty(uut.walletInfo.privateKey)
 
-      assert.property(uut, 'legacyAddress')
-      assert.isString(uut.legacyAddress)
-      assert.isNotEmpty(uut.legacyAddress)
+      assert.property(uut.walletInfo, 'cashAddress')
+      assert.isString(uut.walletInfo.cashAddress)
+      assert.isNotEmpty(uut.walletInfo.cashAddress)
 
-      assert.property(uut, 'slpAddress')
-      assert.isString(uut.slpAddress)
-      assert.isNotEmpty(uut.slpAddress)
+      assert.property(uut.walletInfo, 'legacyAddress')
+      assert.isString(uut.walletInfo.legacyAddress)
+      assert.isNotEmpty(uut.walletInfo.legacyAddress)
+
+      assert.property(uut.walletInfo, 'slpAddress')
+      assert.isString(uut.walletInfo.slpAddress)
+      assert.isNotEmpty(uut.walletInfo.slpAddress)
     })
   })
 
   describe('#constructor', () => {
     it('should create a new wallet without encrypted mnemonic', async () => {
       const uut = new MinimalBCHWallet()
-      await uut.walletInfo
+      await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
-      assert.property(uut, 'mnemonic')
-      assert.isString(uut.mnemonic)
-      assert.isNotEmpty(uut.mnemonic)
+      assert.property(uut, 'walletInfo')
+      assert.property(uut, 'walletInfoPromise')
+      assert.property(uut, 'walletInfoCreated')
+      assert.equal(uut.walletInfoCreated, true)
 
-      assert.property(uut, 'privateKey')
-      assert.isString(uut.privateKey)
-      assert.isNotEmpty(uut.privateKey)
+      assert.property(uut.walletInfo, 'mnemonic')
+      assert.isString(uut.walletInfo.mnemonic)
+      assert.isNotEmpty(uut.walletInfo.mnemonic)
 
-      assert.property(uut, 'cashAddress')
-      assert.isString(uut.cashAddress)
-      assert.isNotEmpty(uut.cashAddress)
+      assert.property(uut.walletInfo, 'privateKey')
+      assert.isString(uut.walletInfo.privateKey)
+      assert.isNotEmpty(uut.walletInfo.privateKey)
 
-      assert.property(uut, 'legacyAddress')
-      assert.isString(uut.legacyAddress)
-      assert.isNotEmpty(uut.legacyAddress)
+      assert.property(uut.walletInfo, 'cashAddress')
+      assert.isString(uut.walletInfo.cashAddress)
+      assert.isNotEmpty(uut.walletInfo.cashAddress)
 
-      assert.property(uut, 'slpAddress')
-      assert.isString(uut.slpAddress)
-      assert.isNotEmpty(uut.slpAddress)
+      assert.property(uut.walletInfo, 'legacyAddress')
+      assert.isString(uut.walletInfo.legacyAddress)
+      assert.isNotEmpty(uut.walletInfo.legacyAddress)
+
+      assert.property(uut.walletInfo, 'slpAddress')
+      assert.isString(uut.walletInfo.slpAddress)
+      assert.isNotEmpty(uut.walletInfo.slpAddress)
 
       assert.notProperty(uut, 'mnemonicEncrypted')
+      assert.notProperty(uut.walletInfo, 'mnemonicEncrypted')
     })
 
     it('should create a new wallet with encrypted mnemonic', async () => {
       const uut = new MinimalBCHWallet(null, { password: 'myStrongPassword' })
-      await uut.walletInfo
+      await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
-      assert.property(uut, 'mnemonic')
-      assert.isString(uut.mnemonic)
-      assert.isNotEmpty(uut.mnemonic)
+      assert.property(uut.walletInfo, 'mnemonic')
+      assert.isString(uut.walletInfo.mnemonic)
+      assert.isNotEmpty(uut.walletInfo.mnemonic)
 
-      assert.property(uut, 'privateKey')
-      assert.isString(uut.privateKey)
-      assert.isNotEmpty(uut.privateKey)
+      assert.property(uut.walletInfo, 'privateKey')
+      assert.isString(uut.walletInfo.privateKey)
+      assert.isNotEmpty(uut.walletInfo.privateKey)
 
-      assert.property(uut, 'cashAddress')
-      assert.isString(uut.cashAddress)
-      assert.isNotEmpty(uut.cashAddress)
+      assert.property(uut.walletInfo, 'cashAddress')
+      assert.isString(uut.walletInfo.cashAddress)
+      assert.isNotEmpty(uut.walletInfo.cashAddress)
 
-      assert.property(uut, 'legacyAddress')
-      assert.isString(uut.legacyAddress)
-      assert.isNotEmpty(uut.legacyAddress)
+      assert.property(uut.walletInfo, 'legacyAddress')
+      assert.isString(uut.walletInfo.legacyAddress)
+      assert.isNotEmpty(uut.walletInfo.legacyAddress)
 
-      assert.property(uut, 'slpAddress')
-      assert.isString(uut.slpAddress)
-      assert.isNotEmpty(uut.slpAddress)
+      assert.property(uut.walletInfo, 'slpAddress')
+      assert.isString(uut.walletInfo.slpAddress)
+      assert.isNotEmpty(uut.walletInfo.slpAddress)
 
-      assert.property(uut, 'mnemonicEncrypted')
-      assert.isString(uut.mnemonicEncrypted)
-      assert.isNotEmpty(uut.mnemonicEncrypted)
+      assert.property(uut.walletInfo, 'mnemonicEncrypted')
+      assert.isString(uut.walletInfo.mnemonicEncrypted)
+      assert.isNotEmpty(uut.walletInfo.mnemonicEncrypted)
     })
 
     it('should decrypt an encrypted mnemonic', async () => {
@@ -116,10 +135,10 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const uut = new MinimalBCHWallet(mnemonicEncrypted, {
         password: password
       })
-      await uut.walletInfo
+      await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
-      assert.equal(uut.mnemonic, mnemonic)
+      assert.equal(uut.walletInfo.mnemonic, mnemonic)
     })
 
     it('should throw error if incorrect password', async () => {
@@ -130,9 +149,9 @@ describe('#index.js - Minimal BCH Wallet', () => {
         const uut = new MinimalBCHWallet(mnemonicEncrypted, {
           password: 'bad password'
         })
-        await uut.walletInfo
+        await uut.walletInfoPromise
 
-        assert.notProperty(uut, 'mnemonic', 'Unexpected result!')
+        assert.notProperty(uut.walletInfo, 'mnemonic', 'Unexpected result!')
       } catch (err) {
         // console.log('err: ', err)
         assert.include(err.message, 'Wrong password')
@@ -144,31 +163,31 @@ describe('#index.js - Minimal BCH Wallet', () => {
         'negative prepare champion corn bean proof one same column water warm melt'
 
       const uut = new MinimalBCHWallet(mnemonic)
-      await uut.walletInfo
+      await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
-      assert.property(uut, 'mnemonic')
-      assert.isString(uut.mnemonic)
-      assert.isNotEmpty(uut.mnemonic)
-      assert.equal(uut.mnemonic, mnemonic)
+      assert.property(uut.walletInfo, 'mnemonic')
+      assert.isString(uut.walletInfo.mnemonic)
+      assert.isNotEmpty(uut.walletInfo.mnemonic)
+      assert.equal(uut.walletInfo.mnemonic, mnemonic)
 
-      assert.property(uut, 'privateKey')
-      assert.isString(uut.privateKey)
-      assert.isNotEmpty(uut.privateKey)
+      assert.property(uut.walletInfo, 'privateKey')
+      assert.isString(uut.walletInfo.privateKey)
+      assert.isNotEmpty(uut.walletInfo.privateKey)
 
-      assert.property(uut, 'cashAddress')
-      assert.isString(uut.cashAddress)
-      assert.isNotEmpty(uut.cashAddress)
+      assert.property(uut.walletInfo, 'cashAddress')
+      assert.isString(uut.walletInfo.cashAddress)
+      assert.isNotEmpty(uut.walletInfo.cashAddress)
 
-      assert.property(uut, 'legacyAddress')
-      assert.isString(uut.legacyAddress)
-      assert.isNotEmpty(uut.legacyAddress)
+      assert.property(uut.walletInfo, 'legacyAddress')
+      assert.isString(uut.walletInfo.legacyAddress)
+      assert.isNotEmpty(uut.walletInfo.legacyAddress)
 
-      assert.property(uut, 'slpAddress')
-      assert.isString(uut.slpAddress)
-      assert.isNotEmpty(uut.slpAddress)
+      assert.property(uut.walletInfo, 'slpAddress')
+      assert.isString(uut.walletInfo.slpAddress)
+      assert.isNotEmpty(uut.walletInfo.slpAddress)
 
-      assert.notProperty(uut, 'mnemonicEncrypted')
+      assert.notProperty(uut.walletInfo, 'mnemonicEncrypted')
     })
   })
 
@@ -211,6 +230,34 @@ describe('#index.js - Minimal BCH Wallet', () => {
       // console.log(`transactions: ${JSON.stringify(transactions, null, 2)}`)
 
       assert.isArray(transactions)
+    })
+  })
+
+  describe('#send', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      // Mock live network calls.
+      sandbox.stub(uut.sendBch, 'sendBch').resolves(txid)
+
+      const output = await uut.send()
+
+      assert.equal(output, txid)
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        // Mock live network calls.
+        sandbox.stub(uut.sendBch, 'sendBch').throws(new Error('error message'))
+
+        await uut.send()
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
     })
   })
 })
