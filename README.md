@@ -3,7 +3,7 @@
 This is a minalist Bitcoin Cash (BCH) wallet for use with front end web apps.
 It's forked from the [Simple Bitcoin Wallet](https://www.npmjs.com/package/simple-bitcoin-wallet) developed by [Honest.cash](https://honest.cash). It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-ipfs-web-wallet) and [bch-js](https://www.npmjs.com/package/@chris.troutner/bch-js) provided by [FullStack.cash](https://fullstack.cash)
 
-The default derivation path for the wallet keypair is m/44'/245'/0'/0/0.
+The default derivation path for the wallet keypair is `m/44'/245'/0'/0/0`. This is the BIP44 standard for SLP token-aware wallets.
 
 ## How to use it?
 
@@ -29,19 +29,19 @@ const BchWallet = require("minimal-bch-wallet");
 ### Create new wallets
 ```js
 const bchWallet = new BchWallet();
-await bchWallet.walletInfo
+await bchWallet.walletInfoPromise // Wait for wallet to be created.
 
 // 12 words seed phrase for the wallet
-console.log(bchWallet.mnemonic);
+console.log(bchWallet.walletInfo.mnemonic);
 
 // cash address derived from the seed (derivation path: m/44'/245'/0'/0/0)
-console.log(bchWallet.cashAddress);
+console.log(bchWallet.walletInfo.cashAddress);
 
 // legacy address derived from the seed (derivation path: m/44'/245'/0'/0/0)
-console.log(bchWallet.legacyAddress);
+console.log(bchWallet.walletInfo.legacyAddress);
 
 // private key for the BCH address derived from the seed (derivation path: m/44'/245'/0'/0/0)
-console.log(bchWallet.privateKey);
+console.log(bchWallet.walletInfo.privateKey);
 ```
 
 ### Mnemonic encryption
@@ -51,17 +51,17 @@ const bchWallet = new BchWallet(null, {
 });
 
 // 12 words seed phrase for the wallet
-console.log(bchWallet.mnemonic);
+console.log(bchWallet.walletInfo.mnemonic);
 
 // encrypted mnemonic
-console.log(bchWallet.mnemonicEncrypted);
+console.log(bchWallet.walletInfo.mnemonicEncrypted);
 
-const bchWallet2 = new BchWallet(bchWallet.mnemonicEncrypted, {
+const bchWallet2 = new BchWallet(bchWallet.walletInfo.mnemonicEncrypted, {
   password: "myStrongPassword"
 });
 
 // decrypted mnemonic
-console.log(bchWallet.mnemonic);
+console.log(bchWallet.walletInfo.mnemonic);
 ```
 
 ### Initialize wallet with mnemonic
