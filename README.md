@@ -79,7 +79,7 @@ const bchWallet2 = new BchWallet("minor bench until split suffer shine series ba
 ### Send transactions
 You can send funds to other BCH wallets. You can distribute funds to N users by simply extending the receiver array.
 ```js
-const simpleWallet = new SimpleWallet();
+const bchWallet = new BchWallet();
 
 const receivers = [
     {
@@ -89,7 +89,7 @@ const receivers = [
     }
 ];
 
-const tx = await simpleWallet.send(receivers);
+const tx = await bchWallet.send(receivers);
 
 // Transaction ID
 // you can then see the transaction in one of the explorers
@@ -102,29 +102,29 @@ console.log(tx.txid);
 Gets balance (confirmed + unconfirmed) for an BCH address
 
 ```js
-// will get a balance for simpleWallet.cashAddress
-const myBalance = await simpleWallet.getBalance();
+// will get a balance for bchWallet.cashAddress
+const myBalance = await bchWallet.getBalance();
 
 // will get a balance for any address
-const balanceOfOtherAddress = await simpleWallet.getBalance("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
+const balanceOfOtherAddress = await bchWallet.getBalance("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
 ```
 
 ### Get Wallet Transaction History
 Get an array of TXIDs of the transactions involving this wallet.
 
 ```js
-// will get transaction history for simpleWallet.cashAddress
-const myTransactions = await simpleWallet.getTransactions();
+// will get transaction history for bchWallet.cashAddress
+const myTransactions = await bchWallet.getTransactions();
 
 // will get transaction history for any address
-const txHistoryOfOtherAddress = await simpleWallet.getTransactions("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
+const txHistoryOfOtherAddress = await bchWallet.getTransactions("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
 ```
 
 
 ### Error Handling
 ```js
 try {
-    tx = await simpleWallet.send([
+    tx = await BchWallet.send([
         { address: "bitcoincash:qrlhkg4d9z3y88j246a6482xzregxaxnfsagmd2kh3", amountSat: 1000 }
     ]);
 } catch (err) {
@@ -143,13 +143,13 @@ While developing BCH apps, remember to never send the private keys / mnemonic / 
 1. Your servers can be hacked
 2. Depending on your jurisdiction you may not have the allowance to manage the funds of your users
 ```js
-const simpleWallet1 = new SimpleWallet();
+const bchWallet1 = new BchWallet();
 
 // save the mnemonic for later
-localStorage.setItem("BCH_MNEMONIC", simpleWallet.walletInfo.mnemonic);
+localStorage.setItem("BCH_MNEMONIC", bchWallet1.walletInfo.mnemonic);
 
 // retrieve mnemonic to initialize the wallet
-const simpleWallet2 = new SimpleWallet(localStorage.getItem("BCH_MNEMONIC"));
+const bchWallet2 = new BchWallet(localStorage.getItem("BCH_MNEMONIC"));
 ```
 
 
