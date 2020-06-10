@@ -130,7 +130,7 @@ class MinimalBCHWallet {
       return _this.sendBch.sendBch(outputs, {
         mnemonic: _this.walletInfo.mnemonic,
         cashAddress: _this.walletInfo.address,
-        HdPath: _this.walletInfo.hdPath
+        hdPath: _this.walletInfo.hdPath
       })
     } catch (err) {
       console.error('Error in send()')
