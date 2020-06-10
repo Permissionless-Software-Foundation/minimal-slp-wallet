@@ -192,7 +192,7 @@ describe('#SendBCH', () => {
       const outputs = [
         {
           address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
-          amountSat: 800
+          amountSat: 600
         }
       ]
 

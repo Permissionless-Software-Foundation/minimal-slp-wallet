@@ -20,7 +20,7 @@ async function sendBch () {
 
     // Get the balance of the wallet.
     const balance = await bchWallet.getBalance()
-    console.log('balance: ', balance)
+    console.log(`balance: ${balance} satoshis`)
 
     // Exit if the wallet has no balance.
     if (balance === 0) {
