@@ -89,12 +89,12 @@ const receivers = [
     }
 ];
 
-const tx = await bchWallet.send(receivers);
+const txid = await bchWallet.send(receivers);
 
 // Transaction ID
 // you can then see the transaction in one of the explorers
 // example: `https://explorer.bitcoin.com/bch/tx/${tx.txid}`;
-console.log(tx.txid);
+console.log(txid);
 ```
 
 
@@ -124,7 +124,7 @@ const txHistoryOfOtherAddress = await bchWallet.getTransactions("bitcoincash:qp2
 ### Error Handling
 ```js
 try {
-    tx = await BchWallet.send([
+    tx = await bchWallet.send([
         { address: "bitcoincash:qrlhkg4d9z3y88j246a6482xzregxaxnfsagmd2kh3", amountSat: 1000 }
     ]);
 } catch (err) {
