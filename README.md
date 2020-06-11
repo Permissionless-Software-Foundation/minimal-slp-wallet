@@ -3,8 +3,7 @@
 This is a minalist Bitcoin Cash (BCH) wallet for use with front end web apps.
 It's forked from the [Simple Bitcoin Wallet](https://www.npmjs.com/package/simple-bitcoin-wallet) developed by [Honest.cash](https://honest.cash). It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-ipfs-web-wallet) and [bch-js](https://www.npmjs.com/package/@chris.troutner/bch-js) provided by [FullStack.cash](https://fullstack.cash)
 
-The default derivation path for the wallet keypair is `m/44'/245'/0'/0/0`. This is the BIP44 standard for SLP token-aware wallets.
-- Note: *The wallet is not yet token-aware, but this feature will be added soon.*
+The default derivation path for the wallet keypair is `m/44'/145'/0'/0/0`. This is the BIP44 standard for BCH wallets.
 
 ## How to use it?
 
@@ -35,13 +34,13 @@ await bchWallet.walletInfoPromise // Wait for wallet to be created.
 // 12 words seed phrase for the wallet
 console.log(bchWallet.walletInfo.mnemonic);
 
-// cash address derived from the seed (derivation path: m/44'/245'/0'/0/0)
+// cash address derived from the seed (derivation path: m/44'/145'/0'/0/0)
 console.log(bchWallet.walletInfo.cashAddress);
 
-// legacy address derived from the seed (derivation path: m/44'/245'/0'/0/0)
+// legacy address derived from the seed (derivation path: m/44'/145'/0'/0/0)
 console.log(bchWallet.walletInfo.legacyAddress);
 
-// private key for the BCH address derived from the seed (derivation path: m/44'/245'/0'/0/0)
+// private key for the BCH address derived from the seed (derivation path: m/44'/145'/0'/0/0)
 console.log(bchWallet.walletInfo.privateKey);
 ```
 
@@ -72,7 +71,7 @@ const bchWallet = new BchWallet("minor bench until split suffer shine series bag
 
 // initialize for specific HD derivation path
 const bchWallet2 = new BchWallet("minor bench until split suffer shine series bag avoid cruel orient aunt", {
-    HdPath: "m/44'/245'/0'/1'"
+    HdPath: "m/44'/145'/0'/1'"
 });
 ```
 
