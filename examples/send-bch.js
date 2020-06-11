@@ -8,7 +8,7 @@ async function sendBch () {
   try {
     // Replace this mnemonic with the one created with the create-wallet.js example.
     const mnemonic =
-      'question blossom series broom easy payment pipe betray kitchen siege yellow vocal'
+      'essence appear intact casino neck scatter search post cube fit door margin'
     const reciever = ''
     const sats2Send = 1000
 
