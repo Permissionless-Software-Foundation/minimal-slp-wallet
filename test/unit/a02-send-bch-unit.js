@@ -94,13 +94,13 @@ describe('#SendBCH', () => {
 
       const { necessaryUtxos, change } = uut.getNecessaryUtxosAndChange(
         outputs,
-        mockData.exampleUtxos02.utxos
+        mockData.exampleUtxos01.utxos
       )
       // console.log('necessaryUtxos: ', necessaryUtxos)
       // console.log('change: ', change)
 
       assert.isArray(necessaryUtxos)
-      assert.equal(necessaryUtxos.length, 2)
+      assert.equal(necessaryUtxos.length, 3)
       assert.isNumber(change)
     })
 
@@ -108,7 +108,7 @@ describe('#SendBCH', () => {
       const outputs = [
         {
           address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
-          amountSat: 12523803
+          amountSat: 12513803
         },
         {
           address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
@@ -187,7 +187,7 @@ describe('#SendBCH', () => {
     it('should ignore change if below the dust limit', async () => {
       sandbox
         .stub(uut.bchjs.Electrumx, 'utxo')
-        .resolves(mockData.exampleUtxos02)
+        .resolves(mockData.exampleUtxos01)
 
       const outputs = [
         {
