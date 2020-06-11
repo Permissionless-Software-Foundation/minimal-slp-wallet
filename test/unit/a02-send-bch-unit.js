@@ -27,21 +27,21 @@ describe('#SendBCH', () => {
       const fee = uut.calculateFee(1, 2, 1)
       // console.log('fee: ', fee)
 
-      assert.equal(fee, 226)
+      assert.equal(fee, 260)
     })
 
     it('should accurately calculate a P2PKH with 2 input and 2 outputs', () => {
       const fee = uut.calculateFee(2, 2, 1)
       // console.log('fee: ', fee)
 
-      assert.equal(fee, 374)
+      assert.equal(fee, 408)
     })
 
     it('should accurately calculate a P2PKH with 2 input and 3 outputs', () => {
       const fee = uut.calculateFee(2, 3, 1)
       // console.log('fee: ', fee)
 
-      assert.equal(fee, 408)
+      assert.equal(fee, 442)
     })
 
     it('should throw an error for bad input', () => {
