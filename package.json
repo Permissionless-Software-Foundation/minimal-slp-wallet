@@ -1,5 +1,5 @@
 {
-  "name": "minimal-bch-wallet",
+  "name": "minimal-slp-wallet",
   "version": "1.0.0",
   "description": "A minimalist Bitcoin Cash (BCH) wallet npm library, for use in a web apps.",
   "main": "index.js",
@@ -26,12 +26,12 @@
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "apidoc": {
-    "title": "minimal-bch-wallet",
+    "title": "minimal-slp-wallet",
     "url": "localhost:5000"
   },
-  "repository": "Permissionless-Software-Foundation/minimal-bch-wallet",
+  "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
-    "@chris.troutner/bch-js": "^3.1.2",
+    "@chris.troutner/bch-js": "3.2.1",
     "apidoc": "^0.23.0",
     "bch-donation": "^1.1.0",
     "crypto-js": "^4.0.0"
