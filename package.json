@@ -21,7 +21,9 @@
     "react",
     "front end",
     "client",
-    "apidoc"
+    "apidoc",
+    "slp",
+    "tokens"
   ],
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
