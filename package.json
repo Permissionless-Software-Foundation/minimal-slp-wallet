@@ -1,0 +1,62 @@
+{
+  "name": "minimal-bch-wallet",
+  "version": "1.0.0",
+  "description": "A minimalist Bitcoin Cash (BCH) wallet npm library, for use in a web apps.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "nyc mocha test/unit/",
+    "test:integration": "mocha --timeout 25000 test/integration/",
+    "lint": "standard --env mocha --fix",
+    "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit"
+  },
+  "keywords": [
+    "bitcoin",
+    "bitcoin cash",
+    "wallet",
+    "javascript",
+    "cryptocurrency",
+    "react",
+    "front end",
+    "client",
+    "apidoc"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "apidoc": {
+    "title": "minimal-bch-wallet",
+    "url": "localhost:5000"
+  },
+  "repository": "Permissionless-Software-Foundation/minimal-bch-wallet",
+  "dependencies": {
+    "@chris.troutner/bch-js": "^3.1.2",
+    "apidoc": "^0.23.0",
+    "bch-donation": "^1.1.0",
+    "crypto-js": "^4.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
+    "eslint": "5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
+    "semantic-release": "^17.0.0",
+    "sinon": "^9.0.2",
+    "standard": "^14.3.1"
+  },
+  "release": {
+    "publish": [
+      {
+        "path": "@semantic-release/npm",
+        "npmPublish": true
+      }
+    ]
+  }
+}
