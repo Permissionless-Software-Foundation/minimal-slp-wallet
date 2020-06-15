@@ -1,5 +1,5 @@
 /*
-  Integration tests for the utxos.js library
+  Unit tests for the utxos.js library
 */
 
 const assert = require('chai').assert
