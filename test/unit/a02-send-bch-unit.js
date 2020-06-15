@@ -166,8 +166,6 @@ describe('#SendBCH', () => {
   describe('#createTransaction', () => {
     it('should throw an error if UTXOs array is empty', async () => {
       try {
-        // sandbox.stub(uut.bchjs.Electrumx, 'utxo').resolves({ success: false })
-
         const outputs = [
           {
             address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
@@ -203,10 +201,6 @@ describe('#SendBCH', () => {
     })
 
     it('should add change output if above the dust limit', async () => {
-      // sandbox
-      //   .stub(uut.bchjs.Electrumx, 'utxo')
-      //   .resolves(mockData.exampleUtxos01)
-
       const outputs = [
         {
           address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
