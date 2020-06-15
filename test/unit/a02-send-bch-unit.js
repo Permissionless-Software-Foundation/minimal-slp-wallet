@@ -164,9 +164,9 @@ describe('#SendBCH', () => {
   })
 
   describe('#createTransaction', () => {
-    it('should throw an error if UTXOs can not be retrieved', async () => {
+    it('should throw an error if UTXOs array is empty', async () => {
       try {
-        sandbox.stub(uut.bchjs.Electrumx, 'utxo').resolves({ success: false })
+        // sandbox.stub(uut.bchjs.Electrumx, 'utxo').resolves({ success: false })
 
         const outputs = [
           {
@@ -175,20 +175,16 @@ describe('#SendBCH', () => {
           }
         ]
 
-        await uut.createTransaction(outputs, mockData.mockWallet)
+        await uut.createTransaction(outputs, mockData.mockWallet, [])
 
         assert.equal(true, false, 'Unexpected result')
       } catch (err) {
         // console.log('err: ', err)
-        assert.include(err.message, 'Could not retrieve UTXO data')
+        assert.include(err.message, 'UTXO list is empty')
       }
     })
 
     it('should ignore change if below the dust limit', async () => {
-      sandbox
-        .stub(uut.bchjs.Electrumx, 'utxo')
-        .resolves(mockData.exampleUtxos01)
-
       const outputs = [
         {
           address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
@@ -198,7 +194,8 @@ describe('#SendBCH', () => {
 
       const { hex, txid } = await uut.createTransaction(
         outputs,
-        mockData.mockWallet
+        mockData.mockWallet,
+        mockData.exampleUtxos01.utxos
       )
 
       assert.isString(hex)
@@ -206,9 +203,9 @@ describe('#SendBCH', () => {
     })
 
     it('should add change output if above the dust limit', async () => {
-      sandbox
-        .stub(uut.bchjs.Electrumx, 'utxo')
-        .resolves(mockData.exampleUtxos01)
+      // sandbox
+      //   .stub(uut.bchjs.Electrumx, 'utxo')
+      //   .resolves(mockData.exampleUtxos01)
 
       const outputs = [
         {
@@ -219,7 +216,8 @@ describe('#SendBCH', () => {
 
       const { hex, txid } = await uut.createTransaction(
         outputs,
-        mockData.mockWallet
+        mockData.mockWallet,
+        mockData.exampleUtxos01.utxos
       )
       // console.log('hex: ', hex)
       // console.log('txid: ', txid)

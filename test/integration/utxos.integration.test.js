@@ -47,15 +47,20 @@ describe('#UTXOs', () => {
 
   describe('#initUtxoStore', () => {
     it('should initialize and return the utxoStore', async () => {
-      const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
+      const addr = 'bitcoincash:qqaqa62t2uhv9cl6ze3appmvy3tnz8kyvyd54cex00'
 
       const utxos = await uut.initUtxoStore(addr)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
 
       // Each UTXO returned should have an isValid property.
       utxos.forEach(elem => assert.property(elem, 'isValid'))
 
       // The UTXO store should match the returned data.
       assert.deepEqual(uut.utxoStore, utxos)
+
+      // Token and BCH UTXOs should be separate.
+      assert.equal(uut.bchUtxos.length, 1)
+      assert.equal(uut.tokenUtxos.length, 2)
     })
   })
 })

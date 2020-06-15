@@ -77,7 +77,9 @@ describe('#UTXOs', () => {
       const utxos = mockData.mixedUtxos
 
       // Mock network calls.
-      sandbox.stub(uut.bchjs.SLP.Utils, 'tokenUtxoDetails').resolves(mockData.hydratedUtxos)
+      sandbox
+        .stub(uut.bchjs.SLP.Utils, 'tokenUtxoDetails')
+        .resolves(mockData.hydratedUtxos)
 
       const hydratedUtxos = await uut.hydrate(utxos)
       // console.log(`hydratedUtxos: ${JSON.stringify(hydratedUtxos, null, 2)}`)
@@ -117,14 +119,17 @@ describe('#UTXOs', () => {
 
       // The UTXO store should match the returned data.
       assert.deepEqual(uut.utxoStore, utxos)
+
+      // Token and BCH UTXOs should be separate.
+      assert.equal(uut.bchUtxos.length, 1)
+      assert.equal(uut.tokenUtxos.length, 2)
     })
 
     it('should handle network errors', async () => {
       try {
         const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
 
-        sandbox.stub(uut, 'getUtxos')
-          .throws(new Error('test error'))
+        sandbox.stub(uut, 'getUtxos').throws(new Error('test error'))
 
         await uut.initUtxoStore(addr)
 
