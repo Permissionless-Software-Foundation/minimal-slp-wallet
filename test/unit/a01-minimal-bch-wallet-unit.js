@@ -126,6 +126,9 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
 
     it('should decrypt an encrypted mnemonic', async () => {
+      // Mock the utxo store, to ignore it for this test.
+      // sandbox.stub(uut.utxos, 'initUtxoStore').resolves([])
+
       const mnemonicEncrypted =
         'U2FsdGVkX18uyavim4FoIETcRxgOi1E/XFc1ARR3k6HVrJgH60YnLxjbs6yMnWMjpaqbBmSC3uYjhZ+cgFlndOEZI34T0sWFfL952CHCFjd2AjypCjFhqkmHzOCCkhgf'
       const mnemonic =
@@ -258,6 +261,54 @@ describe('#index.js - Minimal BCH Wallet', () => {
         // console.log('err: ', err)
         assert.include(err.message, 'error message')
       }
+    })
+  })
+
+  describe('#sendTokens', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      // Mock live network calls.
+      sandbox.stub(uut.tokens, 'sendTokens').resolves(txid)
+
+      const output = await uut.sendTokens()
+
+      assert.equal(output, txid)
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        // Mock live network calls.
+        sandbox.stub(uut.tokens, 'sendTokens').throws(new Error('error message'))
+
+        await uut.sendTokens()
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
+    })
+  })
+
+  describe('#getUtxos', () => {
+    it('should wrap the initUtxoStore function', async () => {
+      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
+
+      const obj = await uut.getUtxos()
+
+      assert.deepEqual(obj, {})
+    })
+  })
+
+  describe('#listTokens', () => {
+    it('should wrap the listTokens function', async () => {
+      sandbox.stub(uut.tokens, 'listTokens').resolves({})
+
+      const obj = await uut.listTokens()
+
+      assert.deepEqual(obj, {})
     })
   })
 })

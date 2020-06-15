@@ -1,5 +1,5 @@
 /*
-  An example for sending BCH with this library.
+  An example for sending tokens with this library.
 */
 
 const SlpWallet = require('../index')
@@ -10,7 +10,9 @@ async function sendBch () {
     const MNEMONIC =
       'essence appear intact casino neck scatter search post cube fit door margin'
     const RECIEVER = ''
-    const SATS_TO_SEND = 1000
+    const TOKENID =
+      'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+    const TOKENS_TO_SEND = 1
 
     // Instantiate the wallet library.
     const slpWallet = new SlpWallet(MNEMONIC)
@@ -33,26 +35,28 @@ async function sendBch () {
     }
 
     // Create the outputs array.
-    const outputs = []
+    let output = {}
 
     // If reciever is not specified, send the funds back to the wallet.
     if (RECIEVER === '') {
-      outputs.push({
+      output = {
         address: slpWallet.walletInfo.address,
-        amountSat: SATS_TO_SEND
-      })
-    //
-    // Send the funds to the reciever.
+        tokenId: TOKENID,
+        qty: TOKENS_TO_SEND
+      }
+      //
+      // Send the funds to the reciever.
     } else {
-      outputs.push({
+      output = {
         address: RECIEVER,
-        amountSat: SATS_TO_SEND
-      })
+        tokenId: TOKENID,
+        qty: TOKENS_TO_SEND
+      }
     }
 
-    const txid = await slpWallet.send(outputs)
+    const txid = await slpWallet.sendTokens(output)
 
-    console.log(`Success! BCH sent with TXID: ${txid}`)
+    console.log(`Success! Tokens sent with TXID: ${txid}`)
   } catch (err) {
     console.error('Error: ', err)
   }

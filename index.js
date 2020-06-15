@@ -11,6 +11,8 @@ const BCHJS = require('@chris.troutner/bch-js')
 const crypto = require('crypto-js')
 
 const SendBCH = require('./lib/send-bch')
+const Utxos = require('./lib/utxos')
+const Tokens = require('./lib/tokens')
 
 let _this
 
@@ -25,6 +27,8 @@ class MinimalBCHWallet {
     this.bchjs = new BCHJS()
     this.crypto = crypto
     this.sendBch = new SendBCH()
+    this.utxos = new Utxos()
+    this.tokens = new Tokens()
 
     _this = this
 
@@ -76,6 +80,11 @@ class MinimalBCHWallet {
       // return resolve(walletInfo)
       // return walletInfo
 
+      if (process.env.TEST !== 'unit') {
+        // Get any  UTXOs for this wallet.
+        await _this.utxos.initUtxoStore(walletInfo.address)
+      }
+
       _this.walletInfoCreated = true
       _this.walletInfo = walletInfo
     } catch (err) {
@@ -84,6 +93,11 @@ class MinimalBCHWallet {
       throw err
     }
     // })
+  }
+
+  // Get the UTXO information for this wallet.
+  getUtxos () {
+    return _this.utxos.initUtxoStore()
   }
 
   // Encrypt the mnemonic of the wallet.
@@ -127,15 +141,40 @@ class MinimalBCHWallet {
   // This is a wrapper for the send-bch.js library.
   send (outputs) {
     try {
-      return _this.sendBch.sendBch(outputs, {
-        mnemonic: _this.walletInfo.mnemonic,
-        cashAddress: _this.walletInfo.address,
-        hdPath: _this.walletInfo.hdPath
-      })
+      return _this.sendBch.sendBch(
+        outputs,
+        {
+          mnemonic: _this.walletInfo.mnemonic,
+          cashAddress: _this.walletInfo.address,
+          hdPath: _this.walletInfo.hdPath
+        },
+        _this.utxos.bchUtxos
+      )
     } catch (err) {
       console.error('Error in send()')
       throw err
     }
+  }
+
+  // Send Tokens. Returns a promise that resolves into a TXID.
+  // This is a wrapper for the tokens.js library.
+  sendTokens (output) {
+    try {
+      return _this.tokens.sendTokens(
+        output,
+        _this.walletInfo,
+        _this.utxos.bchUtxos,
+        _this.utxos.tokenUtxos
+      )
+    } catch (err) {
+      console.error('Error in send()')
+      throw err
+    }
+  }
+
+  // Return information on SLP tokens held by this wallet.
+  listTokens () {
+    return _this.tokens.listTokens(_this.utxos.tokenUtxos)
   }
 }
 
