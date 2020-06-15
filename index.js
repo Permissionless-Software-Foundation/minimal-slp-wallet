@@ -80,8 +80,10 @@ class MinimalBCHWallet {
       // return resolve(walletInfo)
       // return walletInfo
 
-      // Get any  UTXOs for this wallet.
-      await _this.utxos.initUtxoStore(walletInfo.address)
+      if (process.env.TEST !== 'unit') {
+        // Get any  UTXOs for this wallet.
+        await _this.utxos.initUtxoStore(walletInfo.address)
+      }
 
       _this.walletInfoCreated = true
       _this.walletInfo = walletInfo
@@ -94,13 +96,8 @@ class MinimalBCHWallet {
   }
 
   // Get the UTXO information for this wallet.
-  async getUtxos () {
-    try {
-      await _this.utxos.initUtxos()
-    } catch (err) {
-      console.error('error in getUtxos()')
-      throw err
-    }
+  getUtxos () {
+    return _this.utxos.initUtxoStore()
   }
 
   // Encrypt the mnemonic of the wallet.
