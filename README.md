@@ -136,6 +136,16 @@ const myBalance = await bchWallet.getBalance();
 const balanceOfOtherAddress = await bchWallet.getBalance("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
 ```
 
+### List Tokens
+List the SLP tokens held by an address.
+```js
+// will get token balance for bchWallet.cashAddress
+const myBalance = await bchWallet.listTokens();
+
+// will get a balance for any address
+const balanceOfOtherAddress = await bchWallet.listTokens("simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk");
+```
+
 ### Get Wallet Transaction History
 Get an array of TXIDs of the transactions involving this wallet.
 

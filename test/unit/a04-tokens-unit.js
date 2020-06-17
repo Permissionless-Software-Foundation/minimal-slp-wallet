@@ -26,9 +26,9 @@ describe('#UTXOs', () => {
 
   afterEach(() => sandbox.restore())
 
-  describe('#listTokens', () => {
+  describe('#listTokensFromUtxos', () => {
     it('should return a list of tokens', () => {
-      const tokenInfo = uut.listTokens(mockData.hydratedUtxos)
+      const tokenInfo = uut.listTokensFromUtxos(mockData.hydratedUtxos)
       // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       // Assert that the returned array is the expected size.
@@ -50,7 +50,7 @@ describe('#UTXOs', () => {
     })
 
     it('should return aggregate token data', () => {
-      const tokenInfo = uut.listTokens(mockData.tokenUtxos02)
+      const tokenInfo = uut.listTokensFromUtxos(mockData.tokenUtxos02)
       // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       // Assert that the returned array is the expected size.
@@ -64,7 +64,7 @@ describe('#UTXOs', () => {
 
     it('should handle and throw errors', async () => {
       try {
-        uut.listTokens('a')
+        uut.listTokensFromUtxos('a')
 
         assert(true, false, 'unexpected result')
       } catch (err) {

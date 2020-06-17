@@ -174,7 +174,7 @@ class MinimalBCHWallet {
 
   // Return information on SLP tokens held by this wallet.
   listTokens () {
-    return _this.tokens.listTokens(_this.utxos.tokenUtxos)
+    return _this.tokens.listTokensFromUtxos(_this.utxos.tokenUtxos)
   }
 }
 

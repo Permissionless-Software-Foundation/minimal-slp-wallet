@@ -304,7 +304,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
   describe('#listTokens', () => {
     it('should wrap the listTokens function', async () => {
-      sandbox.stub(uut.tokens, 'listTokens').resolves({})
+      sandbox.stub(uut.tokens, 'listTokensFromUtxos').resolves({})
 
       const obj = await uut.listTokens()
 
