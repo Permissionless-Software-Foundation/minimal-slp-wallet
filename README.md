@@ -105,6 +105,22 @@ const txid = await bchWallet.send(receivers);
 console.log(txid);
 ```
 
+### Send Tokens
+You can send tokens in a similar way:
+```js
+
+const receiver = {
+  address: "simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk",
+  tokenId: "a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2",
+  qty: 1.25
+}
+
+const txid = await bchWallet.sendTokens(receiver);
+
+// Transaction ID
+console.log(txid);
+```
+
 
 ### Get Wallet Balance
 Gets balance (confirmed + unconfirmed) for an BCH address
