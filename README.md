@@ -121,6 +121,9 @@ const txid = await bchWallet.sendTokens(receiver);
 console.log(txid);
 ```
 
+*Note:* Only single token sends are supported at the moment. i.e. One token type
+per receiver per transaction.
+
 
 ### Get Wallet Balance
 Gets balance (confirmed + unconfirmed) for an BCH address
