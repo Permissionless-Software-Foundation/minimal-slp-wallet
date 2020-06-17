@@ -218,4 +218,38 @@ describe('#UTXOs', () => {
       }
     })
   })
+
+  describe('#listTokensFromAddress', () => {
+    it('should get token information for an address', async () => {
+      const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
+
+      // Stub network calls and subfunctions that are not within the scope of testing.
+      sandbox.stub(uut.utxos, 'getUtxos').resolves({})
+      sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
+
+      const tokenInfo = await uut.listTokensFromAddress(addr)
+      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.isArray(tokenInfo)
+
+      assert.property(tokenInfo[0], 'tokenId')
+      assert.property(tokenInfo[0], 'ticker')
+      assert.property(tokenInfo[0], 'name')
+      assert.property(tokenInfo[0], 'decimals')
+      assert.property(tokenInfo[0], 'tokenType')
+      assert.property(tokenInfo[0], 'url')
+      assert.property(tokenInfo[0], 'qty')
+    })
+
+    it('should throw an error if address is not specified', async () => {
+      try {
+        await uut.listTokensFromAddress()
+
+        assert.equal(true, false, 'Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'Address not provided')
+      }
+    })
+  })
 })
