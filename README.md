@@ -6,6 +6,14 @@ It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Pe
 
 The default derivation path for the wallet keypair is `m/44'/245'/0'/0/0`. This is the BIP44 standard for SLP token-aware BCH wallets.
 
+## Examples
+The [examples](./examples) directory shows how to write node.js JavaScript apps that use this library to work with BCH:
+
+- [Create a wallet](./examples/create-wallet.js)
+- [Send BCH](./examples/send-bch.js)
+- [List Tokens](./examples/list-tokens.js)
+- [Send Tokens](./examples/send-tokens.js)
+
 ## How to use it?
 
 ### Import
@@ -97,6 +105,25 @@ const txid = await bchWallet.send(receivers);
 console.log(txid);
 ```
 
+### Send Tokens
+You can send tokens in a similar way:
+```js
+
+const receiver = {
+  address: "simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk",
+  tokenId: "a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2",
+  qty: 1.25
+}
+
+const txid = await bchWallet.sendTokens(receiver);
+
+// Transaction ID
+console.log(txid);
+```
+
+*Note:* Only single token sends are supported at the moment. i.e. One token type
+per receiver per transaction.
+
 
 ### Get Wallet Balance
 Gets balance (confirmed + unconfirmed) for an BCH address
@@ -107,6 +134,16 @@ const myBalance = await bchWallet.getBalance();
 
 // will get a balance for any address
 const balanceOfOtherAddress = await bchWallet.getBalance("bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h");
+```
+
+### List Tokens
+List the SLP tokens held by an address.
+```js
+// will get token balance for bchWallet.cashAddress
+const myBalance = await bchWallet.listTokens();
+
+// will get a balance for any address
+const balanceOfOtherAddress = await bchWallet.listTokens("simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk");
 ```
 
 ### Get Wallet Transaction History

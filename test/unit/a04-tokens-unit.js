@@ -26,9 +26,9 @@ describe('#UTXOs', () => {
 
   afterEach(() => sandbox.restore())
 
-  describe('#listTokens', () => {
+  describe('#listTokensFromUtxos', () => {
     it('should return a list of tokens', () => {
-      const tokenInfo = uut.listTokens(mockData.hydratedUtxos)
+      const tokenInfo = uut.listTokensFromUtxos(mockData.hydratedUtxos)
       // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       // Assert that the returned array is the expected size.
@@ -50,7 +50,7 @@ describe('#UTXOs', () => {
     })
 
     it('should return aggregate token data', () => {
-      const tokenInfo = uut.listTokens(mockData.tokenUtxos02)
+      const tokenInfo = uut.listTokensFromUtxos(mockData.tokenUtxos02)
       // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       // Assert that the returned array is the expected size.
@@ -64,7 +64,7 @@ describe('#UTXOs', () => {
 
     it('should handle and throw errors', async () => {
       try {
-        uut.listTokens('a')
+        uut.listTokensFromUtxos('a')
 
         assert(true, false, 'unexpected result')
       } catch (err) {
@@ -215,6 +215,40 @@ describe('#UTXOs', () => {
       } catch (err) {
         // console.log('err: ', err)
         assert.include(err.message, 'error message')
+      }
+    })
+  })
+
+  describe('#listTokensFromAddress', () => {
+    it('should get token information for an address', async () => {
+      const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
+
+      // Stub network calls and subfunctions that are not within the scope of testing.
+      sandbox.stub(uut.utxos, 'getUtxos').resolves({})
+      sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
+
+      const tokenInfo = await uut.listTokensFromAddress(addr)
+      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.isArray(tokenInfo)
+
+      assert.property(tokenInfo[0], 'tokenId')
+      assert.property(tokenInfo[0], 'ticker')
+      assert.property(tokenInfo[0], 'name')
+      assert.property(tokenInfo[0], 'decimals')
+      assert.property(tokenInfo[0], 'tokenType')
+      assert.property(tokenInfo[0], 'url')
+      assert.property(tokenInfo[0], 'qty')
+    })
+
+    it('should throw an error if address is not specified', async () => {
+      try {
+        await uut.listTokensFromAddress()
+
+        assert.equal(true, false, 'Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'Address not provided')
       }
     })
   })
