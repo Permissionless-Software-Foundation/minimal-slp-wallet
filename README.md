@@ -6,6 +6,14 @@ It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Pe
 
 The default derivation path for the wallet keypair is `m/44'/245'/0'/0/0`. This is the BIP44 standard for SLP token-aware BCH wallets.
 
+## Examples
+The [examples](./examples) directory shows how to write node.js JavaScript apps that use this library to work with BCH:
+
+- [Create a wallet](./examples/create-wallet.js)
+- [Send BCH](./examples/send-bch.js)
+- [List Tokens](./examples/list-tokens.js)
+- [Send Tokens](./examples/send-tokens.js)
+
 ## How to use it?
 
 ### Import
