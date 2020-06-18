@@ -50,8 +50,14 @@ class MinimalBCHWallet {
 
       // Generate the HD wallet.
       mnemonic = mnemonic || _this.bchjs.Mnemonic.generate(128)
+      console.log('mnemonic: ', mnemonic)
+
       const rootSeedBuffer = await _this.bchjs.Mnemonic.toSeed(mnemonic)
+      console.log('rootSeedBuffer: ', rootSeedBuffer)
+
       const masterHDNode = _this.bchjs.HDNode.fromSeed(rootSeedBuffer)
+      console.log('masterHDNode: ', masterHDNode)
+
       const childNode = masterHDNode.derivePath(this.hdPath)
       const privateKey = _this.bchjs.HDNode.toWIF(childNode)
 
