@@ -1,5 +1,5 @@
 /*
-  An example for listing the tokens and token balances of the wallet.
+  An example for listing the tokens and token balances of the wallet. a
 */
 
 const SlpWallet = require('../index')
