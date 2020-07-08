@@ -158,13 +158,14 @@ class MinimalBCHWallet {
 
   // Send Tokens. Returns a promise that resolves into a TXID.
   // This is a wrapper for the tokens.js library.
-  sendTokens (output) {
+  sendTokens (output, satsPerByte = 1.0) {
     try {
       return _this.tokens.sendTokens(
         output,
         _this.walletInfo,
         _this.utxos.bchUtxos,
-        _this.utxos.tokenUtxos
+        _this.utxos.tokenUtxos,
+        satsPerByte
       )
     } catch (err) {
       console.error('Error in send()')
