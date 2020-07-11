@@ -22,13 +22,27 @@ class MinimalBCHWallet {
 
     this.hdPath = this.advancedOptions.hdPath || "m/44'/245'/0'/0/0"
 
+    const bchjsOptions = {}
+    if (this.advancedOptions.restURL) {
+      bchjsOptions.restURL = advancedOptions.restURL
+    }
+
+    if (this.advancedOptions.apiToken) {
+      bchjsOptions.apiToken = advancedOptions.apiToken
+    }
+
     // Encapsulae the external libraries.
     this.BCHJS = BCHJS
-    this.bchjs = new BCHJS()
+    this.bchjs = new BCHJS(bchjsOptions)
     this.crypto = crypto
     this.sendBch = new SendBCH()
     this.utxos = new Utxos()
     this.tokens = new Tokens()
+
+    // Overwrite the dependencies copy of bchjs with this current instance.
+    this.sendBch.bchjs = this.bchjs
+    this.utxos.bchjs = this.bchjs
+    this.tokens.bchjs = this.bchjs
 
     _this = this
 
