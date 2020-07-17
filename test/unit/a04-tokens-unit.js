@@ -110,6 +110,10 @@ describe('#UTXOs', () => {
       const bchUtxos = utxos.getBchUtxos()
       const tokenUtxos = utxos.getTokenUtxos()
 
+      // Mock live network calls.
+      sandbox
+        .stub(uut.axios, 'request')
+        .resolves({ data: { script: '<Buffer ', outputs: 2 } })
       const { hex, txid } = await uut.createTransaction(
         output,
         walletInfo,
@@ -139,6 +143,10 @@ describe('#UTXOs', () => {
       // modify tokenUtxo for this test.
       tokenUtxos[0].tokenQty = 2
 
+      // Mock live network calls.
+      sandbox
+        .stub(uut.axios, 'request')
+        .resolves({ data: { script: '<Buffer ', outputs: 2 } })
       const { hex, txid } = await uut.createTransaction(
         output,
         walletInfo,
@@ -167,6 +175,11 @@ describe('#UTXOs', () => {
 
       // Modify the BCH UTXO for this test.
       bchUtxos[0].value = bchUtxos[0].satoshis = 100000
+
+      // Mock live network calls.
+      sandbox
+        .stub(uut.axios, 'request')
+        .resolves({ data: { script: '<Buffer ', outputs: 2 } })
 
       const { hex, txid } = await uut.createTransaction(
         output,

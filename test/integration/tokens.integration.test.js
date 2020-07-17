@@ -30,4 +30,19 @@ describe('#tokens.js', () => {
       assert.property(tokenInfo[0], 'qty')
     })
   })
+/*   describe('#getSendOpReturn', () => {
+    it('should return OP_RETURN object ', async () => {
+      const tokenUtxos = [{
+        tokenId: '0a321bff9761f28e06a268b14711274bb77617410a16807bd0437ef234a072b1',
+        decimals: 0,
+        tokenQty: 2
+      }]
+      const sendQty = 1
+      const result = await uut.getSendOpReturn(tokenUtxos, sendQty)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.hasAllKeys(result, ['script', 'outputs'])
+      assert.isNumber(result.outputs)
+    })
+  }) */
 })
