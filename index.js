@@ -10,9 +10,11 @@
 const BCHJS = require('@chris.troutner/bch-js')
 const crypto = require('crypto-js')
 
+// Local libraries
 const SendBCH = require('./lib/send-bch')
 const Utxos = require('./lib/utxos')
 const Tokens = require('./lib/tokens')
+const utxoMocks = require('./test/unit/mocks/utxo-mocks')
 
 let _this
 
@@ -20,8 +22,11 @@ class MinimalBCHWallet {
   constructor (hdPrivateKeyOrMnemonic, advancedOptions) {
     this.advancedOptions = advancedOptions || {}
 
+    // BEGIN Handle advanced options.
+    // HD Derivation path.
     this.hdPath = this.advancedOptions.hdPath || "m/44'/245'/0'/0/0"
 
+    // bch-js options.
     const bchjsOptions = {}
     if (this.advancedOptions.restURL) {
       bchjsOptions.restURL = advancedOptions.restURL
@@ -30,6 +35,11 @@ class MinimalBCHWallet {
     if (this.advancedOptions.apiToken) {
       bchjsOptions.apiToken = advancedOptions.apiToken
     }
+
+    // Allow passing of test flag for unit tests.
+    this.isTest = false
+    if (this.advancedOptions.test) this.isTest = true
+    // END Handle advanced options.
 
     // Encapsulae the external libraries.
     this.crypto = crypto
@@ -42,11 +52,11 @@ class MinimalBCHWallet {
     this.tokens = new Tokens()
 
     // Overwrite the dependencies copy of bchjs with this current instance.
-    // this.sendBch.bchjs = this.bchjs
-    // this.utxos.bchjs = this.bchjs
-    // this.tokens.bchjs = this.bchjs
-    // this.tokens.sendBch = this.sendBch
-    // this.tokens.utxos = this.utxos
+    this.sendBch.bchjs = this.bchjs
+    this.utxos.bchjs = this.bchjs
+    this.tokens.bchjs = this.bchjs
+    this.tokens.sendBch = this.sendBch
+    this.tokens.utxos = this.utxos
 
     this.temp = []
 
@@ -57,10 +67,6 @@ class MinimalBCHWallet {
     // have a new walletInfo property that will contain the wallet information.
     this.walletInfoCreated = false
     this.walletInfoPromise = this.create(hdPrivateKeyOrMnemonic)
-  }
-
-  fillTemp () {
-    _this.temp = ['d', 'e', 'f']
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
@@ -104,7 +110,11 @@ class MinimalBCHWallet {
       // return resolve(walletInfo)
       // return walletInfo
 
-      if (process.env.TEST !== 'unit') {
+      if (this.isTest) {
+        _this.utxos.utxoStore = utxoMocks.mockUtxoStore
+        _this.utxos.bchUtxos = utxoMocks.mockBchUtxos
+        _this.utxos.tokenUtxos = utxoMocks.mockTokenUtxos
+      } else {
         // Get any  UTXOs for this wallet.
         await _this.utxos.initUtxoStore(walletInfo.address)
       }

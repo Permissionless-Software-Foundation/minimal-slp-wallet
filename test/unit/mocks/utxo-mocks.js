@@ -197,10 +197,82 @@ const tokenUtxos02 = [
   }
 ]
 
+const mockUtxoStore = [
+  {
+    height: 639762,
+    tx_hash: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    tx_pos: 1,
+    value: 546,
+    satoshis: 546,
+    txid: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    vout: 1,
+    utxoType: 'token',
+    transactionType: 'send',
+    tokenId: 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
+    tokenTicker: 'TROUT',
+    tokenName: "Trout's test token",
+    tokenDocumentUrl: 'troutsblog.com',
+    tokenDocumentHash: '',
+    decimals: 2,
+    tokenType: 1,
+    tokenQty: 2,
+    isValid: true
+  },
+  {
+    height: 639762,
+    tx_hash: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    tx_pos: 4,
+    value: 2960,
+    satoshis: 2960,
+    txid: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    vout: 4,
+    isValid: false
+  }
+]
+
+const mockBchUtxos = [
+  {
+    height: 639762,
+    tx_hash: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    tx_pos: 4,
+    value: 2960,
+    satoshis: 2960,
+    txid: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    vout: 4,
+    isValid: false
+  }
+]
+
+const mockTokenUtxos = [
+  {
+    height: 639762,
+    tx_hash: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    tx_pos: 1,
+    value: 546,
+    satoshis: 546,
+    txid: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
+    vout: 1,
+    utxoType: 'token',
+    transactionType: 'send',
+    tokenId: 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
+    tokenTicker: 'TROUT',
+    tokenName: "Trout's test token",
+    tokenDocumentUrl: 'troutsblog.com',
+    tokenDocumentHash: '',
+    decimals: 2,
+    tokenType: 1,
+    tokenQty: 1,
+    isValid: true
+  }
+]
+
 module.exports = {
   simpleUtxos,
   mixedUtxos,
   hydratedUtxos,
   tokenUtxos01,
-  tokenUtxos02
+  tokenUtxos02,
+  mockUtxoStore,
+  mockBchUtxos,
+  mockTokenUtxos
 }

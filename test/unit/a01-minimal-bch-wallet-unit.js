@@ -21,7 +21,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
   beforeEach(async () => {
     sandbox = sinon.createSandbox()
 
-    uut = new MinimalBCHWallet()
+    uut = new MinimalBCHWallet(undefined, { test: true })
     await uut.walletInfoPromise
   })
 
@@ -58,11 +58,24 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.isString(uut.walletInfo.slpAddress)
       assert.isNotEmpty(uut.walletInfo.slpAddress)
     })
+
+    it('should work when test flag is false', async () => {
+      // Force the test flag to be false.
+      uut.isTest = false
+
+      // Stub the network calls.
+      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
+
+      const walletInfoPromise = uut.create()
+      await walletInfoPromise
+
+      assert(true, true, 'Not throwing an error is a success!')
+    })
   })
 
   describe('#constructor', () => {
     it('should create a new wallet without encrypted mnemonic', async () => {
-      const uut = new MinimalBCHWallet()
+      const uut = new MinimalBCHWallet(undefined, { test: true })
       await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
@@ -96,7 +109,10 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
 
     it('should create a new wallet with encrypted mnemonic', async () => {
-      const uut = new MinimalBCHWallet(null, { password: 'myStrongPassword' })
+      const uut = new MinimalBCHWallet(null, {
+        password: 'myStrongPassword',
+        test: true
+      })
       await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
@@ -136,7 +152,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const password = 'myStrongPassword'
 
       const uut = new MinimalBCHWallet(mnemonicEncrypted, {
-        password: password
+        password: password,
+        test: true
       })
       await uut.walletInfoPromise
       // console.log('uut: ', uut)
@@ -150,7 +167,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
           'U2FsdGVkX18uyavim4FoIETcRxgOi1E/XFc1ARR3k6HVrJgH60YnLxjbs6yMnWMjpaqbBmSC3uYjhZ+cgFlndOEZI34T0sWFfL952CHCFjd2AjypCjFhqkmHzOCCkhgf'
 
         const uut = new MinimalBCHWallet(mnemonicEncrypted, {
-          password: 'bad password'
+          password: 'bad password',
+          test: true
         })
         await uut.walletInfoPromise
 
@@ -165,7 +183,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const mnemonic =
         'negative prepare champion corn bean proof one same column water warm melt'
 
-      const uut = new MinimalBCHWallet(mnemonic)
+      const uut = new MinimalBCHWallet(mnemonic, { test: true })
       await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
@@ -191,6 +209,23 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.isNotEmpty(uut.walletInfo.slpAddress)
 
       assert.notProperty(uut.walletInfo, 'mnemonicEncrypted')
+    })
+
+    it('should accept advanced options', async () => {
+      const exampleURL = 'http://somewebsite.com/v3/'
+      const exampleApiToken = 'myapitoken'
+
+      const advancedOptions = {
+        test: true,
+        restURL: exampleURL,
+        apiToken: exampleApiToken
+      }
+
+      const uut = new MinimalBCHWallet(undefined, advancedOptions)
+      await uut.walletInfoPromise
+
+      assert.equal(uut.advancedOptions.restURL, exampleURL)
+      assert.equal(uut.advancedOptions.apiToken, exampleApiToken)
     })
   })
 
@@ -280,7 +315,9 @@ describe('#index.js - Minimal BCH Wallet', () => {
     it('should throw an error if there is an issue with broadcasting a tx', async () => {
       try {
         // Mock live network calls.
-        sandbox.stub(uut.tokens, 'sendTokens').throws(new Error('error message'))
+        sandbox
+          .stub(uut.tokens, 'sendTokens')
+          .throws(new Error('error message'))
 
         await uut.sendTokens()
 
