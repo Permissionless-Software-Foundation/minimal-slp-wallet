@@ -20,6 +20,8 @@ async function sendBch () {
     // Wait for the wallet to be created.
     await slpWallet.walletInfoPromise
 
+    // console.log('slpWallet.utxos.utxoStore: ', slpWallet.utxos.utxoStore)
+
     // Get the balance of the wallet.
     const balance = await slpWallet.getBalance()
     console.log(`balance: ${balance} satoshis`)
