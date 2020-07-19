@@ -13,7 +13,7 @@ let uut
 const mockData = require('./mocks/utxo-mocks')
 const sendMockData = require('./mocks/send-bch-mocks')
 
-describe('#UTXOs', () => {
+describe('#tokens', () => {
   let sandbox
   let utxos
 
@@ -96,6 +96,12 @@ describe('#UTXOs', () => {
     })
 
     it('should send token with no token change and no UTXO change', async () => {
+      sandbox.stub(uut.bchjs.SLP.TokenType1, 'getHexOpReturn').resolves({
+        script:
+          '6a04534c500001010453454e4420497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7080000000005f5e100',
+        outputs: 1
+      })
+
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
@@ -122,6 +128,12 @@ describe('#UTXOs', () => {
     })
 
     it('should send token with token change and no UTXO change', async () => {
+      sandbox.stub(uut.bchjs.SLP.TokenType1, 'getHexOpReturn').resolves({
+        script:
+          '6a04534c500001010453454e4420497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7080000000005f5e100080000000005f5e100',
+        outputs: 2
+      })
+
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
@@ -151,6 +163,12 @@ describe('#UTXOs', () => {
     })
 
     it('should send token with no token change and UTXO change', async () => {
+      sandbox.stub(uut.bchjs.SLP.TokenType1, 'getHexOpReturn').resolves({
+        script:
+          '6a04534c500001010453454e4420497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7080000000005f5e100080000000005f5e100',
+        outputs: 2
+      })
+
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
