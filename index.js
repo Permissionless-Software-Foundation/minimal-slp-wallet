@@ -32,17 +32,23 @@ class MinimalBCHWallet {
     }
 
     // Encapsulae the external libraries.
+    this.crypto = crypto
     this.BCHJS = BCHJS
     this.bchjs = new BCHJS(bchjsOptions)
-    this.crypto = crypto
+
+    // Instantiate local libraries.
     this.sendBch = new SendBCH()
     this.utxos = new Utxos()
     this.tokens = new Tokens()
 
     // Overwrite the dependencies copy of bchjs with this current instance.
-    this.sendBch.bchjs = this.bchjs
-    this.utxos.bchjs = this.bchjs
-    this.tokens.bchjs = this.bchjs
+    // this.sendBch.bchjs = this.bchjs
+    // this.utxos.bchjs = this.bchjs
+    // this.tokens.bchjs = this.bchjs
+    // this.tokens.sendBch = this.sendBch
+    // this.tokens.utxos = this.utxos
+
+    this.temp = []
 
     _this = this
 
@@ -51,6 +57,10 @@ class MinimalBCHWallet {
     // have a new walletInfo property that will contain the wallet information.
     this.walletInfoCreated = false
     this.walletInfoPromise = this.create(hdPrivateKeyOrMnemonic)
+  }
+
+  fillTemp () {
+    _this.temp = ['d', 'e', 'f']
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
