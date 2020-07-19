@@ -8,10 +8,10 @@ const sinon = require('sinon')
 
 // Mocking data libraries.
 // const mockData = require('./mocks/util-mocks')
+const mockUtxos = require('./mocks/utxo-mocks')
 
 // Unit under test
 const MinimalBCHWallet = require('../../index')
-// const uut = new MinimalBCHWallet()
 let uut
 
 describe('#index.js - Minimal BCH Wallet', () => {
@@ -226,6 +226,18 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
       assert.equal(uut.advancedOptions.restURL, exampleURL)
       assert.equal(uut.advancedOptions.apiToken, exampleApiToken)
+    })
+
+    // CT 07-19-2020 - This test case is from a bug around the use of 'this'
+    // and the '_this' local global. It was preventing the UTXO store from
+    // being accessible.
+    it('should be able to access the UTXO store', async () => {
+      const uut = new MinimalBCHWallet(undefined, { test: true })
+      await uut.walletInfoPromise
+
+      assert.equal(uut.utxos.utxoStore, mockUtxos.mockUtxoStore)
+      assert.equal(uut.utxos.bchUtxos, mockUtxos.mockBchUtxos)
+      assert.equal(uut.utxos.tokenUtxos, mockUtxos.mockTokenUtxos)
     })
   })
 
