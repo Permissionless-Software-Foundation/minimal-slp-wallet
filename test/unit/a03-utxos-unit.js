@@ -72,14 +72,59 @@ describe('#UTXOs', () => {
     })
   })
 
+  describe('#getArrayChunks', () => {
+    it('should throw error if "arrayToSlice" input is not array type', async () => {
+      try {
+        const arr = 1
+        const limit = 5
+        await uut.getArrayChunks(arr, limit)
+      } catch (err) {
+        assert.include(err.message, 'arrayToSlice must be an array')
+      }
+    })
+    it('should throw error if "limit" input is not number type', async () => {
+      try {
+        const arr = []
+        const limit = '5'
+        await uut.getArrayChunks(arr, limit)
+      } catch (err) {
+        assert.include(err.message, 'limit must be a number')
+      }
+    })
+    it('should return chunks if array length is greatter than limit ', async () => {
+      const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+      const limit = 5
+      const result = await uut.getArrayChunks(arr, limit)
+
+      assert.equal(result.length, arr.length / limit)
+      assert.isArray(result[0])
+      assert.isArray(result[1])
+    })
+    it('should return chunks if array length is less than limit ', async () => {
+      const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, [{ test: 'test' }]]
+      const limit = 20
+      const result = await uut.getArrayChunks(arr, limit)
+
+      assert.equal(result.length, 1)
+      assert.isArray(result[0])
+      assert.deepEqual(arr, result[0])
+    })
+    it('should return empty array if arrayToSlice is empty', async () => {
+      const arr = []
+      const limit = 20
+      const result = await uut.getArrayChunks(arr, limit)
+
+      assert.equal(result.length, 0)
+    })
+  })
   describe('#hydrateUtxos', () => {
     it('should get token information for each UTXO', async () => {
       const utxos = mockData.mixedUtxos
 
       // Mock network calls.
       sandbox
-        .stub(uut.bchjs.SLP.Utils, 'tokenUtxoDetails')
-        .resolves(mockData.hydratedUtxos)
+        .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
+        .resolves({ data: { details: mockData.hydratedUtxos } })
 
       const hydratedUtxos = await uut.hydrate(utxos)
       // console.log(`hydratedUtxos: ${JSON.stringify(hydratedUtxos, null, 2)}`)
@@ -92,7 +137,7 @@ describe('#UTXOs', () => {
         const utxos = mockData.mixedUtxos
 
         sandbox
-          .stub(uut.bchjs.SLP.Utils, 'tokenUtxoDetails')
+          .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
           .throws(new Error('test error'))
 
         await uut.hydrate(utxos)
@@ -100,6 +145,15 @@ describe('#UTXOs', () => {
         assert(true, false, 'unexpected result')
       } catch (err) {
         assert.include(err.message, 'test error')
+      }
+    })
+    it('should throw error if input is invalid type', async () => {
+      try {
+        await uut.hydrate(1)
+
+        assert(true, false, 'unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'Input must be an array')
       }
     })
   })
