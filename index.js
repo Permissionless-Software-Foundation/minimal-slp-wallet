@@ -7,7 +7,7 @@
 
 'use strict'
 
-const BCHJS = require('@chris.troutner/bch-js')
+const BCHJS = require('@psf/bch-js')
 const crypto = require('crypto-js')
 
 // Local libraries
