@@ -175,6 +175,10 @@ class MinimalBCHWallet {
   // This is a wrapper for the send-bch.js library.
   send (outputs) {
     try {
+      console.log(
+        `_this.utxos.bchUtxos: ${JSON.stringify(_this.utxos.bchUtxos, null, 2)}`
+      )
+
       return _this.sendBch.sendBch(
         outputs,
         {
