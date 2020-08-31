@@ -4,14 +4,14 @@
 
 const SlpWallet = require('../index')
 
-async function sendBch () {
+async function sendTokens () {
   try {
     // Replace the values for the constants below to customize for your use.
     const MNEMONIC =
       'essence appear intact casino neck scatter search post cube fit door margin'
     const RECIEVER = ''
     const TOKENID =
-      'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+      '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e716b6a5'
     const TOKENS_TO_SEND = 1
 
     // Instantiate the wallet library.
@@ -63,4 +63,4 @@ async function sendBch () {
     console.error('Error: ', err)
   }
 }
-sendBch()
+sendTokens()

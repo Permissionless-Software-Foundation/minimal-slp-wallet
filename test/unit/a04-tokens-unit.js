@@ -96,12 +96,6 @@ describe('#tokens', () => {
     })
 
     it('should send token with no token change and no UTXO change', async () => {
-      sandbox.stub(uut.bchjs.SLP.TokenType1, 'getHexOpReturn').resolves({
-        script:
-          '6a04534c500001010453454e4420497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7080000000005f5e100',
-        outputs: 1
-      })
-
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
@@ -128,12 +122,6 @@ describe('#tokens', () => {
     })
 
     it('should send token with token change and no UTXO change', async () => {
-      sandbox.stub(uut.bchjs.SLP.TokenType1, 'getHexOpReturn').resolves({
-        script:
-          '6a04534c500001010453454e4420497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7080000000005f5e100080000000005f5e100',
-        outputs: 2
-      })
-
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
@@ -163,12 +151,6 @@ describe('#tokens', () => {
     })
 
     it('should send token with no token change and UTXO change', async () => {
-      sandbox.stub(uut.bchjs.SLP.TokenType1, 'getHexOpReturn').resolves({
-        script:
-          '6a04534c500001010453454e4420497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7080000000005f5e100080000000005f5e100',
-        outputs: 2
-      })
-
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
@@ -195,6 +177,98 @@ describe('#tokens', () => {
 
       assert.isString(hex)
       assert.isString(txid)
+    })
+
+    it('should send NFT Group token', async () => {
+      const output = {
+        address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+        tokenId:
+          '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299',
+        qty: 1
+      }
+
+      const walletInfo = sendMockData.mockWallet
+
+      // Prep the utxo data.
+      utxos.utxoStore = mockData.mockNFTGroupUtxos
+      const bchUtxos = utxos.getBchUtxos()
+      const tokenUtxos = utxos.getTokenUtxos()
+
+      // Modify the BCH UTXO for this test.
+      bchUtxos[0].value = bchUtxos[0].satoshis = 100000
+
+      const { hex, txid } = await uut.createTransaction(
+        output,
+        walletInfo,
+        bchUtxos,
+        tokenUtxos
+      )
+
+      assert.isString(hex)
+      assert.isString(txid)
+    })
+
+    it('should send NFT (Child) token', async () => {
+      const output = {
+        address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+        tokenId:
+          '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e716b6a5',
+        qty: 1
+      }
+
+      const walletInfo = sendMockData.mockWallet
+
+      // Prep the utxo data.
+      utxos.utxoStore = mockData.mockNFTChildUtxos
+      const bchUtxos = utxos.getBchUtxos()
+      const tokenUtxos = utxos.getTokenUtxos()
+
+      // Modify the BCH UTXO for this test.
+      bchUtxos[0].value = bchUtxos[0].satoshis = 100000
+
+      const { hex, txid } = await uut.createTransaction(
+        output,
+        walletInfo,
+        bchUtxos,
+        tokenUtxos
+      )
+
+      assert.isString(hex)
+      assert.isString(txid)
+    })
+
+    it('should throw an error for unknown token type', async () => {
+      try {
+        const output = {
+          address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+          tokenId:
+            '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e716b6a5',
+          qty: 1
+        }
+
+        const walletInfo = sendMockData.mockWallet
+
+        // Prep the utxo data.
+        utxos.utxoStore = mockData.mockNFTChildUtxos
+
+        // Manipulate the token type to force an error.
+        utxos.utxoStore[0].tokenType = 888
+
+        const bchUtxos = utxos.getBchUtxos()
+        const tokenUtxos = utxos.getTokenUtxos()
+
+        await uut.createTransaction(
+          output,
+          walletInfo,
+          bchUtxos,
+          tokenUtxos
+        )
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'Token Type 888 unknown')
+      }
     })
   })
 
