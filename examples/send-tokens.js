@@ -11,7 +11,7 @@ async function sendTokens () {
       'essence appear intact casino neck scatter search post cube fit door margin'
     const RECIEVER = ''
     const TOKENID =
-      '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299'
+      '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e716b6a5'
     const TOKENS_TO_SEND = 1
 
     // Instantiate the wallet library.

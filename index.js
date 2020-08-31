@@ -198,6 +198,8 @@ class MinimalBCHWallet {
   // This is a wrapper for the tokens.js library.
   sendTokens (output, satsPerByte = 1.0) {
     try {
+      console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+
       return _this.tokens.sendTokens(
         output,
         _this.walletInfo,
