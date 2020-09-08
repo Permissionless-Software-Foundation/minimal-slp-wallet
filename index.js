@@ -84,6 +84,7 @@ class MinimalBCHWallet {
       const masterHDNode = _this.bchjs.HDNode.fromSeed(rootSeedBuffer)
       const childNode = masterHDNode.derivePath(this.hdPath)
       const privateKey = _this.bchjs.HDNode.toWIF(childNode)
+      const publicKey = _this.bchjs.HDNode.toPublicKey(childNode)
 
       const walletInfo = {}
 
@@ -98,6 +99,7 @@ class MinimalBCHWallet {
       // Set the wallet properties.
       walletInfo.mnemonic = mnemonic
       walletInfo.privateKey = privateKey
+      walletInfo.publicKey = publicKey.toString('hex')
       walletInfo.address = walletInfo.cashAddress = _this.bchjs.HDNode.toCashAddress(
         childNode
       )

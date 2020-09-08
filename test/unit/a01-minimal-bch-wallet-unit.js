@@ -46,6 +46,10 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.isString(uut.walletInfo.privateKey)
       assert.isNotEmpty(uut.walletInfo.privateKey)
 
+      assert.property(uut.walletInfo, 'publicKey')
+      assert.isString(uut.walletInfo.publicKey)
+      assert.isNotEmpty(uut.walletInfo.publicKey)
+
       assert.property(uut.walletInfo, 'cashAddress')
       assert.isString(uut.walletInfo.cashAddress)
       assert.isNotEmpty(uut.walletInfo.cashAddress)
