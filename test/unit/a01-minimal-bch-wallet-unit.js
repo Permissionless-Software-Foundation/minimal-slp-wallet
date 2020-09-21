@@ -243,6 +243,18 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(uut.utxos.bchUtxos, mockUtxos.mockBchUtxos)
       assert.equal(uut.utxos.tokenUtxos, mockUtxos.mockTokenUtxos)
     })
+
+    it('should update all instances of bch-js with the free tier', async () => {
+      const freeUrl = 'https://free-main.fullstack.cash/v3/'
+
+      const uut = new MinimalBCHWallet(undefined, {
+        restURL: freeUrl
+      })
+
+      assert.equal(uut.sendBch.bchjs.restURL, freeUrl)
+      assert.equal(uut.utxos.bchjs.restURL, freeUrl)
+      assert.equal(uut.tokens.bchjs.restURL, freeUrl)
+    })
   })
 
   describe('#getBalance', () => {

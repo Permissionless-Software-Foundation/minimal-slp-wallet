@@ -177,9 +177,9 @@ class MinimalBCHWallet {
   // This is a wrapper for the send-bch.js library.
   send (outputs) {
     try {
-      console.log(
-        `_this.utxos.bchUtxos: ${JSON.stringify(_this.utxos.bchUtxos, null, 2)}`
-      )
+      // console.log(
+      //   `_this.utxos.bchUtxos: ${JSON.stringify(_this.utxos.bchUtxos, null, 2)}`
+      // )
 
       return _this.sendBch.sendBch(
         outputs,
@@ -200,7 +200,7 @@ class MinimalBCHWallet {
   // This is a wrapper for the tokens.js library.
   sendTokens (output, satsPerByte = 1.0) {
     try {
-      console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+      // console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
 
       return _this.tokens.sendTokens(
         output,
