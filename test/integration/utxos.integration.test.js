@@ -43,6 +43,28 @@ describe('#UTXOs', () => {
       // Each UTXO returned should have an isValid property.
       hydratedUtxos.forEach(elem => assert.property(elem, 'isValid'))
     })
+
+    // This test evaluates an address that has been 'dust attacked' with a
+    // transaction that SLPDB won't evaluate. As a result, the SLPDB-based
+    // hydrateUTXOs call will return 'null'
+    it('should hydrate UTXOs with a dust attack', async () => {
+      const addr = 'bitcoincash:qrv7l8qaerhng6flj60dx0f5nfxmhqtf9qjwlw9hg3'
+
+      const utxos = await uut.getUtxos(addr)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      const hydratedUtxos = await uut.hydrate(utxos)
+      // console.log(`hydratedUtxos: ${JSON.stringify(hydratedUtxos, null, 2)}`)
+
+      assert.isArray(hydratedUtxos)
+
+      // At the time of writing this test, the address has 2 utxos.
+      assert.equal(hydratedUtxos.length, 2)
+
+      // With the backup hydrate function, neight UTXO should show isValid=null.
+      assert.notEqual(hydratedUtxos[0].isValid, null)
+      assert.notEqual(hydratedUtxos[1].isValid, null)
+    })
   })
 
   describe('#initUtxoStore', () => {

@@ -117,14 +117,55 @@ describe('#UTXOs', () => {
       assert.equal(result.length, 0)
     })
   })
+
+  describe('#bkupValidate', () => {
+    it('should validate a dust attack', async () => {
+      // Mock network call.
+      sandbox
+        .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
+        .resolves({ data: mockData.mockSlpApi })
+
+      const hydratedUtxo = await uut.bkupValidate(mockData.dustAttackUtxo)
+      // console.log(`hydratedUtxo: ${JSON.stringify(hydratedUtxo, null, 2)}`)
+
+      // Assert that expected properties exist.
+      assert.property(hydratedUtxo, 'height')
+      assert.property(hydratedUtxo, 'tx_hash')
+      assert.property(hydratedUtxo, 'tx_pos')
+      assert.property(hydratedUtxo, 'value')
+      assert.property(hydratedUtxo, 'satoshis')
+      assert.property(hydratedUtxo, 'txid')
+      assert.property(hydratedUtxo, 'vout')
+      assert.property(hydratedUtxo, 'isValid')
+
+      // Expecting isValid to be validated to false.
+      assert.equal(hydratedUtxo.isValid, false)
+    })
+
+    it('should handle network errors', async () => {
+      try {
+        // Force network error.
+        sandbox
+          .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
+          .throws(new Error('test error'))
+
+        await uut.bkupValidate(mockData.dustAttackUtxo)
+
+        assert(true, false, 'unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
   describe('#hydrateUtxos', () => {
     it('should get token information for each UTXO', async () => {
       const utxos = mockData.mixedUtxos
 
       // Mock network calls.
       sandbox
-        .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
-        .resolves({ data: { details: mockData.hydratedUtxos } })
+        .stub(uut.bchjs.SLP.Utils, 'hydrateUtxos')
+        .resolves({ slpUtxos: [{ utxos: mockData.hydratedUtxos }] })
 
       const hydratedUtxos = await uut.hydrate(utxos)
       // console.log(`hydratedUtxos: ${JSON.stringify(hydratedUtxos, null, 2)}`)
@@ -136,9 +177,10 @@ describe('#UTXOs', () => {
       try {
         const utxos = mockData.mixedUtxos
 
+        // Force an error.
         sandbox
-          .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
-          .throws(new Error('test error'))
+          .stub(uut.bchjs.SLP.Utils, 'hydrateUtxos')
+          .rejects(new Error('test error'))
 
         await uut.hydrate(utxos)
 
@@ -147,6 +189,7 @@ describe('#UTXOs', () => {
         assert.include(err.message, 'test error')
       }
     })
+
     it('should throw error if input is invalid type', async () => {
       try {
         await uut.hydrate(1)
