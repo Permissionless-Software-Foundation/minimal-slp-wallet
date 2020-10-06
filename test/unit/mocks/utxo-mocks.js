@@ -332,6 +332,33 @@ const mockNFTChildUtxos = [
   }
 ]
 
+const dustAttackUtxo = {
+  height: 655965,
+  tx_hash: 'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+  tx_pos: 21,
+  value: 547,
+  satoshis: 547,
+  txid: 'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+  vout: 21,
+  isValid: null
+}
+
+const mockSlpApi = {
+  details: [
+    {
+      height: 655965,
+      tx_hash:
+        'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+      tx_pos: 21,
+      value: 547,
+      satoshis: 547,
+      txid: 'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+      vout: 21,
+      isValid: false
+    }
+  ]
+}
+
 module.exports = {
   simpleUtxos,
   mixedUtxos,
@@ -342,5 +369,7 @@ module.exports = {
   mockBchUtxos,
   mockTokenUtxos,
   mockNFTGroupUtxos,
-  mockNFTChildUtxos
+  mockNFTChildUtxos,
+  dustAttackUtxo,
+  mockSlpApi
 }
