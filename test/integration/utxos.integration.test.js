@@ -47,7 +47,7 @@ describe('#UTXOs', () => {
     // This test evaluates an address that has been 'dust attacked' with a
     // transaction that SLPDB won't evaluate. As a result, the SLPDB-based
     // hydrateUTXOs call will return 'null'
-    it('should hydrate UTXOs with a dust attack', async () => {
+    it('should hydrate UTXOs from a dust attack', async () => {
       const addr = 'bitcoincash:qrv7l8qaerhng6flj60dx0f5nfxmhqtf9qjwlw9hg3'
 
       const utxos = await uut.getUtxos(addr)
