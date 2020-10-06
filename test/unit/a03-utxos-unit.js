@@ -158,7 +158,7 @@ describe('#UTXOs', () => {
     })
   })
 
-  describe('#hydrateUtxos', () => {
+  describe('#hydrate', () => {
     it('should get token information for each UTXO', async () => {
       const utxos = mockData.mixedUtxos
 
@@ -198,6 +198,25 @@ describe('#UTXOs', () => {
       } catch (err) {
         assert.include(err.message, 'Input must be an array')
       }
+    })
+
+    it('should get token information when SLPDB returns isValid=null', async () => {
+      const utxos = mockData.mixedUtxos
+
+      // Force hydrateUtxos() to return a UTXO with a isValid=null value.
+      const mockedUtxos = Object.assign({}, mockData) // Clone the testwallet
+      mockedUtxos.hydratedUtxos[0].isValid = null
+      sandbox
+        .stub(uut.bchjs.SLP.Utils, 'hydrateUtxos')
+        .resolves({ slpUtxos: [{ utxos: mockedUtxos.hydratedUtxos }] })
+
+      // Mock bkupValidate() to return an isValid=false value.
+      sandbox.stub(uut, 'bkupValidate').resolves(mockData.hydratedUtxos[0])
+
+      const hydratedUtxos = await uut.hydrate(utxos)
+      // console.log(`hydratedUtxos: ${JSON.stringify(hydratedUtxos, null, 2)}`)
+
+      assert.deepEqual(hydratedUtxos, mockData.hydratedUtxos)
     })
   })
 
