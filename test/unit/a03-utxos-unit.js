@@ -146,8 +146,8 @@ describe('#UTXOs', () => {
       try {
         // Force network error.
         sandbox
-          .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
-          .throws(new Error('test error'))
+          .stub(uut.bchjs.SLP.Utils, 'validateTxid2')
+          .rejects(new Error('test error'))
 
         await uut.bkupValidate(mockData.dustAttackUtxo)
 
