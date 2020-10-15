@@ -85,4 +85,35 @@ describe('#UTXOs', () => {
       assert.equal(uut.tokenUtxos.length, 2)
     })
   })
+
+  describe('#bkupValidate', () => {
+    it('should validate a dust attack', async () => {
+      const utxo = {
+        height: 655965,
+        tx_hash: 'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+        tx_pos: 21,
+        value: 547,
+        satoshis: 547,
+        txid: 'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+        vout: 21,
+        isValid: null
+      }
+
+      const hydratedUtxo = await uut.bkupValidate(utxo)
+      // console.log(`hydratedUtxo: ${JSON.stringify(hydratedUtxo, null, 2)}`)
+
+      // Assert that expected properties exist.
+      assert.property(hydratedUtxo, 'height')
+      assert.property(hydratedUtxo, 'tx_hash')
+      assert.property(hydratedUtxo, 'tx_pos')
+      assert.property(hydratedUtxo, 'value')
+      assert.property(hydratedUtxo, 'satoshis')
+      assert.property(hydratedUtxo, 'txid')
+      assert.property(hydratedUtxo, 'vout')
+      assert.property(hydratedUtxo, 'isValid')
+
+      // Expecting isValid to be validated to false.
+      assert.equal(hydratedUtxo.isValid, false)
+    })
+  })
 })
