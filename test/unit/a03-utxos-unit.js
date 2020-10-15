@@ -122,8 +122,8 @@ describe('#UTXOs', () => {
     it('should validate a dust attack', async () => {
       // Mock network call.
       sandbox
-        .stub(uut.bchjs.SLP.TokenType1.axios, 'request')
-        .resolves({ data: mockData.mockSlpApi })
+        .stub(uut.bchjs.SLP.Utils, 'validateTxid2')
+        .resolves(mockData.mockSlpApiResult)
 
       const hydratedUtxo = await uut.bkupValidate(mockData.dustAttackUtxo)
       // console.log(`hydratedUtxo: ${JSON.stringify(hydratedUtxo, null, 2)}`)

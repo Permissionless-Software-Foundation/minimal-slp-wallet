@@ -359,6 +359,12 @@ const mockSlpApi = {
   ]
 }
 
+const mockSlpApiResult = {
+  txid: 'a675af87dcd8d39be782737aa52e0076b52eb2f5ce355ffcb5567a64dd96b77e',
+  isValid: false,
+  msg: ''
+}
+
 module.exports = {
   simpleUtxos,
   mixedUtxos,
@@ -371,5 +377,6 @@ module.exports = {
   mockNFTGroupUtxos,
   mockNFTChildUtxos,
   dustAttackUtxo,
-  mockSlpApi
+  mockSlpApi,
+  mockSlpApiResult
 }
