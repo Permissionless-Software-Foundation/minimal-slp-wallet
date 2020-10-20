@@ -47,16 +47,9 @@ class MinimalBCHWallet {
     this.bchjs = new BCHJS(bchjsOptions)
 
     // Instantiate local libraries.
-    this.sendBch = new SendBCH()
-    this.utxos = new Utxos()
-    this.tokens = new Tokens()
-
-    // Overwrite the dependencies copy of bchjs with this current instance.
-    this.sendBch.bchjs = this.bchjs
-    this.utxos.bchjs = this.bchjs
-    this.tokens.bchjs = this.bchjs
-    this.tokens.sendBch = this.sendBch
-    this.tokens.utxos = this.utxos
+    this.sendBch = new SendBCH(bchjsOptions)
+    this.utxos = new Utxos(bchjsOptions)
+    this.tokens = new Tokens(bchjsOptions)
 
     this.temp = []
 

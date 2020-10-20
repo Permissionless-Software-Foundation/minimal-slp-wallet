@@ -20,8 +20,11 @@ describe('#tokens', () => {
   let utxos
 
   beforeEach(() => {
-    uut = new Tokens()
-    utxos = new Utxos()
+    const config = {
+      restURL: 'https://free-main.fullstack.cash/v3/'
+    }
+    uut = new Tokens(config)
+    utxos = new Utxos(config)
 
     sandbox = sinon.createSandbox()
 
