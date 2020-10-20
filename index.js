@@ -7,7 +7,7 @@
 
 'use strict'
 
-const BCHJS = require('@chris.troutner/bch-js')
+const BCHJS = require('@psf/bch-js')
 const crypto = require('crypto-js')
 
 // Local libraries
@@ -47,16 +47,9 @@ class MinimalBCHWallet {
     this.bchjs = new BCHJS(bchjsOptions)
 
     // Instantiate local libraries.
-    this.sendBch = new SendBCH()
-    this.utxos = new Utxos()
-    this.tokens = new Tokens()
-
-    // Overwrite the dependencies copy of bchjs with this current instance.
-    this.sendBch.bchjs = this.bchjs
-    this.utxos.bchjs = this.bchjs
-    this.tokens.bchjs = this.bchjs
-    this.tokens.sendBch = this.sendBch
-    this.tokens.utxos = this.utxos
+    this.sendBch = new SendBCH(bchjsOptions)
+    this.utxos = new Utxos(bchjsOptions)
+    this.tokens = new Tokens(bchjsOptions)
 
     this.temp = []
 
@@ -84,6 +77,7 @@ class MinimalBCHWallet {
       const masterHDNode = _this.bchjs.HDNode.fromSeed(rootSeedBuffer)
       const childNode = masterHDNode.derivePath(this.hdPath)
       const privateKey = _this.bchjs.HDNode.toWIF(childNode)
+      const publicKey = _this.bchjs.HDNode.toPublicKey(childNode)
 
       const walletInfo = {}
 
@@ -98,6 +92,7 @@ class MinimalBCHWallet {
       // Set the wallet properties.
       walletInfo.mnemonic = mnemonic
       walletInfo.privateKey = privateKey
+      walletInfo.publicKey = publicKey.toString('hex')
       walletInfo.address = walletInfo.cashAddress = _this.bchjs.HDNode.toCashAddress(
         childNode
       )
@@ -175,6 +170,10 @@ class MinimalBCHWallet {
   // This is a wrapper for the send-bch.js library.
   send (outputs) {
     try {
+      // console.log(
+      //   `_this.utxos.bchUtxos: ${JSON.stringify(_this.utxos.bchUtxos, null, 2)}`
+      // )
+
       return _this.sendBch.sendBch(
         outputs,
         {
@@ -194,6 +193,8 @@ class MinimalBCHWallet {
   // This is a wrapper for the tokens.js library.
   sendTokens (output, satsPerByte = 1.0) {
     try {
+      // console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+
       return _this.tokens.sendTokens(
         output,
         _this.walletInfo,

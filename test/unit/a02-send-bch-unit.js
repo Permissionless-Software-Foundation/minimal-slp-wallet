@@ -17,7 +17,11 @@ describe('#SendBCH', () => {
   // Restore the sandbox before each test.
   beforeEach(() => {
     sandbox = sinon.createSandbox()
-    uut = new SendBCH()
+
+    const config = {
+      restURL: 'https://free-main.fullstack.cash/v3/'
+    }
+    uut = new SendBCH(config)
   })
 
   afterEach(() => sandbox.restore())

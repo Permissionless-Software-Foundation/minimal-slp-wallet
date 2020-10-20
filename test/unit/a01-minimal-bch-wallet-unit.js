@@ -46,6 +46,10 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.isString(uut.walletInfo.privateKey)
       assert.isNotEmpty(uut.walletInfo.privateKey)
 
+      assert.property(uut.walletInfo, 'publicKey')
+      assert.isString(uut.walletInfo.publicKey)
+      assert.isNotEmpty(uut.walletInfo.publicKey)
+
       assert.property(uut.walletInfo, 'cashAddress')
       assert.isString(uut.walletInfo.cashAddress)
       assert.isNotEmpty(uut.walletInfo.cashAddress)
@@ -75,7 +79,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
   describe('#constructor', () => {
     it('should create a new wallet without encrypted mnemonic', async () => {
-      const uut = new MinimalBCHWallet(undefined, { test: true })
+      uut = new MinimalBCHWallet(undefined, { test: true })
       await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
@@ -109,7 +113,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
 
     it('should create a new wallet with encrypted mnemonic', async () => {
-      const uut = new MinimalBCHWallet(null, {
+      uut = new MinimalBCHWallet(null, {
         password: 'myStrongPassword',
         test: true
       })
@@ -151,7 +155,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
         'negative prepare champion corn bean proof one same column water warm melt'
       const password = 'myStrongPassword'
 
-      const uut = new MinimalBCHWallet(mnemonicEncrypted, {
+      uut = new MinimalBCHWallet(mnemonicEncrypted, {
         password: password,
         test: true
       })
@@ -166,7 +170,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
         const mnemonicEncrypted =
           'U2FsdGVkX18uyavim4FoIETcRxgOi1E/XFc1ARR3k6HVrJgH60YnLxjbs6yMnWMjpaqbBmSC3uYjhZ+cgFlndOEZI34T0sWFfL952CHCFjd2AjypCjFhqkmHzOCCkhgf'
 
-        const uut = new MinimalBCHWallet(mnemonicEncrypted, {
+        uut = new MinimalBCHWallet(mnemonicEncrypted, {
           password: 'bad password',
           test: true
         })
@@ -183,7 +187,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const mnemonic =
         'negative prepare champion corn bean proof one same column water warm melt'
 
-      const uut = new MinimalBCHWallet(mnemonic, { test: true })
+      uut = new MinimalBCHWallet(mnemonic, { test: true })
       await uut.walletInfoPromise
       // console.log('uut: ', uut)
 
@@ -221,7 +225,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
         apiToken: exampleApiToken
       }
 
-      const uut = new MinimalBCHWallet(undefined, advancedOptions)
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
       await uut.walletInfoPromise
 
       assert.equal(uut.advancedOptions.restURL, exampleURL)
@@ -232,12 +236,25 @@ describe('#index.js - Minimal BCH Wallet', () => {
     // and the '_this' local global. It was preventing the UTXO store from
     // being accessible.
     it('should be able to access the UTXO store', async () => {
-      const uut = new MinimalBCHWallet(undefined, { test: true })
+      uut = new MinimalBCHWallet(undefined, { test: true })
       await uut.walletInfoPromise
 
       assert.equal(uut.utxos.utxoStore, mockUtxos.mockUtxoStore)
       assert.equal(uut.utxos.bchUtxos, mockUtxos.mockBchUtxos)
       assert.equal(uut.utxos.tokenUtxos, mockUtxos.mockTokenUtxos)
+    })
+
+    it('should update all instances of bch-js with the free tier', async () => {
+      const freeUrl = 'https://free-main.fullstack.cash/v3/'
+
+      uut = new MinimalBCHWallet(undefined, {
+        restURL: freeUrl,
+        test: true
+      })
+
+      assert.equal(uut.sendBch.bchjs.restURL, freeUrl)
+      assert.equal(uut.utxos.bchjs.restURL, freeUrl)
+      assert.equal(uut.tokens.bchjs.restURL, freeUrl)
     })
   })
 
