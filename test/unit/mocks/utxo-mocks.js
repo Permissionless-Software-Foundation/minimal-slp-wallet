@@ -365,6 +365,102 @@ const mockSlpApiResult = {
   msg: ''
 }
 
+const cornerCase1BchUtxos = [
+  {
+    height: 657451,
+    tx_hash: '56f6e950622e180b1299df0112f09f3d81d071ab21aaebc3ab7955e8a96d6861',
+    tx_pos: 4,
+    value: 1144743,
+    satoshis: 1144743,
+    txid: '56f6e950622e180b1299df0112f09f3d81d071ab21aaebc3ab7955e8a96d6861',
+    vout: 4,
+    isValid: false
+  },
+  {
+    height: 657466,
+    tx_hash: 'c9b44538cc6dbe56b138f27a4311b4476713128f516f873452b4606f6e613bed',
+    tx_pos: 0,
+    value: 83002,
+    satoshis: 83002,
+    txid: 'c9b44538cc6dbe56b138f27a4311b4476713128f516f873452b4606f6e613bed',
+    vout: 0,
+    isValid: false
+  },
+  {
+    height: 0,
+    tx_hash: '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
+    tx_pos: 4,
+    value: 63754,
+    satoshis: 63754,
+    txid: '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
+    vout: 4,
+    isValid: false
+  }
+]
+
+const cornerCase1TokenUtxos = [
+  {
+    height: 657466,
+    tx_hash: 'ad5c4626297068f28d9ba6d45fb218cb622911e07ebe3003be33e9b7e8f0bc7f',
+    tx_pos: 2,
+    value: 546,
+    satoshis: 546,
+    txid: 'ad5c4626297068f28d9ba6d45fb218cb622911e07ebe3003be33e9b7e8f0bc7f',
+    vout: 2,
+    utxoType: 'token',
+    transactionType: 'send',
+    tokenId: '1a1fd545b922c8ee4ecd89bc312904f4e3ba4cf7850141066ad3e3f281668188',
+    tokenTicker: 'MINT',
+    tokenName: 'Mint',
+    tokenDocumentUrl: 'mintslp.com',
+    tokenDocumentHash: '',
+    decimals: 8,
+    tokenType: 1,
+    tokenQty: 46,
+    isValid: true
+  },
+  {
+    height: 0,
+    tx_hash: '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
+    tx_pos: 1,
+    value: 546,
+    satoshis: 546,
+    txid: '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
+    vout: 1,
+    utxoType: 'token',
+    transactionType: 'send',
+    tokenId: '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0',
+    tokenTicker: 'PSF',
+    tokenName: 'Permissionless Software Foundation',
+    tokenDocumentUrl: 'psfoundation.cash',
+    tokenDocumentHash: '',
+    decimals: 8,
+    tokenType: 1,
+    tokenQty: 196,
+    isValid: true
+  },
+  {
+    height: 0,
+    tx_hash: '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
+    tx_pos: 2,
+    value: 546,
+    satoshis: 546,
+    txid: '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
+    vout: 2,
+    utxoType: 'token',
+    transactionType: 'send',
+    tokenId: '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0',
+    tokenTicker: 'PSF',
+    tokenName: 'Permissionless Software Foundation',
+    tokenDocumentUrl: 'psfoundation.cash',
+    tokenDocumentHash: '',
+    decimals: 8,
+    tokenType: 1,
+    tokenQty: 0.14152798,
+    isValid: true
+  }
+]
+
 module.exports = {
   simpleUtxos,
   mixedUtxos,
@@ -378,5 +474,7 @@ module.exports = {
   mockNFTChildUtxos,
   dustAttackUtxo,
   mockSlpApi,
-  mockSlpApiResult
+  mockSlpApiResult,
+  cornerCase1BchUtxos,
+  cornerCase1TokenUtxos
 }

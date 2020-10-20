@@ -10,18 +10,26 @@ const Utxos = require('../../lib/utxos')
 
 let uut
 
-const mockData = require('./mocks/utxo-mocks')
-const sendMockData = require('./mocks/send-bch-mocks')
+const mockDataLib = require('./mocks/utxo-mocks')
+let mockData
+const sendMockDataLib = require('./mocks/send-bch-mocks')
+let sendMockData
 
 describe('#tokens', () => {
   let sandbox
   let utxos
 
   beforeEach(() => {
-    uut = new Tokens()
-    utxos = new Utxos()
+    const config = {
+      restURL: 'https://free-main.fullstack.cash/v3/'
+    }
+    uut = new Tokens(config)
+    utxos = new Utxos(config)
 
     sandbox = sinon.createSandbox()
+
+    mockData = Object.assign({}, mockDataLib)
+    sendMockData = Object.assign({}, sendMockDataLib)
   })
 
   afterEach(() => sandbox.restore())
@@ -257,18 +265,50 @@ describe('#tokens', () => {
         const bchUtxos = utxos.getBchUtxos()
         const tokenUtxos = utxos.getTokenUtxos()
 
-        await uut.createTransaction(
-          output,
-          walletInfo,
-          bchUtxos,
-          tokenUtxos
-        )
+        await uut.createTransaction(output, walletInfo, bchUtxos, tokenUtxos)
 
         assert.equal(true, false, 'unexpected result')
       } catch (err) {
         // console.log('err: ', err)
         assert.include(err.message, 'Token Type 888 unknown')
       }
+    })
+
+    // This corner case was discovered when trying to 'send all' PSF tokens.
+    // TXID: fc87f721eb9bbd71006a79ae7a33ac41b723c71d12b51a8224ceb73d9960473c
+    // The whole number was sent at one UTXO and the decimal part of the token
+    // is sent as change to the same address.
+    //
+    // This test reliably generates the same results in hex format, you can use
+    // This endpoint to deconstruct the transaction. Notice that outputs 1 and
+    // 2 are dust and SLP outputs.
+    // https://free-main.fullstack.cash/v3/rawtransactions/decodeRawTransaction/02000000034b74a5c286cf3ed285a09ac618d2f853e7f3a5a2fced321d208afb9a1f06c999010000006b483045022100aa293b80ffc608b223af429b9c9e4ec8d961099406fa863dab8a83f5e7ef85a4022023295d7c167b58c0202d4053147477704909f6845cf91c46045a175a4695998141210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff4b74a5c286cf3ed285a09ac618d2f853e7f3a5a2fced321d208afb9a1f06c999020000006b48304502210088337579933248ae80f0b90d1502f17111aab6d00b4580c0de5076452d370ad10220613f6bd41b477858c7b8dbc0085b4c323889d9c70f36a8b79ca12427f3ffd09441210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff4b74a5c286cf3ed285a09ac618d2f853e7f3a5a2fced321d208afb9a1f06c999040000006b48304502210087d041cc2715578ae242fc88063dd1f4a55a557e176e844390e80045414f73e802201a5c00d892f3b9c228459b0ffcca04c8ede98eb6c368f145161d608e45c7034641210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff050000000000000000406a04534c500001010453454e442038e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0080000000490404400080000000000d7f45e22020000000000001976a9147c64bd3437ae896bb6518586cd7acbdc8435643b88ac22020000000000001976a9141d027f19f0e9c4e6bb4e0b5359b4d2e2f9e27d9888acd0070000000000001976a914203b64bfbaa9e58333295b621159ddebc591ecb188ac42ee0000000000001976a9141d027f19f0e9c4e6bb4e0b5359b4d2e2f9e27d9888ac00000000
+    it('should handle corner case #1', async () => {
+      const output = {
+        address: 'simpleledger:qp7xf0f5x7hgj6ak2xzcdnt6e0wggdty8vqe0asv5y',
+        tokenId:
+          '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0',
+        qty: 196
+      }
+
+      const walletInfo = sendMockData.mockWallet
+
+      // Prep the utxo data.
+      utxos.utxoStore = mockData.cornerCase1BchUtxos.concat(
+        mockData.cornerCase1TokenUtxos
+      )
+      const bchUtxos = utxos.getBchUtxos()
+      const tokenUtxos = utxos.getTokenUtxos()
+
+      const { hex } = await uut.createTransaction(
+        output,
+        walletInfo,
+        bchUtxos,
+        tokenUtxos
+      )
+      // console.log('hex: ', hex)
+
+      assert.isString(hex)
     })
   })
 

@@ -9,7 +9,10 @@ let uut
 
 describe('#tokens.js', () => {
   beforeEach(() => {
-    uut = new Tokens()
+    const config = {
+      restURL: 'https://free-main.fullstack.cash/v3/'
+    }
+    uut = new Tokens(config)
   })
 
   describe('#listTokensFromAddress', () => {
