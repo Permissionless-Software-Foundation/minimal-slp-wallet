@@ -214,6 +214,25 @@ class MinimalBCHWallet {
 
     return _this.tokens.listTokensFromAddress(addr)
   }
+
+  // Send BCH. Returns a promise that resolves into a TXID.
+  // This is a wrapper for the send-bch.js library.
+  sendAll (toAddress) {
+    try {
+      return _this.sendBch.sendAllBch(
+        toAddress,
+        {
+          mnemonic: _this.walletInfo.mnemonic,
+          cashAddress: _this.walletInfo.address,
+          hdPath: _this.walletInfo.hdPath
+        },
+        _this.utxos.bchUtxos
+      )
+    } catch (err) {
+      console.error('Error in sendAll()')
+      throw err
+    }
+  }
 }
 
 module.exports = MinimalBCHWallet

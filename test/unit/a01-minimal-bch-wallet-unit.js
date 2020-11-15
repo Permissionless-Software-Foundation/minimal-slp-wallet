@@ -327,6 +327,33 @@ describe('#index.js - Minimal BCH Wallet', () => {
       }
     })
   })
+  describe('#sendAll', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      // Mock live network calls.
+      sandbox.stub(uut.sendBch, 'sendAllBch').resolves(txid)
+
+      const output = await uut.sendAll()
+
+      assert.equal(output, txid)
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        // Mock live network calls.
+        sandbox.stub(uut.sendBch, 'sendAllBch').throws(new Error('error message'))
+
+        await uut.sendAll()
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
+    })
+  })
 
   describe('#sendTokens', () => {
     it('should broadcast a transaction and return a txid', async () => {
