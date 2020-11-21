@@ -32,8 +32,15 @@ class MinimalBCHWallet {
       bchjsOptions.restURL = advancedOptions.restURL
     }
 
+    // JWT token for increased rate limits.
     if (this.advancedOptions.apiToken) {
       bchjsOptions.apiToken = advancedOptions.apiToken
+    }
+
+    // Set the sats-per-byte fee rate.
+    this.fee = 1.2
+    if (this.advancedOptions.fee) {
+      this.fee = this.advancedOptions.fee
     }
 
     // Allow passing of test flag for unit tests.
@@ -179,7 +186,8 @@ class MinimalBCHWallet {
         {
           mnemonic: _this.walletInfo.mnemonic,
           cashAddress: _this.walletInfo.address,
-          hdPath: _this.walletInfo.hdPath
+          hdPath: _this.walletInfo.hdPath,
+          fee: _this.fee
         },
         _this.utxos.bchUtxos
       )
@@ -191,9 +199,12 @@ class MinimalBCHWallet {
 
   // Send Tokens. Returns a promise that resolves into a TXID.
   // This is a wrapper for the tokens.js library.
-  sendTokens (output, satsPerByte = 1.0) {
+  sendTokens (output, satsPerByte) {
     try {
       // console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+
+      // If mining fee is not specified, use the value assigned in the constructor.
+      if (!satsPerByte) satsPerByte = _this.fee
 
       return _this.tokens.sendTokens(
         output,
@@ -224,7 +235,8 @@ class MinimalBCHWallet {
         {
           mnemonic: _this.walletInfo.mnemonic,
           cashAddress: _this.walletInfo.address,
-          hdPath: _this.walletInfo.hdPath
+          hdPath: _this.walletInfo.hdPath,
+          fee: _this.fee
         },
         _this.utxos.bchUtxos
       )
