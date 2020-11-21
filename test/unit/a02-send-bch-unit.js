@@ -277,6 +277,7 @@ describe('#SendBCH', () => {
         assert.include(err.message, 'Address to send must be a bch address')
       }
     })
+
     it('should throw an error if UTXOs array is empty', async () => {
       try {
         const toAddress = 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
@@ -292,6 +293,23 @@ describe('#SendBCH', () => {
 
     it('should build transaction', async () => {
       const toAddress = 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
+
+      const { hex, txid } = await uut.createSendAllTx(
+        toAddress,
+        mockData.mockWallet,
+        mockData.exampleUtxos01.utxos
+      )
+      // console.log('hex: ', hex)
+      // console.log('txid: ', txid)
+
+      assert.isString(hex)
+      assert.isString(txid)
+    })
+
+    it('should use default fee if fee is not specified.', async () => {
+      const toAddress = 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
+
+      mockData.mockWallet.fee = undefined
 
       const { hex, txid } = await uut.createSendAllTx(
         toAddress,

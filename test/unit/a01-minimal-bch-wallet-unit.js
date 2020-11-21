@@ -232,6 +232,18 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(uut.advancedOptions.apiToken, exampleApiToken)
     })
 
+    it('should adjust the tx fee', async () => {
+      const advancedOptions = {
+        test: true,
+        fee: 3
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+      await uut.walletInfoPromise
+
+      assert.equal(uut.advancedOptions.fee, 3)
+    })
+
     // CT 07-19-2020 - This test case is from a bug around the use of 'this'
     // and the '_this' local global. It was preventing the UTXO store from
     // being accessible.
@@ -343,7 +355,9 @@ describe('#index.js - Minimal BCH Wallet', () => {
     it('should throw an error if there is an issue with broadcasting a tx', async () => {
       try {
         // Mock live network calls.
-        sandbox.stub(uut.sendBch, 'sendAllBch').throws(new Error('error message'))
+        sandbox
+          .stub(uut.sendBch, 'sendAllBch')
+          .throws(new Error('error message'))
 
         await uut.sendAll()
 
