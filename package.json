@@ -11,7 +11,8 @@
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit"
+    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit",
+    "build": "browserify index.js -p tinyify --s SlpWallet -o dist/minimal-slp-wallet.js"
   },
   "keywords": [
     "bitcoin",
@@ -34,7 +35,7 @@
   },
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
-    "@psf/bch-js": "3.10.3",
+    "@psf/bch-js": "4.2.5",
     "apidoc": "^0.25.0",
     "bch-donation": "^1.1.0",
     "crypto-js": "^4.0.0"
@@ -50,9 +51,10 @@
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
-    "semantic-release": "^17.2.1",
+    "semantic-release": "^17.3.0",
     "sinon": "^9.2.0",
-    "standard": "^14.3.4"
+    "standard": "^14.3.4",
+    "tinyify": "^3.0.0"
   },
   "release": {
     "publish": [
