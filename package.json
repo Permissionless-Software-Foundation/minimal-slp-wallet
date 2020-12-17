@@ -9,7 +9,7 @@
     "test:integration": "mocha --timeout 25000 test/integration/",
     "test:temp": "mocha --timeout 25000 -g '#hydrate' test/integration/",
     "lint": "standard --env mocha --fix",
-    "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
+    "docs": "./node_modules/.bin/apidoc -i lib/ -o docs",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha test/unit/ --exit",
     "build": "browserify index.js -p tinyify --s SlpWallet -o dist/minimal-slp-wallet.min.js"
