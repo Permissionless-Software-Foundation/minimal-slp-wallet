@@ -9,7 +9,7 @@
     "test:integration": "mocha --timeout 25000 test/integration/",
     "test:temp": "mocha --timeout 25000 -g '#hydrate' test/integration/",
     "lint": "standard --env mocha --fix",
-    "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
+    "docs": "./node_modules/.bin/apidoc -i lib/ -o docs",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha test/unit/ --exit",
     "build": "browserify index.js -p tinyify --s SlpWallet -o dist/minimal-slp-wallet.min.js"
@@ -35,7 +35,7 @@
   },
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
-    "@psf/bch-js": "4.2.5",
+    "@psf/bch-js": "4.3.0",
     "apidoc": "^0.25.0",
     "bch-donation": "^1.1.0",
     "crypto-js": "^4.0.0"
