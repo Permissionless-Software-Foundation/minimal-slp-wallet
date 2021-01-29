@@ -4,20 +4,24 @@
 
 const assert = require('chai').assert
 const sinon = require('sinon')
+const cloneDeep = require('lodash.clonedeep')
 
 const UTXOs = require('../../lib/utxos')
 let uut
 
-const mockData = require('./mocks/utxo-mocks')
+const mockDataLib = require('./mocks/utxo-mocks')
+let mockData
 
 describe('#UTXOs', () => {
   let sandbox
 
   beforeEach(() => {
     const config = {
-      restURL: 'https://free-main.fullstack.cash/v3/'
+      restURL: 'https://api.fullstack.cash/v4/'
     }
     uut = new UTXOs(config)
+
+    mockData = cloneDeep(mockDataLib)
 
     sandbox = sinon.createSandbox()
   })
@@ -207,11 +211,11 @@ describe('#UTXOs', () => {
       const utxos = mockData.mixedUtxos
 
       // Force hydrateUtxos() to return a UTXO with a isValid=null value.
-      const mockedUtxos = Object.assign({}, mockData) // Clone the testwallet
-      mockedUtxos.hydratedUtxos[0].isValid = null
+      // const mockedUtxos = Object.assign({}, mockData) // Clone the testwallet
+      mockData.hydratedUtxos[0].isValid = null
       sandbox
         .stub(uut.bchjs.SLP.Utils, 'hydrateUtxos')
-        .resolves({ slpUtxos: [{ utxos: mockedUtxos.hydratedUtxos }] })
+        .resolves({ slpUtxos: [{ utxos: mockData.hydratedUtxos }] })
 
       // Mock bkupValidate() to return an isValid=false value.
       sandbox.stub(uut, 'bkupValidate').resolves(mockData.hydratedUtxos[0])
