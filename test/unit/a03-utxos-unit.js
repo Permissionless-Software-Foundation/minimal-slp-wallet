@@ -233,7 +233,10 @@ describe('#UTXOs', () => {
 
       // Mock network calls.
       sandbox.stub(uut, 'getUtxos').resolves(mockData.mixedUtxos)
-      sandbox.stub(uut, 'hydrate').resolves(mockData.hydratedUtxos)
+      // sandbox.stub(uut, 'hydrate').resolves(mockData.hydratedUtxos)
+      sandbox
+        .stub(uut.bchjs.SLP.Utils, 'hydrateUtxos')
+        .resolves({ slpUtxos: [{ utxos: mockData.hydratedUtxos }] })
 
       const utxos = await uut.initUtxoStore(addr)
 
