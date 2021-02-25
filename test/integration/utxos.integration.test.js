@@ -10,7 +10,7 @@ let uut
 describe('#UTXOs', () => {
   beforeEach(() => {
     const config = {
-      restURL: 'https://free-main.fullstack.cash/v3/'
+      restURL: 'https://bchn.fullstack.cash/v4/'
     }
     uut = new UTXOs(config)
   })
