@@ -64,7 +64,7 @@ const hydratedUtxos = [
     tokenDocumentHash: '',
     decimals: 8,
     tokenType: 1,
-    tokenQty: 1,
+    tokenQty: '1',
     isValid: true
   },
   {
@@ -84,7 +84,7 @@ const hydratedUtxos = [
     tokenDocumentHash: '',
     decimals: 0,
     tokenType: 1,
-    tokenQty: 1,
+    tokenQty: '1',
     isValid: true
   }
 ]
