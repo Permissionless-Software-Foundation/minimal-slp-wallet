@@ -89,6 +89,20 @@ describe('#UTXOs', () => {
     })
   })
 
+  describe('#initUtxoStore2', () => {
+    it('should initialize and return the utxoStore', async () => {
+      const addr = 'bitcoincash:qqaqa62t2uhv9cl6ze3appmvy3tnz8kyvyd54cex00'
+
+      const result = await uut.initUtxoStore2(addr)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      assert.property(result, 'address')
+      assert.property(result, 'bchUtxos')
+      assert.property(result, 'nullUtxos')
+      assert.property(result, 'slpUtxos')
+    })
+  })
+
   describe('#bkupValidate', () => {
     it('should validate a dust attack', async () => {
       const utxo = {
