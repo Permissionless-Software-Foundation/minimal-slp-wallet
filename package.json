@@ -1,5 +1,5 @@
 {
-  "name": "minimal-slp-wallet",
+  "name": "minimal-slp-wallet-v2",
   "version": "2.0.0",
   "description": "A minimalist Bitcoin Cash (BCH) wallet npm library, for use in a web apps.",
   "main": "dist/minimal-slp-wallet.min.js",
@@ -33,7 +33,7 @@
     "title": "minimal-slp-wallet",
     "url": "localhost:5000"
   },
-  "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
+  "repository": "PSF-Skunkworks/minimal-slp-wallet-v2",
   "dependencies": {
     "@psf/bch-js": "4.15.21",
     "apidoc": "^0.25.0",
