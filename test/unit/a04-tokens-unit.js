@@ -114,8 +114,8 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore2 = mockData.tokenUtxos01
-      const bchUtxos = utxos.utxoStore2.bchUtxos
+      utxos.utxoStore = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
@@ -143,8 +143,8 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore2 = mockData.tokenUtxos01
-      const bchUtxos = utxos.utxoStore2.bchUtxos
+      utxos.utxoStore = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore.bchUtxos
       let tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // modify tokenUtxo for this test.
@@ -177,8 +177,8 @@ describe('#tokens', () => {
       // utxos.utxoStore = mockData.hydratedUtxos
       // const bchUtxos = utxos.getBchUtxos()
       // const tokenUtxos = utxos.getTokenUtxos()
-      utxos.utxoStore2 = mockData.tokenUtxos01
-      const bchUtxos = utxos.utxoStore2.bchUtxos
+      utxos.utxoStore = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
@@ -209,8 +209,8 @@ describe('#tokens', () => {
       // utxos.utxoStore = mockData.mockNFTGroupUtxos
       // const bchUtxos = utxos.getBchUtxos()
       // const tokenUtxos = utxos.getTokenUtxos()
-      utxos.utxoStore2 = mockData.mockNFTGroupUtxos
-      const bchUtxos = utxos.utxoStore2.bchUtxos
+      utxos.utxoStore = mockData.mockNFTGroupUtxos
+      const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
@@ -241,8 +241,8 @@ describe('#tokens', () => {
       // utxos.utxoStore = mockData.mockNFTChildUtxos
       // const bchUtxos = utxos.getBchUtxos()
       // const tokenUtxos = utxos.getTokenUtxos()
-      utxos.utxoStore2 = mockData.mockNFTChildUtxos
-      const bchUtxos = utxos.utxoStore2.bchUtxos
+      utxos.utxoStore = mockData.mockNFTChildUtxos
+      const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
@@ -271,8 +271,8 @@ describe('#tokens', () => {
         const walletInfo = sendMockData.mockWallet
 
         // Prep the utxo data.
-        utxos.utxoStore2 = mockData.mockNFTChildUtxos
-        const bchUtxos = utxos.utxoStore2.bchUtxos
+        utxos.utxoStore = mockData.mockNFTChildUtxos
+        const bchUtxos = utxos.utxoStore.bchUtxos
         const tokenUtxos = utxos.getSpendableTokenUtxos()
 
         // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
@@ -309,8 +309,8 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore2 = mockData.cornerCase1TokenUtxos
-      const bchUtxos = utxos.utxoStore2.bchUtxos
+      utxos.utxoStore = mockData.cornerCase1TokenUtxos
+      const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       const { hex } = await uut.createTransaction(
@@ -371,8 +371,9 @@ describe('#tokens', () => {
       // Stub network calls and subfunctions that are not within the scope of testing.
       // sandbox.stub(uut.utxos, 'getUtxos').resolves({})
       // sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
-      sandbox.stub(uut.utxos, 'initUtxoStore2').resolves({})
-      uut.utxos.utxoStore2 = mockData.tokenUtxos01
+      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
+      uut.utxos.utxoStore = mockData.tokenUtxos01
+      // console.log(`uut.utxos.utxoStore: ${JSON.stringify(uut.utxos.utxoStore, null, 2)}`)
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
       // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
