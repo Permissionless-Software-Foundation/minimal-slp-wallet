@@ -114,9 +114,12 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore = mockData.hydratedUtxos
-      const bchUtxos = utxos.getBchUtxos()
-      const tokenUtxos = utxos.getTokenUtxos()
+      utxos.utxoStore2 = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore2.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+      // Modify the BCH UTXO for this test.
+      // bchUtxos[0].value = bchUtxos[0].satoshis = 100000
 
       const { hex, txid } = await uut.createTransaction(
         output,
@@ -140,18 +143,20 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore = mockData.hydratedUtxos
-      const bchUtxos = utxos.getBchUtxos()
-      const tokenUtxos = utxos.getTokenUtxos()
+      utxos.utxoStore2 = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore2.bchUtxos
+      let tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // modify tokenUtxo for this test.
-      tokenUtxos[0].tokenQty = 2
+      tokenUtxos = tokenUtxos.find(elem => elem.tokenId === output.tokenId)
+      // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
+      tokenUtxos.tokenQty = '2'
 
       const { hex, txid } = await uut.createTransaction(
         output,
         walletInfo,
         bchUtxos,
-        tokenUtxos
+        [tokenUtxos]
       )
 
       assert.isString(hex)
@@ -169,9 +174,12 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore = mockData.hydratedUtxos
-      const bchUtxos = utxos.getBchUtxos()
-      const tokenUtxos = utxos.getTokenUtxos()
+      // utxos.utxoStore = mockData.hydratedUtxos
+      // const bchUtxos = utxos.getBchUtxos()
+      // const tokenUtxos = utxos.getTokenUtxos()
+      utxos.utxoStore2 = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore2.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
       bchUtxos[0].value = bchUtxos[0].satoshis = 100000
@@ -198,9 +206,12 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore = mockData.mockNFTGroupUtxos
-      const bchUtxos = utxos.getBchUtxos()
-      const tokenUtxos = utxos.getTokenUtxos()
+      // utxos.utxoStore = mockData.mockNFTGroupUtxos
+      // const bchUtxos = utxos.getBchUtxos()
+      // const tokenUtxos = utxos.getTokenUtxos()
+      utxos.utxoStore2 = mockData.mockNFTGroupUtxos
+      const bchUtxos = utxos.utxoStore2.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
       bchUtxos[0].value = bchUtxos[0].satoshis = 100000
@@ -227,9 +238,12 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore = mockData.mockNFTChildUtxos
-      const bchUtxos = utxos.getBchUtxos()
-      const tokenUtxos = utxos.getTokenUtxos()
+      // utxos.utxoStore = mockData.mockNFTChildUtxos
+      // const bchUtxos = utxos.getBchUtxos()
+      // const tokenUtxos = utxos.getTokenUtxos()
+      utxos.utxoStore2 = mockData.mockNFTChildUtxos
+      const bchUtxos = utxos.utxoStore2.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       // Modify the BCH UTXO for this test.
       bchUtxos[0].value = bchUtxos[0].satoshis = 100000
@@ -257,13 +271,14 @@ describe('#tokens', () => {
         const walletInfo = sendMockData.mockWallet
 
         // Prep the utxo data.
-        utxos.utxoStore = mockData.mockNFTChildUtxos
+        utxos.utxoStore2 = mockData.mockNFTChildUtxos
+        const bchUtxos = utxos.utxoStore2.bchUtxos
+        const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+        // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
 
         // Manipulate the token type to force an error.
-        utxos.utxoStore[0].tokenType = 888
-
-        const bchUtxos = utxos.getBchUtxos()
-        const tokenUtxos = utxos.getTokenUtxos()
+        tokenUtxos[0].tokenType = 888
 
         await uut.createTransaction(output, walletInfo, bchUtxos, tokenUtxos)
 
@@ -294,11 +309,9 @@ describe('#tokens', () => {
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
-      utxos.utxoStore = mockData.cornerCase1BchUtxos.concat(
-        mockData.cornerCase1TokenUtxos
-      )
-      const bchUtxos = utxos.getBchUtxos()
-      const tokenUtxos = utxos.getTokenUtxos()
+      utxos.utxoStore2 = mockData.cornerCase1TokenUtxos
+      const bchUtxos = utxos.utxoStore2.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
 
       const { hex } = await uut.createTransaction(
         output,
