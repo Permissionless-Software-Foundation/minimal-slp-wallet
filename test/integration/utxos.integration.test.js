@@ -94,7 +94,7 @@ describe('#UTXOs', () => {
       const addr = 'bitcoincash:qqaqa62t2uhv9cl6ze3appmvy3tnz8kyvyd54cex00'
 
       const result = await uut.initUtxoStore2(addr)
-      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
 
       assert.property(result, 'address')
       assert.property(result, 'bchUtxos')
