@@ -116,7 +116,7 @@ class MinimalBCHWallet {
         _this.utxos.tokenUtxos = utxoMocks.mockTokenUtxos
       } else {
         // Get any  UTXOs for this wallet.
-        await _this.utxos.initUtxoStore2(walletInfo.address)
+        await _this.utxos.initUtxoStore(walletInfo.address)
       }
 
       _this.walletInfoCreated = true
@@ -131,7 +131,7 @@ class MinimalBCHWallet {
 
   // Get the UTXO information for this wallet.
   getUtxos () {
-    return _this.utxos.initUtxoStore2()
+    return _this.utxos.initUtxoStore()
   }
 
   // Encrypt the mnemonic of the wallet.
@@ -188,7 +188,7 @@ class MinimalBCHWallet {
           fee: _this.fee
         },
         // _this.utxos.bchUtxos
-        _this.utxos.utxoStore2.bchUtxos
+        _this.utxos.utxoStore.bchUtxos
       )
     } catch (err) {
       console.error('Error in send()')
@@ -206,16 +206,16 @@ class MinimalBCHWallet {
       if (!satsPerByte) satsPerByte = _this.fee
 
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
-      const tokenUtxos = _this.utxos.utxoStore2.slpUtxos.type1.tokens.concat(
-        _this.utxos.utxoStore2.slpUtxos.nft.groupTokens,
-        _this.utxos.utxoStore2.slpUtxos.nft.tokens
+      const tokenUtxos = _this.utxos.utxoStore.slpUtxos.type1.tokens.concat(
+        _this.utxos.utxoStore.slpUtxos.nft.groupTokens,
+        _this.utxos.utxoStore.slpUtxos.nft.tokens
       )
 
       return _this.tokens.sendTokens(
         output,
         _this.walletInfo,
         // _this.utxos.bchUtxos,
-        _this.utxos.utxoStore2.bchUtxos,
+        _this.utxos.utxoStore.bchUtxos,
         // _this.utxos.tokenUtxos,
         tokenUtxos,
         satsPerByte
@@ -246,7 +246,7 @@ class MinimalBCHWallet {
           fee: _this.fee
         },
         // _this.utxos.bchUtxos
-        _this.utxos.utxoStore2.bchUtxos
+        _this.utxos.utxoStore.bchUtxos
       )
     } catch (err) {
       console.error('Error in sendAll()')

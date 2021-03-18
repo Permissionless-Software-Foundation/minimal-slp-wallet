@@ -307,7 +307,7 @@ describe('#UTXOs', () => {
 
   describe('#getSpendableTokenUtxos', () => {
     it('should return all the spendable UTXOs', () => {
-      uut.utxoStore2 = mockData.tokenUtxos01
+      uut.utxoStore = mockData.tokenUtxos01
 
       const tokenUtxos = uut.getSpendableTokenUtxos()
       // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
@@ -319,7 +319,7 @@ describe('#UTXOs', () => {
 
     it('should handle an error', () => {
       try {
-        uut.utxoStore2 = {}
+        uut.utxoStore = {}
 
         uut.getSpendableTokenUtxos()
 
@@ -340,7 +340,7 @@ describe('#UTXOs', () => {
         .stub(uut.bchjs.Utxo, 'get')
         .resolves([mockData.tokenUtxos01])
 
-      const utxos = await uut.initUtxoStore2(addr)
+      const utxos = await uut.initUtxoStore(addr)
       // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
 
       assert.property(utxos, 'bchUtxos')
@@ -358,7 +358,7 @@ describe('#UTXOs', () => {
           .stub(uut.bchjs.Utxo, 'get')
           .rejects(new Error('test error'))
 
-        await uut.initUtxoStore2(addr)
+        await uut.initUtxoStore(addr)
 
         assert.fail('unexpected result')
       } catch (err) {
