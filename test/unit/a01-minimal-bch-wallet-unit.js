@@ -375,6 +375,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
         '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
 
       // Mock live network calls.
+      uut.utxos.utxoStore = mockUtxos.tokenUtxos01
       sandbox.stub(uut.tokens, 'sendTokens').resolves(txid)
 
       const output = await uut.sendTokens()
@@ -385,6 +386,9 @@ describe('#index.js - Minimal BCH Wallet', () => {
     it('should throw an error if there is an issue with broadcasting a tx', async () => {
       try {
         // Mock live network calls.
+        uut.utxos.utxoStore = mockUtxos.tokenUtxos01
+
+        // Force an error
         sandbox
           .stub(uut.tokens, 'sendTokens')
           .throws(new Error('error message'))

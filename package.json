@@ -33,9 +33,9 @@
     "title": "minimal-slp-wallet",
     "url": "localhost:5000"
   },
-  "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
+  "repository": "PSF-Skunkworks/minimal-slp-wallet-v2",
   "dependencies": {
-    "@psf/bch-js": "4.15.21",
+    "@psf/bch-js": "4.16.1",
     "apidoc": "^0.25.0",
     "bch-donation": "^1.1.1",
     "crypto-js": "^4.0.0"

@@ -64,7 +64,7 @@ class MinimalBCHWallet {
 
     // The create() function returns a promise. When it resolves, the
     // walletInfoCreated flag will be set to true. The instance will also
-    // have a new walletInfo property that will contain the wallet information.
+    // have a new `walletInfo` property that will contain the wallet information.
     this.walletInfoCreated = false
     this.walletInfoPromise = this.create(hdPrivateKeyOrMnemonic)
   }
@@ -109,9 +109,7 @@ class MinimalBCHWallet {
       walletInfo.legacyAddress = _this.bchjs.HDNode.toLegacyAddress(childNode)
       walletInfo.hdPath = _this.hdPath
 
-      // return resolve(walletInfo)
-      // return walletInfo
-
+      // Add mock UTXOs if this is a test.
       if (this.isTest) {
         _this.utxos.utxoStore = utxoMocks.mockUtxoStore
         _this.utxos.bchUtxos = utxoMocks.mockBchUtxos
@@ -141,7 +139,7 @@ class MinimalBCHWallet {
     return this.crypto.AES.encrypt(mnemonic, password).toString()
   }
 
-  // Decrypte the mnemonic of the wallet.
+  // Decrypt the mnemonic of the wallet.
   decrypt (mnemonicEncrypted, password) {
     let mnemonic
 
@@ -189,7 +187,8 @@ class MinimalBCHWallet {
           hdPath: _this.walletInfo.hdPath,
           fee: _this.fee
         },
-        _this.utxos.bchUtxos
+        // _this.utxos.bchUtxos
+        _this.utxos.utxoStore.bchUtxos
       )
     } catch (err) {
       console.error('Error in send()')
@@ -206,11 +205,19 @@ class MinimalBCHWallet {
       // If mining fee is not specified, use the value assigned in the constructor.
       if (!satsPerByte) satsPerByte = _this.fee
 
+      // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
+      const tokenUtxos = _this.utxos.utxoStore.slpUtxos.type1.tokens.concat(
+        _this.utxos.utxoStore.slpUtxos.nft.groupTokens,
+        _this.utxos.utxoStore.slpUtxos.nft.tokens
+      )
+
       return _this.tokens.sendTokens(
         output,
         _this.walletInfo,
-        _this.utxos.bchUtxos,
-        _this.utxos.tokenUtxos,
+        // _this.utxos.bchUtxos,
+        _this.utxos.utxoStore.bchUtxos,
+        // _this.utxos.tokenUtxos,
+        tokenUtxos,
         satsPerByte
       )
     } catch (err) {
@@ -238,7 +245,8 @@ class MinimalBCHWallet {
           hdPath: _this.walletInfo.hdPath,
           fee: _this.fee
         },
-        _this.utxos.bchUtxos
+        // _this.utxos.bchUtxos
+        _this.utxos.utxoStore.bchUtxos
       )
     } catch (err) {
       console.error('Error in sendAll()')
