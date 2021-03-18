@@ -1,6 +1,6 @@
 {
   "name": "minimal-slp-wallet",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A minimalist Bitcoin Cash (BCH) wallet npm library, for use in a web apps.",
   "main": "dist/minimal-slp-wallet.min.js",
   "scripts": {
