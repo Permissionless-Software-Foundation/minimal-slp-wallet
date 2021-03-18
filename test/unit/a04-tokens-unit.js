@@ -275,7 +275,7 @@ describe('#tokens', () => {
         const bchUtxos = utxos.utxoStore2.bchUtxos
         const tokenUtxos = utxos.getSpendableTokenUtxos()
 
-        console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
+        // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
 
         // Manipulate the token type to force an error.
         tokenUtxos[0].tokenType = 888
