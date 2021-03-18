@@ -362,7 +362,7 @@ describe('#tokens', () => {
       uut.utxos.utxoStore2 = mockData.tokenUtxos01
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
-      console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
 
       assert.isArray(tokenInfo)
 
