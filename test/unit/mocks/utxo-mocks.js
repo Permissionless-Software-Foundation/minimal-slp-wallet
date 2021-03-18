@@ -90,48 +90,125 @@ const hydratedUtxos = [
 ]
 
 // Two token UTXOs from 2 tokens.
-const tokenUtxos01 = [
-  {
-    height: 639443,
-    tx_hash: '8962566e413501224d178a02effc89be5ac0d8e4195f617415d443dc4c38fe50',
-    tx_pos: 1,
-    value: 546,
-    satoshis: 546,
-    txid: '8962566e413501224d178a02effc89be5ac0d8e4195f617415d443dc4c38fe50',
-    vout: 1,
-    utxoType: 'token',
-    transactionType: 'send',
-    tokenId: '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
-    tokenTicker: 'TOK-CH',
-    tokenName: 'TokyoCash',
-    tokenDocumentUrl: '',
-    tokenDocumentHash: '',
-    decimals: 8,
-    tokenType: 1,
-    tokenQty: 1,
-    isValid: true
-  },
-  {
-    height: 639443,
-    tx_hash: 'cbbc6106fdf6e21d84d66e06a1f7fcf3568817ddaa020ad1939db6ce0cfbe54b',
-    tx_pos: 1,
-    value: 546,
-    satoshis: 546,
-    txid: 'cbbc6106fdf6e21d84d66e06a1f7fcf3568817ddaa020ad1939db6ce0cfbe54b',
-    vout: 1,
-    utxoType: 'token',
-    transactionType: 'send',
-    tokenId: 'd0feefd514ae9262a2030e50c6b6d4533000abd12d84bc48a50ba6d69c033c95',
-    tokenTicker: 'PRO',
-    tokenName: 'PROPHET',
-    tokenDocumentUrl: '',
-    tokenDocumentHash: '',
-    decimals: 0,
-    tokenType: 1,
-    tokenQty: 1,
-    isValid: true
+// const tokenUtxos01 = [
+//   {
+//     height: 639443,
+//     tx_hash: '8962566e413501224d178a02effc89be5ac0d8e4195f617415d443dc4c38fe50',
+//     tx_pos: 1,
+//     value: 546,
+//     satoshis: 546,
+//     txid: '8962566e413501224d178a02effc89be5ac0d8e4195f617415d443dc4c38fe50',
+//     vout: 1,
+//     utxoType: 'token',
+//     transactionType: 'send',
+//     tokenId: '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
+//     tokenTicker: 'TOK-CH',
+//     tokenName: 'TokyoCash',
+//     tokenDocumentUrl: '',
+//     tokenDocumentHash: '',
+//     decimals: 8,
+//     tokenType: 1,
+//     tokenQty: 1,
+//     isValid: true
+//   },
+//   {
+//     height: 639443,
+//     tx_hash: 'cbbc6106fdf6e21d84d66e06a1f7fcf3568817ddaa020ad1939db6ce0cfbe54b',
+//     tx_pos: 1,
+//     value: 546,
+//     satoshis: 546,
+//     txid: 'cbbc6106fdf6e21d84d66e06a1f7fcf3568817ddaa020ad1939db6ce0cfbe54b',
+//     vout: 1,
+//     utxoType: 'token',
+//     transactionType: 'send',
+//     tokenId: 'd0feefd514ae9262a2030e50c6b6d4533000abd12d84bc48a50ba6d69c033c95',
+//     tokenTicker: 'PRO',
+//     tokenName: 'PROPHET',
+//     tokenDocumentUrl: '',
+//     tokenDocumentHash: '',
+//     decimals: 0,
+//     tokenType: 1,
+//     tokenQty: 1,
+//     isValid: true
+//   }
+// ]
+
+const tokenUtxos01 = {
+  address: 'bitcoincash:qqmjqwsplscmx0aet355p4l0j8q74thv7v90j65htu',
+  bchUtxos: [],
+  nullUtxos: [],
+  slpUtxos: {
+    type1: {
+      mintBatons: [],
+      tokens: [
+        {
+          height: 640005,
+          tx_hash: '3ad72d9709c206329aa40777d9394ab6d0b5bd0962fba7180533fc966ece165c',
+          tx_pos: 1,
+          value: 546,
+          txid: '3ad72d9709c206329aa40777d9394ab6d0b5bd0962fba7180533fc966ece165c',
+          vout: 1,
+          utxoType: 'token',
+          transactionType: 'send',
+          tokenId: 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
+          tokenTicker: 'TROUT',
+          tokenName: "Trout's test token",
+          tokenDocumentUrl: 'troutsblog.com',
+          tokenDocumentHash: '',
+          decimals: 2,
+          tokenType: 1,
+          isValid: true,
+          tokenQty: '1'
+        },
+        {
+          height: 639443,
+          tx_hash: '8962566e413501224d178a02effc89be5ac0d8e4195f617415d443dc4c38fe50',
+          tx_pos: 1,
+          value: 546,
+          satoshis: 546,
+          txid: '8962566e413501224d178a02effc89be5ac0d8e4195f617415d443dc4c38fe50',
+          vout: 1,
+          utxoType: 'token',
+          transactionType: 'send',
+          tokenId: '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
+          tokenTicker: 'TOK-CH',
+          tokenName: 'TokyoCash',
+          tokenDocumentUrl: '',
+          tokenDocumentHash: '',
+          decimals: 8,
+          tokenType: 1,
+          tokenQty: 1,
+          isValid: true
+        },
+        {
+          height: 639443,
+          tx_hash: 'cbbc6106fdf6e21d84d66e06a1f7fcf3568817ddaa020ad1939db6ce0cfbe54b',
+          tx_pos: 1,
+          value: 546,
+          satoshis: 546,
+          txid: 'cbbc6106fdf6e21d84d66e06a1f7fcf3568817ddaa020ad1939db6ce0cfbe54b',
+          vout: 1,
+          utxoType: 'token',
+          transactionType: 'send',
+          tokenId: 'd0feefd514ae9262a2030e50c6b6d4533000abd12d84bc48a50ba6d69c033c95',
+          tokenTicker: 'PRO',
+          tokenName: 'PROPHET',
+          tokenDocumentUrl: '',
+          tokenDocumentHash: '',
+          decimals: 0,
+          tokenType: 1,
+          tokenQty: 1,
+          isValid: true
+        }
+      ]
+    },
+    nft: {
+      groupMintBatons: [],
+      groupTokens: [],
+      tokens: []
+    }
   }
-]
+}
 
 // Three token UTXOs from 2 tokens.
 const tokenUtxos02 = [

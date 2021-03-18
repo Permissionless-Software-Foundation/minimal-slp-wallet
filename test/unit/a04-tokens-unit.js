@@ -356,8 +356,10 @@ describe('#tokens', () => {
       const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
 
       // Stub network calls and subfunctions that are not within the scope of testing.
-      sandbox.stub(uut.utxos, 'getUtxos').resolves({})
-      sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
+      // sandbox.stub(uut.utxos, 'getUtxos').resolves({})
+      // sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
+      sandbox.stub(uut.utxos, 'initUtxoStore2').resolves({})
+      uut.utxos.utxoStore2 = mockData.tokenUtxos01
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
       // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
