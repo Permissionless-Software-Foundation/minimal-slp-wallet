@@ -400,4 +400,152 @@ describe('#tokens', () => {
       }
     })
   })
+  describe('#createBurnTransaction', () => {
+    it('should throw an error if qty input is not provided.', async () => {
+      try {
+        await uut.createBurnTransaction()
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'qty must be number')
+      }
+    })
+
+    it('should throw an error if tokenId input is not provided.', async () => {
+      try {
+        const tokenId = ''
+        await uut.createBurnTransaction(1, tokenId)
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'tokenId must be string')
+      }
+    })
+    it('should throw an error if walletInfo is not provided.', async () => {
+      try {
+        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const walletInfo = ''
+        await uut.createBurnTransaction(1, tokenId, walletInfo)
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'walletInfo must be a object')
+      }
+    })
+    it('should throw an error if there are no BCH UTXOs.', async () => {
+      try {
+        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const walletInfo = sendMockData.mockWallet
+        const bchUtxos = []
+        await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos)
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'BCH UTXO list is empty')
+      }
+    })
+
+    it('should throw an error if there are no token UTXOs.', async () => {
+      try {
+        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const walletInfo = sendMockData.mockWallet
+
+        // Prep the utxo data.
+        utxos.utxoStore = mockData.tokenUtxos01
+        const bchUtxos = utxos.utxoStore.bchUtxos
+        await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos)
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'Token UTXO list is empty')
+      }
+    })
+    it('should throw an error if tokenId does not match', async () => {
+      try {
+        const tokenId = 'bad token id'
+        const walletInfo = sendMockData.mockWallet
+
+        // Prep the utxo data.
+        utxos.utxoStore = mockData.mockNFTGroupUtxos
+        const bchUtxos = utxos.utxoStore.bchUtxos
+        const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+        await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos, tokenUtxos)
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'tokenId does not match')
+      }
+    })
+    it('should throw an error for non token type1.', async () => {
+      try {
+        const tokenId = '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299'
+        const walletInfo = sendMockData.mockWallet
+
+        // Prep the utxo data.
+        utxos.utxoStore = mockData.mockNFTGroupUtxos
+        const bchUtxos = utxos.utxoStore.bchUtxos
+        const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+        await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos, tokenUtxos)
+
+        assert.equal(true, false, 'unexpecte result')
+      } catch (err) {
+        assert.include(err.message, 'Token must be type 1')
+      }
+    })
+
+    it('should generate burn transaction', async () => {
+      const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+      const walletInfo = sendMockData.mockWallet
+
+      // Prep the utxo data.
+      utxos.utxoStore = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+      const { hex, txid } = await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos, tokenUtxos)
+
+      assert.isString(hex)
+      assert.isString(txid)
+    })
+  })
+  describe('#burnTokens', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const hex =
+        '0200000002abdb671501c19d11c35473aa84547f7f3b301d6924d6c8f419a26616dc486ea3010000006b4830450221009833f7bbecd7ba4c193f1edd693e42b337cd295b7e530cab3b2210f46c6cebe102200b65bf9b9bc66992c09cb1a40a2c84b629ba48c066b9f3cc5fe713a898051b6d41210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffffcc198a396570aebd10605cdde223356c0d8f92133560c52013ae5d43dccccf53010000006a47304402207bd190fce11a0cbf8dd8d0d987bcdd428168312f217ec61d018c3198014a786a02200b0ac3db775ea708eb9a76a9fa84fe9a68a0553408b143f52c220313cc2ecbd241210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff0271020000000000001976a914543dc8f7c91721da06da8c3941f79e26cfbce67288ac6c030000000000001976a9141d027f19f0e9c4e6bb4e0b5359b4d2e2f9e27d9888ac00000000'
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      // Mock live network calls.
+      sandbox.stub(uut, 'createBurnTransaction').resolves(hex)
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        .resolves(txid)
+
+      const output = await uut.burnTokens()
+
+      assert.equal(output, txid)
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        const hex =
+          '0200000002abdb671501c19d11c35473aa84547f7f3b301d6924d6c8f419a26616dc486ea3010000006b4830450221009833f7bbecd7ba4c193f1edd693e42b337cd295b7e530cab3b2210f46c6cebe102200b65bf9b9bc66992c09cb1a40a2c84b629ba48c066b9f3cc5fe713a898051b6d41210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffffcc198a396570aebd10605cdde223356c0d8f92133560c52013ae5d43dccccf53010000006a47304402207bd190fce11a0cbf8dd8d0d987bcdd428168312f217ec61d018c3198014a786a02200b0ac3db775ea708eb9a76a9fa84fe9a68a0553408b143f52c220313cc2ecbd241210259da20750fbde4e48d48068aa93e02701554dc66b4fe83851a91023110093449ffffffff0271020000000000001976a914543dc8f7c91721da06da8c3941f79e26cfbce67288ac6c030000000000001976a9141d027f19f0e9c4e6bb4e0b5359b4d2e2f9e27d9888ac00000000'
+
+        // Mock live network calls.
+        sandbox.stub(uut, 'createBurnTransaction').resolves(hex)
+        sandbox
+          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+          .throws(new Error('error message'))
+
+        await uut.burnTokens()
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
+    })
+  })
 })
