@@ -400,6 +400,7 @@ describe('#tokens', () => {
       }
     })
   })
+
   describe('#createBurnTransaction', () => {
     it('should throw an error if qty input is not provided.', async () => {
       try {
@@ -421,6 +422,7 @@ describe('#tokens', () => {
         assert.include(err.message, 'tokenId must be string')
       }
     })
+
     it('should throw an error if walletInfo is not provided.', async () => {
       try {
         const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
@@ -432,6 +434,7 @@ describe('#tokens', () => {
         assert.include(err.message, 'walletInfo must be a object')
       }
     })
+
     it('should throw an error if there are no BCH UTXOs.', async () => {
       try {
         const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
@@ -460,6 +463,7 @@ describe('#tokens', () => {
         assert.include(err.message, 'Token UTXO list is empty')
       }
     })
+
     it('should throw an error if tokenId does not match', async () => {
       try {
         const tokenId = 'bad token id'
@@ -477,6 +481,7 @@ describe('#tokens', () => {
         assert.include(err.message, 'tokenId does not match')
       }
     })
+
     it('should throw an error for non token type1.', async () => {
       try {
         const tokenId = '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299'
@@ -510,6 +515,7 @@ describe('#tokens', () => {
       assert.isString(txid)
     })
   })
+
   describe('#burnTokens', () => {
     it('should broadcast a transaction and return a txid', async () => {
       const hex =
