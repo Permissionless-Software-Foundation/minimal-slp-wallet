@@ -206,10 +206,7 @@ class MinimalBCHWallet {
       if (!satsPerByte) satsPerByte = _this.fee
 
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
-      const tokenUtxos = _this.utxos.utxoStore.slpUtxos.type1.tokens.concat(
-        _this.utxos.utxoStore.slpUtxos.nft.groupTokens,
-        _this.utxos.utxoStore.slpUtxos.nft.tokens
-      )
+      const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
 
       return _this.tokens.sendTokens(
         output,
@@ -222,6 +219,31 @@ class MinimalBCHWallet {
       )
     } catch (err) {
       console.error('Error in send()')
+      throw err
+    }
+  }
+
+  async burnTokens (qty, tokenId, satsPerByte) {
+    try {
+      // console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+
+      // If mining fee is not specified, use the value assigned in the constructor.
+      if (!satsPerByte) satsPerByte = _this.fee
+
+      // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
+      const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
+
+      // Generate the transaction.
+      return _this.tokens.burnTokens(
+        qty,
+        tokenId,
+        _this.walletInfo,
+        _this.utxos.utxoStore.bchUtxos,
+        tokenUtxos,
+        satsPerByte
+      )
+    } catch (err) {
+      console.error('Error in burnTokens()')
       throw err
     }
   }

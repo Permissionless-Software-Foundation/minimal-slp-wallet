@@ -403,6 +403,39 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
   })
 
+  describe('#burnTokens', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      // Mock live network calls.
+      uut.utxos.utxoStore = mockUtxos.tokenUtxos01
+      sandbox.stub(uut.tokens, 'burnTokens').resolves(txid)
+
+      const output = await uut.burnTokens()
+
+      assert.equal(output, txid)
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        uut.utxos.utxoStore = mockUtxos.tokenUtxos01
+
+        // Force an error
+        sandbox
+          .stub(uut.tokens, 'burnTokens')
+          .throws(new Error('error message'))
+
+        await uut.burnTokens()
+
+        assert.fail('unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
+    })
+  })
+
   describe('#getUtxos', () => {
     it('should wrap the initUtxoStore function', async () => {
       sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
