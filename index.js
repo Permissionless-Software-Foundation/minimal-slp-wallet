@@ -275,6 +275,25 @@ class MinimalBCHWallet {
       throw err
     }
   }
+
+  // Burn all the SLP tokens associated to the token ID
+  async burnAll (tokenId) {
+    try {
+      // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
+      const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
+
+      // Generate the transaction.
+      return _this.tokens.burnAll(
+        tokenId,
+        _this.walletInfo,
+        _this.utxos.utxoStore.bchUtxos,
+        tokenUtxos
+      )
+    } catch (err) {
+      console.error('Error in burnAll()')
+      throw err
+    }
+  }
 }
 
 module.exports = MinimalBCHWallet
