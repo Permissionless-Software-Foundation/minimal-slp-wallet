@@ -281,6 +281,7 @@ class MinimalBCHWallet {
     try {
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
       const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
+      // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
 
       // Generate the transaction.
       return _this.tokens.burnAll(
