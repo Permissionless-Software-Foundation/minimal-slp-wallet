@@ -425,7 +425,8 @@ describe('#tokens', () => {
 
     it('should throw an error if walletInfo is not provided.', async () => {
       try {
-        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const tokenId =
+          'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
         const walletInfo = ''
         await uut.createBurnTransaction(1, tokenId, walletInfo)
 
@@ -437,7 +438,8 @@ describe('#tokens', () => {
 
     it('should throw an error if there are no BCH UTXOs.', async () => {
       try {
-        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const tokenId =
+          'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
         const walletInfo = sendMockData.mockWallet
         const bchUtxos = []
         await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos)
@@ -450,7 +452,8 @@ describe('#tokens', () => {
 
     it('should throw an error if there are no token UTXOs.', async () => {
       try {
-        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const tokenId =
+          'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
         const walletInfo = sendMockData.mockWallet
 
         // Prep the utxo data.
@@ -474,7 +477,13 @@ describe('#tokens', () => {
         const bchUtxos = utxos.utxoStore.bchUtxos
         const tokenUtxos = utxos.getSpendableTokenUtxos()
 
-        await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos, tokenUtxos)
+        await uut.createBurnTransaction(
+          1,
+          tokenId,
+          walletInfo,
+          bchUtxos,
+          tokenUtxos
+        )
 
         assert.equal(true, false, 'unexpecte result')
       } catch (err) {
@@ -484,7 +493,8 @@ describe('#tokens', () => {
 
     it('should throw an error for non token type1.', async () => {
       try {
-        const tokenId = '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299'
+        const tokenId =
+          '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299'
         const walletInfo = sendMockData.mockWallet
 
         // Prep the utxo data.
@@ -492,7 +502,13 @@ describe('#tokens', () => {
         const bchUtxos = utxos.utxoStore.bchUtxos
         const tokenUtxos = utxos.getSpendableTokenUtxos()
 
-        await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos, tokenUtxos)
+        await uut.createBurnTransaction(
+          1,
+          tokenId,
+          walletInfo,
+          bchUtxos,
+          tokenUtxos
+        )
 
         assert.equal(true, false, 'unexpecte result')
       } catch (err) {
@@ -501,7 +517,8 @@ describe('#tokens', () => {
     })
 
     it('should generate burn transaction', async () => {
-      const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+      const tokenId =
+        'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
       const walletInfo = sendMockData.mockWallet
 
       // Prep the utxo data.
@@ -509,7 +526,13 @@ describe('#tokens', () => {
       const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
 
-      const { hex, txid } = await uut.createBurnTransaction(1, tokenId, walletInfo, bchUtxos, tokenUtxos)
+      const { hex, txid } = await uut.createBurnTransaction(
+        1,
+        tokenId,
+        walletInfo,
+        bchUtxos,
+        tokenUtxos
+      )
 
       assert.isString(hex)
       assert.isString(txid)
@@ -551,6 +574,126 @@ describe('#tokens', () => {
       } catch (err) {
         // console.log('err: ', err)
         assert.include(err.message, 'error message')
+      }
+    })
+  })
+
+  describe('#burnAll', () => {
+    it('should throw an error if tokenId is not provided', async () => {
+      try {
+        await uut.burnAll()
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'tokenId must be a string')
+      }
+    })
+
+    it('should throw an error if walletInfo is not provided', async () => {
+      try {
+        const slpUtxos = mockData.mockTokenUtxos
+        const tokenId = slpUtxos[0].tokenId
+        await uut.burnAll(tokenId)
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'walletInfo is required')
+      }
+    })
+
+    it('should throw an error if bchUtxos is not provided', async () => {
+      try {
+        const slpUtxos = mockData.mockTokenUtxos
+        const tokenId = slpUtxos[0].tokenId
+        const walletInfo = sendMockData.mockWallet
+
+        await uut.burnAll(tokenId, walletInfo)
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'BCH UTXO list is empty')
+      }
+    })
+
+    it('should throw an error if bchUtxos list is empty', async () => {
+      try {
+        const slpUtxos = mockData.mockTokenUtxos
+        const tokenId = slpUtxos[0].tokenId
+        const walletInfo = sendMockData.mockWallet
+
+        await uut.burnAll(tokenId, walletInfo, [])
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'BCH UTXO list is empty')
+      }
+    })
+
+    it('should throw an error if slpUtxos is not provided', async () => {
+      try {
+        const slpUtxos = mockData.mockTokenUtxos
+        const tokenId = slpUtxos[0].tokenId
+        const walletInfo = sendMockData.mockWallet
+        const bchUtxos = mockData.mockBchUtxos
+
+        await uut.burnAll(tokenId, walletInfo, bchUtxos)
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'SLP UTXO list is empty')
+      }
+    })
+
+    it('should throw an error if slpUtxos list is empty', async () => {
+      try {
+        const slpUtxos = mockData.mockTokenUtxos
+        const tokenId = slpUtxos[0].tokenId
+        const walletInfo = sendMockData.mockWallet
+        const bchUtxos = mockData.mockBchUtxos
+
+        await uut.burnAll(tokenId, walletInfo, bchUtxos, [])
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'SLP UTXO list is empty')
+      }
+    })
+
+    it('should broadcast a transaction and return a txid', async () => {
+      sandbox.stub(uut.sendBch, 'sendAllBch').resolves('fakeTxid')
+
+      const walletInfo = sendMockData.mockWallet
+      const bchUtxos = mockData.mockBchUtxos
+      const slpUtxos = mockData.mockTokenUtxos
+      const tokenId = slpUtxos[0].tokenId
+
+      const output = await uut.burnAll(tokenId, walletInfo, bchUtxos, slpUtxos)
+
+      assert.equal(output, 'fakeTxid')
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.sendBch, 'sendAllBch').rejects(new Error('fake error'))
+
+        const walletInfo = sendMockData.mockWallet
+        const bchUtxos = mockData.mockBchUtxos
+        const slpUtxos = mockData.mockTokenUtxos
+        const tokenId = slpUtxos[0].tokenId
+
+        await uut.burnAll(tokenId, walletInfo, bchUtxos, slpUtxos)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'fake error')
       }
     })
   })
