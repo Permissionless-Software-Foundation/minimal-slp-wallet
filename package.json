@@ -50,7 +50,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-standard": "^4.0.1",
-    "husky": "^4.3.6",
+    "husky": "^6.0.0",
     "lodash.clonedeep": "^4.5.0",
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
