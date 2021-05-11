@@ -194,3 +194,4 @@ const bchWallet2 = new BchWallet(localStorage.getItem("BCH_MNEMONIC"));
 [MIT](LICENSE.md)
 
 
+test
