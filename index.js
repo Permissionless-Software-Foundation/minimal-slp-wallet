@@ -78,6 +78,9 @@ class MinimalBCHWallet {
         mnemonic = this.decrypt(mnemonic, this.advancedOptions.password)
       }
 
+      // TODO: Detect if mnemonic is actually a WIF, and handle accordingly.
+      // A WIF will start with L or K, and will have no spaces.
+
       // Generate the HD wallet.
       mnemonic = mnemonic || _this.bchjs.Mnemonic.generate(128)
       const rootSeedBuffer = await _this.bchjs.Mnemonic.toSeed(mnemonic)
