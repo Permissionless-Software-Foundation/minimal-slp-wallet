@@ -52,6 +52,7 @@ class MinimalBCHWallet {
     this.crypto = crypto
     this.BCHJS = BCHJS
     this.bchjs = new BCHJS(bchjsOptions)
+    bchjsOptions.bchjs = this.bchjs
 
     // Instantiate local libraries.
     this.sendBch = new SendBCH(bchjsOptions)
@@ -77,6 +78,9 @@ class MinimalBCHWallet {
       if (mnemonic && this.advancedOptions.password) {
         mnemonic = this.decrypt(mnemonic, this.advancedOptions.password)
       }
+
+      // TODO: Detect if mnemonic is actually a WIF, and handle accordingly.
+      // A WIF will start with L or K, and will have no spaces.
 
       // Generate the HD wallet.
       mnemonic = mnemonic || _this.bchjs.Mnemonic.generate(128)

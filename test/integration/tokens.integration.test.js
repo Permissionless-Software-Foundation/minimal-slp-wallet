@@ -3,6 +3,7 @@
 */
 
 const assert = require('chai').assert
+const BCHJS = require('@psf/bch-js')
 
 const Tokens = require('../../lib/tokens')
 let uut
@@ -12,6 +13,8 @@ describe('#tokens.js', () => {
     const config = {
       restURL: 'https://bchn.fullstack.cash/v4/'
     }
+    const bchjs = new BCHJS(config)
+    config.bchjs = bchjs
     uut = new Tokens(config)
   })
 
