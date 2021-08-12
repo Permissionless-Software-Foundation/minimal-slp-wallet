@@ -352,9 +352,7 @@ describe('#tokens', () => {
 
       // Mock live network calls.
       sandbox.stub(uut, 'createTransaction').resolves(hex)
-      sandbox
-        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-        .resolves(txid)
+      sandbox.stub(uut.ar, 'sendTx').resolves(txid)
 
       const output = await uut.sendTokens()
 
@@ -368,9 +366,7 @@ describe('#tokens', () => {
 
         // Mock live network calls.
         sandbox.stub(uut, 'createTransaction').resolves(hex)
-        sandbox
-          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-          .throws(new Error('error message'))
+        sandbox.stub(uut.ar, 'sendTx').throws(new Error('error message'))
 
         await uut.sendTokens()
 
@@ -566,9 +562,7 @@ describe('#tokens', () => {
 
       // Mock live network calls.
       sandbox.stub(uut, 'createBurnTransaction').resolves(hex)
-      sandbox
-        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-        .resolves(txid)
+      sandbox.stub(uut.ar, 'sendTx').resolves(txid)
 
       const output = await uut.burnTokens()
 
@@ -582,9 +576,7 @@ describe('#tokens', () => {
 
         // Mock live network calls.
         sandbox.stub(uut, 'createBurnTransaction').resolves(hex)
-        sandbox
-          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-          .throws(new Error('error message'))
+        sandbox.stub(uut.ar, 'sendTx').throws(new Error('error message'))
 
         await uut.burnTokens()
 

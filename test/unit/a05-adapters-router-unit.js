@@ -110,4 +110,53 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#sendTx', () => {
+    it('should throw an error hex is not specified', async () => {
+      try {
+        await uut.sendTx()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Hex encoded transaction required as input.'
+        )
+      }
+    })
+
+    it('should use bch-js by default', async () => {
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        .resolves('txid-str')
+
+      const result = await uut.sendTx('fakeHex')
+
+      assert.equal(result, 'txid-str')
+    })
+
+    it('should use wallet service when json-rpc interface is selected', async () => {
+      // Mock dependencies.
+      sandbox.stub(uut.jsonRpcWalletService, 'sendTx').resolves('txid-str')
+
+      uut.interface = 'json-rpc'
+
+      const result = await uut.sendTx('fakeHex')
+
+      assert.equal(result, 'txid-str')
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        await uut.sendTx('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+  })
 })
