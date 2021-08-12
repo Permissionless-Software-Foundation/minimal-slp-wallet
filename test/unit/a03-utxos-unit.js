@@ -5,6 +5,7 @@
 const assert = require('chai').assert
 const sinon = require('sinon')
 const cloneDeep = require('lodash.clonedeep')
+const BCHJS = require('@psf/bch-js')
 
 const UTXOs = require('../../lib/utxos')
 let uut
@@ -17,8 +18,10 @@ describe('#UTXOs', () => {
 
   beforeEach(() => {
     const config = {
-      restURL: 'https://api.fullstack.cash/v4/'
+      restURL: 'https://api.fullstack.cash/v5/'
     }
+    const bchjs = new BCHJS(config)
+    config.bchjs = bchjs
     uut = new UTXOs(config)
 
     mockData = cloneDeep(mockDataLib)
@@ -27,6 +30,53 @@ describe('#UTXOs', () => {
   })
 
   afterEach(() => sandbox.restore())
+
+  describe('#constructor', () => {
+    it('should throw an error if instance of bch-js is not passed', () => {
+      try {
+        uut = new UTXOs()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Must pass instance of bch-js when instantiating AdapterRouter.'
+        )
+      }
+    })
+  })
+
+  describe('#initUtxoStore', () => {
+    it('should initialize and return the utxoStore', async () => {
+      const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
+
+      // Mock network calls.
+      sandbox.stub(uut.ar, 'getUtxos').resolves([mockData.tokenUtxos01])
+
+      const utxos = await uut.initUtxoStore(addr)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      assert.property(utxos, 'bchUtxos')
+      assert.property(utxos, 'nullUtxos')
+      assert.property(utxos, 'slpUtxos')
+      assert.property(utxos, 'address')
+    })
+
+    it('should handle network errors', async () => {
+      try {
+        const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
+
+        // Force an error
+        sandbox.stub(uut.ar, 'getUtxos').rejects(new Error('test error'))
+
+        await uut.initUtxoStore(addr)
+
+        assert.fail('unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
 
   // describe('#getUtxos', () => {
   //   it('should get UTXO information for an address', async () => {
@@ -327,42 +377,6 @@ describe('#UTXOs', () => {
       } catch (err) {
         // console.log(err)
         assert.include(err.message, "Cannot read property 'type1' of undefined")
-      }
-    })
-  })
-
-  describe('#initUtxoStore', () => {
-    it('should initialize and return the utxoStore', async () => {
-      const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
-
-      // Mock network calls.
-      sandbox
-        .stub(uut.bchjs.Utxo, 'get')
-        .resolves([mockData.tokenUtxos01])
-
-      const utxos = await uut.initUtxoStore(addr)
-      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
-
-      assert.property(utxos, 'bchUtxos')
-      assert.property(utxos, 'nullUtxos')
-      assert.property(utxos, 'slpUtxos')
-      assert.property(utxos, 'address')
-    })
-
-    it('should handle network errors', async () => {
-      try {
-        const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
-
-        // Force an error
-        sandbox
-          .stub(uut.bchjs.Utxo, 'get')
-          .rejects(new Error('test error'))
-
-        await uut.initUtxoStore(addr)
-
-        assert.fail('unexpected result')
-      } catch (err) {
-        assert.include(err.message, 'test error')
       }
     })
   })

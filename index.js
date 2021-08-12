@@ -52,6 +52,7 @@ class MinimalBCHWallet {
     this.crypto = crypto
     this.BCHJS = BCHJS
     this.bchjs = new BCHJS(bchjsOptions)
+    bchjsOptions.bchjs = this.bchjs
 
     // Instantiate local libraries.
     this.sendBch = new SendBCH(bchjsOptions)

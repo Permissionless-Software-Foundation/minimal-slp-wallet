@@ -4,6 +4,7 @@
 
 const assert = require('chai').assert
 const sinon = require('sinon')
+const BCHJS = require('@psf/bch-js')
 
 const Tokens = require('../../lib/tokens')
 const Utxos = require('../../lib/utxos')
@@ -21,8 +22,10 @@ describe('#tokens', () => {
 
   beforeEach(() => {
     const config = {
-      restURL: 'https://free-main.fullstack.cash/v3/'
+      restURL: 'https://api.fullstack.cash/v5/'
     }
+    const bchjs = new BCHJS(config)
+    config.bchjs = bchjs
     uut = new Tokens(config)
     utxos = new Utxos(config)
 
@@ -33,6 +36,21 @@ describe('#tokens', () => {
   })
 
   afterEach(() => sandbox.restore())
+
+  describe('#constructor', () => {
+    it('should throw an error if instance of bch-js is not passed', () => {
+      try {
+        uut = new Tokens()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Must pass instance of bch-js when instantiating AdapterRouter.'
+        )
+      }
+    })
+  })
 
   describe('#listTokensFromUtxos', () => {
     it('should return a list of tokens', () => {

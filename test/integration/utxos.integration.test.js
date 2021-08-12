@@ -3,6 +3,7 @@
 */
 
 const assert = require('chai').assert
+const BCHJS = require('@psf/bch-js')
 
 const UTXOs = require('../../lib/utxos')
 let uut
@@ -10,8 +11,10 @@ let uut
 describe('#UTXOs', () => {
   beforeEach(() => {
     const config = {
-      restURL: 'https://bchn.fullstack.cash/v4/'
+      restURL: 'https://bchn.fullstack.cash/v5/'
     }
+    const bchjs = new BCHJS(config)
+    config.bchjs = bchjs
     uut = new UTXOs(config)
   })
 
