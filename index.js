@@ -15,6 +15,7 @@ const SendBCH = require('./lib/send-bch')
 const Utxos = require('./lib/utxos')
 const Tokens = require('./lib/tokens')
 const utxoMocks = require('./test/unit/mocks/utxo-mocks')
+const AdapterRouter = require('./lib/adapters/router')
 
 let _this
 
@@ -53,6 +54,20 @@ class MinimalBCHWallet {
     this.BCHJS = BCHJS
     this.bchjs = new BCHJS(bchjsOptions)
     bchjsOptions.bchjs = this.bchjs
+
+    // Instantiate the adapter router.
+    if (advancedOptions.interface === 'json-rpc') {
+      if (!advancedOptions.jsonRpcWalletService) {
+        throw new Error(
+          'Must pass wallet service instance if using json-rpc interface.'
+        )
+      }
+
+      bchjsOptions.interface = 'json-rpc'
+      bchjsOptions.jsonRpcWalletService = advancedOptions.jsonRpcWalletService
+    }
+    this.ar = new AdapterRouter(bchjsOptions)
+    bchjsOptions.ar = this.ar
 
     // Instantiate local libraries.
     this.sendBch = new SendBCH(bchjsOptions)
