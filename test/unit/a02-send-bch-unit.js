@@ -8,6 +8,7 @@ const sinon = require('sinon')
 const BCHJS = require('@psf/bch-js')
 
 const SendBCH = require('../../lib/send-bch')
+const AdapterRouter = require('../../lib/adapters/router')
 let uut // Unit Under Test
 
 const mockData = require('./mocks/send-bch-mocks')
@@ -24,13 +25,14 @@ describe('#SendBCH', () => {
     }
     const bchjs = new BCHJS(config)
     config.bchjs = bchjs
+    config.ar = new AdapterRouter(config)
     uut = new SendBCH(config)
   })
 
   afterEach(() => sandbox.restore())
 
   describe('#constructor', () => {
-    it('should throw an error if instance of bch-js is not passed', () => {
+    it('should throw an error if instance of bch-js is not passed.', () => {
       try {
         uut = new SendBCH()
 
@@ -40,6 +42,16 @@ describe('#SendBCH', () => {
           err.message,
           'Must pass instance of bch-js when instantiating SendBCH.'
         )
+      }
+    })
+
+    it('should throw an error if instance of adapter router is not passed.', () => {
+      try {
+        uut = new SendBCH({ bchjs: {} })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Must pass instance of Adapter Router.')
       }
     })
   })

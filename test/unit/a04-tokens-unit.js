@@ -8,6 +8,7 @@ const BCHJS = require('@psf/bch-js')
 
 const Tokens = require('../../lib/tokens')
 const Utxos = require('../../lib/utxos')
+const AdapterRouter = require('../../lib/adapters/router')
 
 let uut
 
@@ -26,6 +27,7 @@ describe('#tokens', () => {
     }
     const bchjs = new BCHJS(config)
     config.bchjs = bchjs
+    config.ar = new AdapterRouter(config)
     uut = new Tokens(config)
     utxos = new Utxos(config)
 
@@ -48,6 +50,16 @@ describe('#tokens', () => {
           err.message,
           'Must pass instance of bch-js when instantiating AdapterRouter.'
         )
+      }
+    })
+
+    it('should throw an error if instance of bch-js is not passed', () => {
+      try {
+        uut = new Tokens({ bchjs: {} })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Must pass instance of Adapter Router.')
       }
     })
   })

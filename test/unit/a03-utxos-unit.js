@@ -8,6 +8,7 @@ const cloneDeep = require('lodash.clonedeep')
 const BCHJS = require('@psf/bch-js')
 
 const UTXOs = require('../../lib/utxos')
+const AdapterRouter = require('../../lib/adapters/router')
 let uut
 
 const mockDataLib = require('./mocks/utxo-mocks')
@@ -22,6 +23,7 @@ describe('#UTXOs', () => {
     }
     const bchjs = new BCHJS(config)
     config.bchjs = bchjs
+    config.ar = new AdapterRouter(config)
     uut = new UTXOs(config)
 
     mockData = cloneDeep(mockDataLib)
@@ -42,6 +44,16 @@ describe('#UTXOs', () => {
           err.message,
           'Must pass instance of bch-js when instantiating AdapterRouter.'
         )
+      }
+    })
+
+    it('should throw an error if instance of Adapter Router is not passed.', () => {
+      try {
+        uut = new UTXOs({ bchjs: {} })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Must pass instance of Adapter Router.')
       }
     })
   })
