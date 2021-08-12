@@ -5,6 +5,7 @@
 // npm libraries
 const assert = require('chai').assert
 const sinon = require('sinon')
+const BCHJS = require('@psf/bch-js')
 
 const SendBCH = require('../../lib/send-bch')
 let uut // Unit Under Test
@@ -19,12 +20,29 @@ describe('#SendBCH', () => {
     sandbox = sinon.createSandbox()
 
     const config = {
-      restURL: 'https://free-main.fullstack.cash/v3/'
+      restURL: 'https://free-main.fullstack.cash/v5/'
     }
+    const bchjs = new BCHJS(config)
+    config.bchjs = bchjs
     uut = new SendBCH(config)
   })
 
   afterEach(() => sandbox.restore())
+
+  describe('#constructor', () => {
+    it('should throw an error if instance of bch-js is not passed', () => {
+      try {
+        uut = new SendBCH()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Must pass instance of bch-js when instantiating SendBCH.'
+        )
+      }
+    })
+  })
 
   describe('#calculateFee', () => {
     it('should accurately calculate a P2PKH with 1 input and 2 outputs', () => {
@@ -234,9 +252,7 @@ describe('#SendBCH', () => {
 
       // Mock live network calls.
       sandbox.stub(uut, 'createTransaction').resolves(hex)
-      sandbox
-        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-        .resolves(txid)
+      sandbox.stub(uut.ar, 'sendTx').resolves(txid)
 
       const output = await uut.sendBch()
 
@@ -250,9 +266,7 @@ describe('#SendBCH', () => {
 
         // Mock live network calls.
         sandbox.stub(uut, 'createTransaction').resolves(hex)
-        sandbox
-          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-          .throws(new Error('error message'))
+        sandbox.stub(uut.ar, 'sendTx').throws(new Error('error message'))
 
         await uut.sendBch()
 
@@ -280,7 +294,8 @@ describe('#SendBCH', () => {
 
     it('should throw an error if UTXOs array is empty', async () => {
       try {
-        const toAddress = 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
+        const toAddress =
+          'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
 
         await uut.createSendAllTx(toAddress, mockData.mockWallet, [])
 
@@ -333,9 +348,7 @@ describe('#SendBCH', () => {
 
       // Mock live network calls.
       sandbox.stub(uut, 'createSendAllTx').resolves(hex)
-      sandbox
-        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-        .resolves(txid)
+      sandbox.stub(uut.ar, 'sendTx').resolves(txid)
 
       const output = await uut.sendAllBch()
 
@@ -349,9 +362,7 @@ describe('#SendBCH', () => {
 
         // Mock live network calls.
         sandbox.stub(uut, 'createSendAllTx').resolves(hex)
-        sandbox
-          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-          .throws(new Error('error message'))
+        sandbox.stub(uut.ar, 'sendTx').throws(new Error('error message'))
 
         await uut.sendAllBch()
 
