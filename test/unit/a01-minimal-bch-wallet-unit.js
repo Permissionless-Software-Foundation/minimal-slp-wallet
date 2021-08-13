@@ -27,56 +27,6 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
   afterEach(() => sandbox.restore())
 
-  describe('#create', () => {
-    it('should create a new wallet with no input', async () => {
-      const walletInfoPromise = uut.create()
-      await walletInfoPromise
-      // console.log('walletInfo: ', uut.walletInfo)
-
-      assert.property(uut, 'walletInfo')
-      assert.property(uut, 'walletInfoPromise')
-      assert.property(uut, 'walletInfoCreated')
-      assert.equal(uut.walletInfoCreated, true)
-
-      assert.property(uut.walletInfo, 'mnemonic')
-      assert.isString(uut.walletInfo.mnemonic)
-      assert.isNotEmpty(uut.walletInfo.mnemonic)
-
-      assert.property(uut.walletInfo, 'privateKey')
-      assert.isString(uut.walletInfo.privateKey)
-      assert.isNotEmpty(uut.walletInfo.privateKey)
-
-      assert.property(uut.walletInfo, 'publicKey')
-      assert.isString(uut.walletInfo.publicKey)
-      assert.isNotEmpty(uut.walletInfo.publicKey)
-
-      assert.property(uut.walletInfo, 'cashAddress')
-      assert.isString(uut.walletInfo.cashAddress)
-      assert.isNotEmpty(uut.walletInfo.cashAddress)
-
-      assert.property(uut.walletInfo, 'legacyAddress')
-      assert.isString(uut.walletInfo.legacyAddress)
-      assert.isNotEmpty(uut.walletInfo.legacyAddress)
-
-      assert.property(uut.walletInfo, 'slpAddress')
-      assert.isString(uut.walletInfo.slpAddress)
-      assert.isNotEmpty(uut.walletInfo.slpAddress)
-    })
-
-    it('should work when test flag is false', async () => {
-      // Force the test flag to be false.
-      uut.isTest = false
-
-      // Stub the network calls.
-      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
-
-      const walletInfoPromise = uut.create()
-      await walletInfoPromise
-
-      assert(true, true, 'Not throwing an error is a success!')
-    })
-  })
-
   describe('#constructor', () => {
     it('should create a new wallet without encrypted mnemonic', async () => {
       uut = new MinimalBCHWallet(undefined, { test: true })
@@ -257,7 +207,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
 
     it('should update all instances of bch-js with the free tier', async () => {
-      const freeUrl = 'https://free-main.fullstack.cash/v3/'
+      const freeUrl = 'https://api.fullstack.cash/v5/'
 
       uut = new MinimalBCHWallet(undefined, {
         restURL: freeUrl,
@@ -267,6 +217,84 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(uut.sendBch.bchjs.restURL, freeUrl)
       assert.equal(uut.utxos.bchjs.restURL, freeUrl)
       assert.equal(uut.tokens.bchjs.restURL, freeUrl)
+    })
+
+    it('should throw an error if json-rpc is specified without a wallet service library', () => {
+      try {
+        const advancedOptions = {
+          interface: 'json-rpc'
+        }
+
+        uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+        assert.fail('Unexpected code path.')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Must pass wallet service instance if using json-rpc interface.'
+        )
+      }
+    })
+
+    it('should switch to json-rpc interface', () => {
+      const advancedOptions = {
+        interface: 'json-rpc',
+        jsonRpcWalletService: {}
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+      assert.equal(uut.ar.interface, 'json-rpc')
+    })
+  })
+
+  describe('#create', () => {
+    it('should create a new wallet with no input', async () => {
+      const walletInfoPromise = uut.create()
+      await walletInfoPromise
+      // console.log('walletInfo: ', uut.walletInfo)
+
+      assert.property(uut, 'walletInfo')
+      assert.property(uut, 'walletInfoPromise')
+      assert.property(uut, 'walletInfoCreated')
+      assert.equal(uut.walletInfoCreated, true)
+
+      assert.property(uut.walletInfo, 'mnemonic')
+      assert.isString(uut.walletInfo.mnemonic)
+      assert.isNotEmpty(uut.walletInfo.mnemonic)
+
+      assert.property(uut.walletInfo, 'privateKey')
+      assert.isString(uut.walletInfo.privateKey)
+      assert.isNotEmpty(uut.walletInfo.privateKey)
+
+      assert.property(uut.walletInfo, 'publicKey')
+      assert.isString(uut.walletInfo.publicKey)
+      assert.isNotEmpty(uut.walletInfo.publicKey)
+
+      assert.property(uut.walletInfo, 'cashAddress')
+      assert.isString(uut.walletInfo.cashAddress)
+      assert.isNotEmpty(uut.walletInfo.cashAddress)
+
+      assert.property(uut.walletInfo, 'legacyAddress')
+      assert.isString(uut.walletInfo.legacyAddress)
+      assert.isNotEmpty(uut.walletInfo.legacyAddress)
+
+      assert.property(uut.walletInfo, 'slpAddress')
+      assert.isString(uut.walletInfo.slpAddress)
+      assert.isNotEmpty(uut.walletInfo.slpAddress)
+    })
+
+    it('should work when test flag is false', async () => {
+      // Force the test flag to be false.
+      uut.isTest = false
+
+      // Stub the network calls.
+      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
+
+      const walletInfoPromise = uut.create()
+      await walletInfoPromise
+
+      assert(true, true, 'Not throwing an error is a success!')
     })
   })
 
@@ -403,6 +431,26 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
   })
 
+  describe('#getUtxos', () => {
+    it('should wrap the initUtxoStore function', async () => {
+      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
+
+      const obj = await uut.getUtxos()
+
+      assert.deepEqual(obj, {})
+    })
+  })
+
+  describe('#listTokens', () => {
+    it('should wrap the listTokensFromAddress function', async () => {
+      sandbox.stub(uut.tokens, 'listTokensFromAddress').resolves({})
+
+      const obj = await uut.listTokens()
+
+      assert.deepEqual(obj, {})
+    })
+  })
+
   describe('#burnTokens', () => {
     it('should broadcast a transaction and return a txid', async () => {
       const txid =
@@ -436,23 +484,35 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
   })
 
-  describe('#getUtxos', () => {
-    it('should wrap the initUtxoStore function', async () => {
-      sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
+  describe('#burnAll', () => {
+    it('should broadcast a transaction and return a txid', async () => {
+      const tokenId =
+        'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
 
-      const obj = await uut.getUtxos()
+      // Mock live network calls.
+      uut.utxos.utxoStore = mockUtxos.tokenUtxos01
+      sandbox.stub(uut.tokens, 'burnAll').resolves('txid')
 
-      assert.deepEqual(obj, {})
+      const output = await uut.burnAll(tokenId)
+      // console.log('output: ', output)
+
+      assert.equal(output, 'txid')
     })
-  })
 
-  describe('#listTokens', () => {
-    it('should wrap the listTokensFromAddress function', async () => {
-      sandbox.stub(uut.tokens, 'listTokensFromAddress').resolves({})
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.utxos, 'getSpendableTokenUtxos')
+          .throws(new Error('error message'))
 
-      const obj = await uut.listTokens()
+        await uut.burnAll()
 
-      assert.deepEqual(obj, {})
+        assert.fail('unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
     })
   })
 })

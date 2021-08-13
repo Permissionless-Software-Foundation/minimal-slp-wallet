@@ -20,8 +20,8 @@ const AdapterRouter = require('./lib/adapters/router')
 let _this
 
 class MinimalBCHWallet {
-  constructor (hdPrivateKeyOrMnemonic, advancedOptions) {
-    this.advancedOptions = advancedOptions || {}
+  constructor (hdPrivateKeyOrMnemonic, advancedOptions = {}) {
+    this.advancedOptions = advancedOptions
 
     // BEGIN Handle advanced options.
     // HD Derivation path.
