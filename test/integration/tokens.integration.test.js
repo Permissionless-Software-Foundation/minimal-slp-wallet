@@ -6,15 +6,17 @@ const assert = require('chai').assert
 const BCHJS = require('@psf/bch-js')
 
 const Tokens = require('../../lib/tokens')
+const AdapterRouter = require('../../lib/adapters/router')
 let uut
 
 describe('#tokens.js', () => {
   beforeEach(() => {
     const config = {
-      restURL: 'https://bchn.fullstack.cash/v4/'
+      restURL: 'https://bchn.fullstack.cash/v5/'
     }
     const bchjs = new BCHJS(config)
     config.bchjs = bchjs
+    config.ar = new AdapterRouter(config)
     uut = new Tokens(config)
   })
 
