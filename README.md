@@ -36,7 +36,7 @@ npm install minimal-slp-wallet --save
 import BchWallet from 'minimal-slp-wallet'
 
 // nodejs modules
-const BchWallet = require('minimal-slp-walletindex')
+const BchWallet = require('minimal-slp-wallet/index')
 ```
 
 ### Create new wallets
