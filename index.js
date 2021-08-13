@@ -44,9 +44,10 @@ class MinimalBCHWallet {
       this.fee = this.advancedOptions.fee
     }
 
-    // Allow passing of test flag for unit tests.
-    this.isTest = false
-    if (this.advancedOptions.test) this.isTest = true
+    // Allow passing of noUpdate flag, to prevent automatic UTXO retrieval
+    // after wallet is created.
+    this.noUpdate = false
+    if (this.advancedOptions.noUpdate) this.noUpdate = true
     // END Handle advanced options.
 
     // Encapsulae the external libraries.
@@ -128,14 +129,10 @@ class MinimalBCHWallet {
       walletInfo.legacyAddress = _this.bchjs.HDNode.toLegacyAddress(childNode)
       walletInfo.hdPath = _this.hdPath
 
-      // Add mock UTXOs if this is a test.
-      if (this.isTest) {
-        _this.utxos.utxoStore = utxoMocks.mockUtxoStore
-        _this.utxos.bchUtxos = utxoMocks.mockBchUtxos
-        _this.utxos.tokenUtxos = utxoMocks.mockTokenUtxos
-      } else {
+      // Do not update the wallet UTXOs if noUpdate flag is set.
+      if (!this.noUpdate) {
         // Get any  UTXOs for this wallet.
-        await _this.utxos.initUtxoStore(walletInfo.address)
+        await this.utxos.initUtxoStore(walletInfo.address)
       }
 
       _this.walletInfoCreated = true

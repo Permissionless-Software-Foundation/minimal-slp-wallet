@@ -5,6 +5,7 @@
 const assert = require('chai').assert
 const BCHJS = require('@psf/bch-js')
 
+const AdapterRouter = require('../../lib/adapters/router')
 const UTXOs = require('../../lib/utxos')
 let uut
 
@@ -15,6 +16,7 @@ describe('#UTXOs', () => {
     }
     const bchjs = new BCHJS(config)
     config.bchjs = bchjs
+    config.ar = new AdapterRouter(config)
     uut = new UTXOs(config)
   })
 
