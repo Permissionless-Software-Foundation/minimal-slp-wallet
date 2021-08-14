@@ -17,7 +17,7 @@ const Tokens = require('./lib/tokens')
 const utxoMocks = require('./test/unit/mocks/utxo-mocks')
 const AdapterRouter = require('./lib/adapters/router')
 
-let _this
+// let this
 
 class MinimalBCHWallet {
   constructor (hdPrivateKeyOrMnemonic, advancedOptions = {}) {
@@ -77,7 +77,7 @@ class MinimalBCHWallet {
 
     this.temp = []
 
-    _this = this
+    // this = this
 
     // The create() function returns a promise. When it resolves, the
     // walletInfoCreated flag will be set to true. The instance will also
@@ -99,12 +99,12 @@ class MinimalBCHWallet {
       // A WIF will start with L or K, and will have no spaces.
 
       // Generate the HD wallet.
-      mnemonic = mnemonic || _this.bchjs.Mnemonic.generate(128)
-      const rootSeedBuffer = await _this.bchjs.Mnemonic.toSeed(mnemonic)
-      const masterHDNode = _this.bchjs.HDNode.fromSeed(rootSeedBuffer)
+      mnemonic = mnemonic || this.bchjs.Mnemonic.generate(128)
+      const rootSeedBuffer = await this.bchjs.Mnemonic.toSeed(mnemonic)
+      const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeedBuffer)
       const childNode = masterHDNode.derivePath(this.hdPath)
-      const privateKey = _this.bchjs.HDNode.toWIF(childNode)
-      const publicKey = _this.bchjs.HDNode.toPublicKey(childNode)
+      const privateKey = this.bchjs.HDNode.toWIF(childNode)
+      const publicKey = this.bchjs.HDNode.toPublicKey(childNode)
 
       const walletInfo = {}
 
@@ -120,14 +120,14 @@ class MinimalBCHWallet {
       walletInfo.mnemonic = mnemonic
       walletInfo.privateKey = privateKey
       walletInfo.publicKey = publicKey.toString('hex')
-      walletInfo.address = walletInfo.cashAddress = _this.bchjs.HDNode.toCashAddress(
+      walletInfo.address = walletInfo.cashAddress = this.bchjs.HDNode.toCashAddress(
         childNode
       )
-      walletInfo.slpAddress = _this.bchjs.SLP.Address.toSLPAddress(
+      walletInfo.slpAddress = this.bchjs.SLP.Address.toSLPAddress(
         walletInfo.address
       )
-      walletInfo.legacyAddress = _this.bchjs.HDNode.toLegacyAddress(childNode)
-      walletInfo.hdPath = _this.hdPath
+      walletInfo.legacyAddress = this.bchjs.HDNode.toLegacyAddress(childNode)
+      walletInfo.hdPath = this.hdPath
 
       // Do not update the wallet UTXOs if noUpdate flag is set.
       if (!this.noUpdate) {
@@ -135,8 +135,8 @@ class MinimalBCHWallet {
         await this.utxos.initUtxoStore(walletInfo.address)
       }
 
-      _this.walletInfoCreated = true
-      _this.walletInfo = walletInfo
+      this.walletInfoCreated = true
+      this.walletInfo = walletInfo
     } catch (err) {
       // return reject(err)
       console.error('Error in create()')
@@ -147,7 +147,7 @@ class MinimalBCHWallet {
 
   // Get the UTXO information for this wallet.
   getUtxos () {
-    return _this.utxos.initUtxoStore()
+    return this.utxos.initUtxoStore(this.walletInfo.address)
   }
 
   // Encrypt the mnemonic of the wallet.
@@ -192,19 +192,19 @@ class MinimalBCHWallet {
   send (outputs) {
     try {
       // console.log(
-      //   `_this.utxos.bchUtxos: ${JSON.stringify(_this.utxos.bchUtxos, null, 2)}`
+      //   `this.utxos.bchUtxos: ${JSON.stringify(this.utxos.bchUtxos, null, 2)}`
       // )
 
-      return _this.sendBch.sendBch(
+      return this.sendBch.sendBch(
         outputs,
         {
-          mnemonic: _this.walletInfo.mnemonic,
-          cashAddress: _this.walletInfo.address,
-          hdPath: _this.walletInfo.hdPath,
-          fee: _this.fee
+          mnemonic: this.walletInfo.mnemonic,
+          cashAddress: this.walletInfo.address,
+          hdPath: this.walletInfo.hdPath,
+          fee: this.fee
         },
-        // _this.utxos.bchUtxos
-        _this.utxos.utxoStore.bchUtxos
+        // this.utxos.bchUtxos
+        this.utxos.utxoStore.bchUtxos
       )
     } catch (err) {
       console.error('Error in send()')
@@ -216,20 +216,20 @@ class MinimalBCHWallet {
   // This is a wrapper for the tokens.js library.
   sendTokens (output, satsPerByte) {
     try {
-      // console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+      // console.log(`utxoStore: ${JSON.stringify(this.utxos.utxoStore, null, 2)}`)
 
       // If mining fee is not specified, use the value assigned in the constructor.
-      if (!satsPerByte) satsPerByte = _this.fee
+      if (!satsPerByte) satsPerByte = this.fee
 
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
-      const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
+      const tokenUtxos = this.utxos.getSpendableTokenUtxos()
 
-      return _this.tokens.sendTokens(
+      return this.tokens.sendTokens(
         output,
-        _this.walletInfo,
-        // _this.utxos.bchUtxos,
-        _this.utxos.utxoStore.bchUtxos,
-        // _this.utxos.tokenUtxos,
+        this.walletInfo,
+        // this.utxos.bchUtxos,
+        this.utxos.utxoStore.bchUtxos,
+        // this.utxos.tokenUtxos,
         tokenUtxos,
         satsPerByte
       )
@@ -241,20 +241,20 @@ class MinimalBCHWallet {
 
   async burnTokens (qty, tokenId, satsPerByte) {
     try {
-      // console.log(`utxoStore: ${JSON.stringify(_this.utxos.utxoStore, null, 2)}`)
+      // console.log(`utxoStore: ${JSON.stringify(this.utxos.utxoStore, null, 2)}`)
 
       // If mining fee is not specified, use the value assigned in the constructor.
-      if (!satsPerByte) satsPerByte = _this.fee
+      if (!satsPerByte) satsPerByte = this.fee
 
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
-      const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
+      const tokenUtxos = this.utxos.getSpendableTokenUtxos()
 
       // Generate the transaction.
-      return _this.tokens.burnTokens(
+      return this.tokens.burnTokens(
         qty,
         tokenId,
-        _this.walletInfo,
-        _this.utxos.utxoStore.bchUtxos,
+        this.walletInfo,
+        this.utxos.utxoStore.bchUtxos,
         tokenUtxos,
         satsPerByte
       )
@@ -268,23 +268,23 @@ class MinimalBCHWallet {
   listTokens (slpAddress) {
     const addr = slpAddress || this.walletInfo.slpAddress
 
-    return _this.tokens.listTokensFromAddress(addr)
+    return this.tokens.listTokensFromAddress(addr)
   }
 
   // Send BCH. Returns a promise that resolves into a TXID.
   // This is a wrapper for the send-bch.js library.
   sendAll (toAddress) {
     try {
-      return _this.sendBch.sendAllBch(
+      return this.sendBch.sendAllBch(
         toAddress,
         {
-          mnemonic: _this.walletInfo.mnemonic,
-          cashAddress: _this.walletInfo.address,
-          hdPath: _this.walletInfo.hdPath,
-          fee: _this.fee
+          mnemonic: this.walletInfo.mnemonic,
+          cashAddress: this.walletInfo.address,
+          hdPath: this.walletInfo.hdPath,
+          fee: this.fee
         },
-        // _this.utxos.bchUtxos
-        _this.utxos.utxoStore.bchUtxos
+        // this.utxos.bchUtxos
+        this.utxos.utxoStore.bchUtxos
       )
     } catch (err) {
       console.error('Error in sendAll()')
@@ -296,14 +296,14 @@ class MinimalBCHWallet {
   async burnAll (tokenId) {
     try {
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
-      const tokenUtxos = _this.utxos.getSpendableTokenUtxos()
+      const tokenUtxos = this.utxos.getSpendableTokenUtxos()
       // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
 
       // Generate the transaction.
-      return _this.tokens.burnAll(
+      return this.tokens.burnAll(
         tokenId,
-        _this.walletInfo,
-        _this.utxos.utxoStore.bchUtxos,
+        this.walletInfo,
+        this.utxos.utxoStore.bchUtxos,
         tokenUtxos
       )
     } catch (err) {
