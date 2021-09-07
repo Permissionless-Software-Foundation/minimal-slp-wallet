@@ -4,4 +4,4 @@ The minimal-slp-wallet library is used to tie in the [psf-bch-wallet](https://gi
 
 This is highly complimentary, as psf-bch-wallet can be used for rapid prototyping and debugging. The web wallet is slower to develop on, but makes for a more accessible (non-developer) UI.
 
-![./images/dep-diagram.png](Dependency diagram)
+![Dependency diagram](./images/dep-diagram.png)
