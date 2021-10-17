@@ -123,6 +123,9 @@ class MinimalBCHWallet {
       walletInfo.address = walletInfo.cashAddress = this.bchjs.HDNode.toCashAddress(
         childNode
       )
+      walletInfo.ecashAddress = this.bchjs.Address.toEcashAddress(
+        walletInfo.address
+      )
       walletInfo.slpAddress = this.bchjs.SLP.Address.toSLPAddress(
         walletInfo.address
       )
