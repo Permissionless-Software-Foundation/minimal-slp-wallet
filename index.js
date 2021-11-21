@@ -14,7 +14,6 @@ const crypto = require('crypto-js')
 const SendBCH = require('./lib/send-bch')
 const Utxos = require('./lib/utxos')
 const Tokens = require('./lib/tokens')
-const utxoMocks = require('./test/unit/mocks/utxo-mocks')
 const AdapterRouter = require('./lib/adapters/router')
 
 // let this
@@ -87,47 +86,68 @@ class MinimalBCHWallet {
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
-  async create (mnemonic) {
+  async create (mnemonicOrWif) {
     // return new Promise(async (resolve, reject) => {
     try {
       // Attempt to decrypt mnemonic if password is provided.
-      if (mnemonic && this.advancedOptions.password) {
-        mnemonic = this.decrypt(mnemonic, this.advancedOptions.password)
-      }
-
-      // TODO: Detect if mnemonic is actually a WIF, and handle accordingly.
-      // A WIF will start with L or K, and will have no spaces.
-
-      // Generate the HD wallet.
-      mnemonic = mnemonic || this.bchjs.Mnemonic.generate(128)
-      const rootSeedBuffer = await this.bchjs.Mnemonic.toSeed(mnemonic)
-      const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeedBuffer)
-      const childNode = masterHDNode.derivePath(this.hdPath)
-      const privateKey = this.bchjs.HDNode.toWIF(childNode)
-      const publicKey = this.bchjs.HDNode.toPublicKey(childNode)
-
-      const walletInfo = {}
-
-      // Encrypt the mnemonic if a password is provided.
-      if (this.advancedOptions.password) {
-        walletInfo.mnemonicEncrypted = this.encrypt(
-          mnemonic,
+      if (mnemonicOrWif && this.advancedOptions.password) {
+        mnemonicOrWif = this.decrypt(
+          mnemonicOrWif,
           this.advancedOptions.password
         )
       }
 
-      // Set the wallet properties.
-      walletInfo.mnemonic = mnemonic
-      walletInfo.privateKey = privateKey
-      walletInfo.publicKey = publicKey.toString('hex')
-      walletInfo.address = walletInfo.cashAddress = this.bchjs.HDNode.toCashAddress(
-        childNode
-      )
+      // let privateKey, publicKey
+      const walletInfo = {}
+
+      // A WIF will start with L or K, will have no spaces, and will be 52
+      // characters long.
+      const startsWithKorL =
+        mnemonicOrWif &&
+        (mnemonicOrWif[0].toString().toLowerCase() === 'k' ||
+        mnemonicOrWif[0].toString().toLowerCase() === 'l')
+      const is52Chars = mnemonicOrWif && mnemonicOrWif.length === 52
+
+      if (startsWithKorL && is52Chars) {
+        // WIF Private Key
+
+        walletInfo.privateKey = mnemonicOrWif
+        const ecPair = this.bchjs.ECPair.fromWIF(mnemonicOrWif)
+        // walletInfo.publicKey = ecPair.toPublicKey().toString('hex')
+        walletInfo.publicKey = this.bchjs.ECPair.toPublicKey(ecPair).toString('hex')
+        walletInfo.mnemonic = null
+        walletInfo.address = walletInfo.cashAddress = this.bchjs.ECPair.toCashAddress(ecPair)
+        walletInfo.legacyAddress = this.bchjs.ECPair.toLegacyAddress(ecPair)
+        walletInfo.hdPath = null
+      } else {
+        // 12-word Mnemonic or no input.
+
+        const mnemonic = mnemonicOrWif || this.bchjs.Mnemonic.generate(128)
+        const rootSeedBuffer = await this.bchjs.Mnemonic.toSeed(mnemonic)
+        const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeedBuffer)
+        const childNode = masterHDNode.derivePath(this.hdPath)
+
+        walletInfo.privateKey = this.bchjs.HDNode.toWIF(childNode)
+        walletInfo.publicKey = this.bchjs.HDNode.toPublicKey(childNode).toString('hex')
+        walletInfo.mnemonic = mnemonic
+        walletInfo.address = walletInfo.cashAddress = this.bchjs.HDNode.toCashAddress(
+          childNode
+        )
+        walletInfo.legacyAddress = this.bchjs.HDNode.toLegacyAddress(childNode)
+        walletInfo.hdPath = this.hdPath
+      }
+
+      // Encrypt the mnemonic if a password is provided.
+      if (this.advancedOptions.password) {
+        walletInfo.mnemonicEncrypted = this.encrypt(
+          mnemonicOrWif,
+          this.advancedOptions.password
+        )
+      }
+
       walletInfo.slpAddress = this.bchjs.SLP.Address.toSLPAddress(
         walletInfo.address
       )
-      walletInfo.legacyAddress = this.bchjs.HDNode.toLegacyAddress(childNode)
-      walletInfo.hdPath = this.hdPath
 
       // Do not update the wallet UTXOs if noUpdate flag is set.
       if (!this.noUpdate) {
@@ -137,6 +157,8 @@ class MinimalBCHWallet {
 
       this.walletInfoCreated = true
       this.walletInfo = walletInfo
+
+      return walletInfo
     } catch (err) {
       // return reject(err)
       console.error('Error in create()')

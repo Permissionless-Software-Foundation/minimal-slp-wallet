@@ -165,6 +165,35 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.notProperty(uut.walletInfo, 'mnemonicEncrypted')
     })
 
+    it('should import clear-text WIF private key', async () => {
+      const wif = 'KyGrqLtG5PLf97Lu6RXDMGKg6YbcmRKCemgoiufFXPmvQWyvThvE'
+
+      uut = new MinimalBCHWallet(wif, { noUpdate: true })
+      await uut.walletInfoPromise
+      // console.log('uut: ', uut)
+
+      assert.property(uut.walletInfo, 'mnemonic')
+      assert.equal(uut.walletInfo.mnemonic, null)
+
+      assert.property(uut.walletInfo, 'privateKey')
+      assert.isString(uut.walletInfo.privateKey)
+      assert.isNotEmpty(uut.walletInfo.privateKey)
+
+      assert.property(uut.walletInfo, 'cashAddress')
+      assert.isString(uut.walletInfo.cashAddress)
+      assert.isNotEmpty(uut.walletInfo.cashAddress)
+
+      assert.property(uut.walletInfo, 'legacyAddress')
+      assert.isString(uut.walletInfo.legacyAddress)
+      assert.isNotEmpty(uut.walletInfo.legacyAddress)
+
+      assert.property(uut.walletInfo, 'slpAddress')
+      assert.isString(uut.walletInfo.slpAddress)
+      assert.isNotEmpty(uut.walletInfo.slpAddress)
+
+      assert.notProperty(uut.walletInfo, 'mnemonicEncrypted')
+    })
+
     it('should accept advanced options', async () => {
       const exampleURL = 'http://somewebsite.com/v3/'
       const exampleApiToken = 'myapitoken'
