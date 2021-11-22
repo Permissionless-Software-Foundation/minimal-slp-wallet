@@ -35,15 +35,15 @@
   },
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
-    "@psf/bch-js": "4.20.14",
-    "apidoc": "^0.25.0",
-    "bch-donation": "^1.1.1",
-    "crypto-js": "^4.0.0"
+    "@psf/bch-js": "4.20.26",
+    "apidoc": "0.25.0",
+    "bch-donation": "1.1.1",
+    "crypto-js": "4.0.0"
   },
   "devDependencies": {
-    "browserify": "^17.0.0",
-    "chai": "^4.2.0",
-    "coveralls": "^3.1.0",
+    "browserify": "17.0.0",
+    "chai": "4.2.0",
+    "coveralls": "3.1.0",
     "eslint": "7.17.0",
     "eslint-config-prettier": "7.1.0",
     "eslint-config-standard": "16.0.2",
@@ -51,13 +51,13 @@
     "eslint-plugin-prettier": "3.3.1",
     "eslint-plugin-standard": "4.0.1",
     "husky": "4.3.8",
-    "lodash.clonedeep": "^4.5.0",
-    "mocha": "^8.2.0",
-    "nyc": "^15.1.0",
-    "semantic-release": "^17.4.4",
-    "sinon": "^9.2.0",
+    "lodash.clonedeep": "4.5.0",
+    "mocha": "8.2.0",
+    "nyc": "15.1.0",
+    "semantic-release": "17.4.4",
+    "sinon": "9.2.0",
     "standard": "16.0.4",
-    "tinyify": "^3.0.0"
+    "tinyify": "3.0.0"
   },
   "release": {
     "publish": [

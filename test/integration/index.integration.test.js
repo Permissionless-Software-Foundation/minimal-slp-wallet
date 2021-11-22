@@ -54,7 +54,7 @@ describe('#BchWallet', () => {
       const wif = 'KyGrqLtG5PLf97Lu6RXDMGKg6YbcmRKCemgoiufFXPmvQWyvThvE'
 
       const walletPromise = await uut.create(wif)
-      console.log(`walletPromise: ${JSON.stringify(walletPromise, null, 2)}`)
+      // console.log(`walletPromise: ${JSON.stringify(walletPromise, null, 2)}`)
 
       assert.include(
         walletPromise.cashAddress,

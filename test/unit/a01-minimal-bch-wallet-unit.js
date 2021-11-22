@@ -12,17 +12,16 @@ const mockUtxos = require('./mocks/utxo-mocks')
 
 // Unit under test
 const MinimalBCHWallet = require('../../index')
-let uut
 
 describe('#index.js - Minimal BCH Wallet', () => {
-  let sandbox
+  let sandbox, uut
 
   // Restore the sandbox before each test.
-  beforeEach(async () => {
+  beforeEach(() => {
     sandbox = sinon.createSandbox()
 
     uut = new MinimalBCHWallet(undefined, { noUpdate: true })
-    await uut.walletInfoPromise
+    // await uut.walletInfoPromise
   })
 
   afterEach(() => sandbox.restore())
@@ -268,7 +267,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
     it('should switch to json-rpc interface', () => {
       const advancedOptions = {
         interface: 'json-rpc',
-        jsonRpcWalletService: {}
+        jsonRpcWalletService: {},
+        noUpdate: true
       }
 
       uut = new MinimalBCHWallet(undefined, advancedOptions)
@@ -315,7 +315,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
     it('should work when noUpdate flag is false', async () => {
       // Force the noUpdate flag to be true.
-      uut.noUpdate = true
+      uut.noUpdate = false
 
       // Stub the network calls.
       sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
@@ -371,6 +371,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
   describe('#send', () => {
     it('should broadcast a transaction and return a txid', async () => {
+      await uut.walletInfoPromise
+
       const txid =
         '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
 
@@ -384,6 +386,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
     it('should throw an error if there is an issue with broadcasting a tx', async () => {
       try {
+        await uut.walletInfoPromise
+
         // Mock live network calls.
         sandbox.stub(uut.sendBch, 'sendBch').throws(new Error('error message'))
 
@@ -396,8 +400,11 @@ describe('#index.js - Minimal BCH Wallet', () => {
       }
     })
   })
+
   describe('#sendAll', () => {
     it('should broadcast a transaction and return a txid', async () => {
+      await uut.walletInfoPromise
+
       const txid =
         '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
 
@@ -411,6 +418,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
     it('should throw an error if there is an issue with broadcasting a tx', async () => {
       try {
+        await uut.walletInfoPromise
+
         // Mock live network calls.
         sandbox
           .stub(uut.sendBch, 'sendAllBch')
@@ -462,6 +471,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
   describe('#getUtxos', () => {
     it('should wrap the initUtxoStore function', async () => {
+      await uut.walletInfoPromise
+
       sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
 
       const obj = await uut.getUtxos()
@@ -472,6 +483,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
   describe('#listTokens', () => {
     it('should wrap the listTokensFromAddress function', async () => {
+      await uut.walletInfoPromise
+
       sandbox.stub(uut.tokens, 'listTokensFromAddress').resolves({})
 
       const obj = await uut.listTokens()
