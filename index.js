@@ -56,15 +56,15 @@ class MinimalBCHWallet {
     bchjsOptions.bchjs = this.bchjs;
 
     // Instantiate the adapter router.
-    if (advancedOptions.interface === "json-rpc") {
-      if (!advancedOptions.jsonRpcWalletService) {
-        throw new Error(
-          "Must pass wallet service instance if using json-rpc interface."
-        );
-      }
+    if (advancedOptions.interface === "consumer-api") {
+      // if (!advancedOptions.jsonRpcWalletService) {
+      //   throw new Error(
+      //     "Must pass wallet service instance if using json-rpc interface."
+      //   );
+      // }
 
-      bchjsOptions.interface = "json-rpc";
-      bchjsOptions.jsonRpcWalletService = advancedOptions.jsonRpcWalletService;
+      bchjsOptions.interface = "consumer-api";
+      bchjsOptions.walletService = advancedOptions.walletService;
     }
     this.ar = new AdapterRouter(bchjsOptions);
     bchjsOptions.ar = this.ar;
