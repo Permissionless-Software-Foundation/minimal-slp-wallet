@@ -65,6 +65,7 @@ class MinimalBCHWallet {
 
       bchjsOptions.interface = "consumer-api";
       bchjsOptions.walletService = advancedOptions.walletService;
+      bchjsOptions.bchWalletApi = advancedOptions.bchWalletApi;
     }
     this.ar = new AdapterRouter(bchjsOptions);
     bchjsOptions.ar = this.ar;
