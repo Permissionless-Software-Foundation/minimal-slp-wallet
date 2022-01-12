@@ -63,18 +63,16 @@ describe('#adapter-router', () => {
       assert.equal(uut.interface, 'consumer-api')
     })
 
-    it('should overwrite default walletService library', () => {
+    it('should override restURL for consumer API', () => {
       const bchjs = new BCHJS()
-
-      const walletService = {}
-
       uut = new AdapterRouter({
         bchjs,
         interface: 'consumer-api',
-        walletService
+        restURL: 'fakeUrl'
       })
 
       assert.equal(uut.interface, 'consumer-api')
+      assert.equal(uut.bchConsumer.restURL, 'fakeUrl')
     })
   })
 
@@ -102,10 +100,11 @@ describe('#adapter-router', () => {
     })
 
     it('should use wallet service when consumer interface is selected', async () => {
-      // Mock dependencies.
-      sandbox.stub(uut.walletService, 'getUtxos').resolves(['test str'])
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
-      uut.interface = 'consumer-api'
+      // Mock dependencies.
+      sandbox.stub(uut.bchConsumer.bch, 'getUtxos').resolves(['test str'])
 
       const result = await uut.getUtxos('fake-addr')
 
@@ -151,10 +150,11 @@ describe('#adapter-router', () => {
     })
 
     it('should use wallet service when consumer-api interface is selected', async () => {
-      // Mock dependencies.
-      sandbox.stub(uut.walletService, 'sendTx').resolves('txid-str')
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
-      uut.interface = 'consumer-api'
+      // Mock dependencies.
+      sandbox.stub(uut.bchConsumer.bch, 'sendTx').resolves('txid-str')
 
       const result = await uut.sendTx('fakeHex')
 
