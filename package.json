@@ -35,8 +35,9 @@
   },
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
-    "@psf/bch-js": "4.20.26",
+    "@psf/bch-js": "4.21.0",
     "apidoc": "0.25.0",
+    "bch-consumer": "1.0.4",
     "bch-donation": "1.1.1",
     "crypto-js": "4.0.0"
   },

@@ -62,4 +62,14 @@ describe('#BchWallet', () => {
       )
     })
   })
+
+  describe('#getBalance', () => {
+    it('should get the balance for an address', async () => {
+      const addr = 'bitcoincash:qqh793x9au6ehvh7r2zflzguanlme760wuzehgzjh9'
+      const result = await uut.getBalance(addr)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`);
+
+      assert.isAbove(result, 546)
+    })
+  })
 })
