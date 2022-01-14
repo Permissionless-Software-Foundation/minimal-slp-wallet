@@ -37,7 +37,7 @@
   "dependencies": {
     "@psf/bch-js": "4.21.0",
     "apidoc": "0.25.0",
-    "bch-consumer": "1.0.4",
+    "bch-consumer": "1.0.5",
     "bch-donation": "1.1.1",
     "crypto-js": "4.0.0"
   },

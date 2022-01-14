@@ -228,7 +228,8 @@ class MinimalBCHWallet {
   // Get transactions associated with the wallet.
   async getTransactions (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    const data = await this.bchjs.Electrumx.transactions(addr)
+    // const data = await this.bchjs.Electrumx.transactions(addr)
+    const data = await this.ar.getTransactions(addr)
 
     const transactions = data.transactions.map(x => x.tx_hash)
     return transactions
