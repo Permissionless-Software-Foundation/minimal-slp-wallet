@@ -173,4 +173,107 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#getBalance', () => {
+    it('should throw an error if address is not specified', async () => {
+      try {
+        await uut.getBalance()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Address string required when calling getBalance()'
+        )
+      }
+    })
+
+    it('should use bch-js by default', async () => {
+      // Mock dependencies.
+      sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves('test str')
+
+      const result = await uut.getBalance('fake-addr')
+
+      assert.equal(result, 'test str')
+    })
+
+    it('should use wallet service when consumer interface is selected', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchConsumer.bch, 'getBalance')
+        .resolves({ success: true, balances: [{ balance: 'test str' }] })
+
+      const result = await uut.getBalance('fake-addr')
+      // console.log('result: ', result)
+
+      assert.equal(result.balance, 'test str')
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        await uut.getBalance('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+  })
+
+  describe('#getTransactions', () => {
+    it('should throw an error if address is not specified', async () => {
+      try {
+        await uut.getTransactions()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Address string required when calling getTransactions()'
+        )
+      }
+    })
+
+    it('should use bch-js by default', async () => {
+      // Mock dependencies.
+      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves('test str')
+
+      const result = await uut.getTransactions('fake-addr')
+
+      assert.equal(result, 'test str')
+    })
+
+    it('should use wallet service when consumer interface is selected', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies.
+      sandbox.stub(uut.bchConsumer.bch, 'getTransactions').resolves({
+        success: true,
+        transactions: [{ transactions: 'test str' }]
+      })
+
+      const result = await uut.getTransactions('fake-addr')
+      // console.log('result: ', result)
+
+      assert.equal(result.transactions, 'test str')
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        await uut.getTransactions('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+  })
 })

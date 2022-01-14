@@ -219,7 +219,8 @@ class MinimalBCHWallet {
   // Get the balance of the wallet.
   async getBalance (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    const balances = await this.bchjs.Electrumx.balance(addr)
+    // const balances = await this.bchjs.Electrumx.balance(addr)
+    const balances = await this.ar.getBalance(addr)
 
     return balances.balance.confirmed + balances.balance.unconfirmed
   }
@@ -227,7 +228,8 @@ class MinimalBCHWallet {
   // Get transactions associated with the wallet.
   async getTransactions (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    const data = await this.bchjs.Electrumx.transactions(addr)
+    // const data = await this.bchjs.Electrumx.transactions(addr)
+    const data = await this.ar.getTransactions(addr)
 
     const transactions = data.transactions.map(x => x.tx_hash)
     return transactions
