@@ -219,7 +219,8 @@ class MinimalBCHWallet {
   // Get the balance of the wallet.
   async getBalance (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    const balances = await this.bchjs.Electrumx.balance(addr)
+    // const balances = await this.bchjs.Electrumx.balance(addr)
+    const balances = await this.ar.getBalance(addr)
 
     return balances.balance.confirmed + balances.balance.unconfirmed
   }
