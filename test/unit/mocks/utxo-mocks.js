@@ -173,7 +173,9 @@ const tokenUtxos01 = {
           decimals: 2,
           tokenType: 1,
           isValid: true,
-          tokenQty: '1'
+          tokenQty: '1',
+          qtyStr: '1',
+          type: 'token'
         },
         {
           height: 639443,
@@ -196,7 +198,9 @@ const tokenUtxos01 = {
           decimals: 8,
           tokenType: 1,
           tokenQty: '1',
-          isValid: true
+          qtyStr: '1',
+          isValid: true,
+          type: 'token'
         },
         {
           height: 639443,
@@ -219,7 +223,9 @@ const tokenUtxos01 = {
           decimals: 0,
           tokenType: 1,
           tokenQty: '1',
-          isValid: true
+          qtyStr: '1',
+          isValid: true,
+          type: 'token'
         }
       ]
     },

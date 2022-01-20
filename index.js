@@ -271,6 +271,7 @@ class MinimalBCHWallet {
 
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
       const tokenUtxos = this.utxos.getSpendableTokenUtxos()
+      // console.log('msw tokenUtxos: ', tokenUtxos)
 
       return this.tokens.sendTokens(
         output,
