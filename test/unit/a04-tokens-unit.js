@@ -67,11 +67,11 @@ describe('#tokens', () => {
   describe('#listTokensFromUtxos', () => {
     it('should return a list of tokens', () => {
       const tokenInfo = uut.listTokensFromUtxos(mockData.hydratedUtxos)
-      // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
+      console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       // Assert that the returned array is the expected size.
       assert.isArray(tokenInfo)
-      assert.equal(tokenInfo.length, 2)
+      assert.equal(tokenInfo.length, 1)
 
       // Assert the objects in the array have the expected properties.
       assert.property(tokenInfo[0], 'tokenId')
@@ -84,7 +84,6 @@ describe('#tokens', () => {
 
       // Assert that the quantities are as expected.
       assert.equal(tokenInfo[0].qty, 1)
-      assert.equal(tokenInfo[1].qty, 1)
     })
 
     it('should return aggregate token data', () => {
@@ -93,11 +92,10 @@ describe('#tokens', () => {
 
       // Assert that the returned array is the expected size.
       assert.isArray(tokenInfo)
-      assert.equal(tokenInfo.length, 2)
+      assert.equal(tokenInfo.length, 1)
 
       // Assert that the quantities are as expected.
-      assert.equal(tokenInfo[0].qty, 2)
-      assert.equal(tokenInfo[1].qty, 1)
+      assert.equal(tokenInfo[0].qty, 1)
     })
 
     it('should handle and throw errors', async () => {
@@ -397,14 +395,12 @@ describe('#tokens', () => {
       const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
 
       // Stub network calls and subfunctions that are not within the scope of testing.
-      // sandbox.stub(uut.utxos, 'getUtxos').resolves({})
-      // sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
       sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
-      uut.utxos.utxoStore = mockData.tokenUtxos01
+      uut.utxos.utxoStore = mockData.tokenUtxos03
       // console.log(`uut.utxos.utxoStore: ${JSON.stringify(uut.utxos.utxoStore, null, 2)}`)
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
-      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+      console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
 
       assert.isArray(tokenInfo)
 

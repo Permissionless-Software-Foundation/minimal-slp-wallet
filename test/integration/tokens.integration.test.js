@@ -25,7 +25,7 @@ describe('#tokens.js', () => {
       const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
-      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+      console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
 
       assert.isArray(tokenInfo)
 

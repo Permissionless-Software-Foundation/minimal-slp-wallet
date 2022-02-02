@@ -7,17 +7,9 @@ const assert = require('chai').assert
 const sinon = require('sinon')
 const BCHJS = require('@psf/bch-js')
 
-// const Tokens = require('../../lib/tokens')
-// const Utxos = require('../../lib/utxos')
-
 const AdapterRouter = require('../../lib/adapters/router')
 
 let uut
-
-// const mockDataLib = require('./mocks/utxo-mocks')
-// let mockData
-// const sendMockDataLib = require('./mocks/send-bch-mocks')
-// let sendMockData
 
 describe('#adapter-router', () => {
   let sandbox
@@ -253,9 +245,9 @@ describe('#adapter-router', () => {
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
-      sandbox.stub(uut.bchConsumer.bch, 'getTransactions').resolves({
+      sandbox.stub(uut.bchConsumer.bch, 'getTxHistory').resolves({
         success: true,
-        transactions: [{ transactions: 'test str' }]
+        txs: ['test str']
       })
 
       const result = await uut.getTransactions('fake-addr')

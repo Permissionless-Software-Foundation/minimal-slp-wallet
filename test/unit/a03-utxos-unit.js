@@ -63,7 +63,7 @@ describe('#UTXOs', () => {
       const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
 
       // Mock network calls.
-      sandbox.stub(uut.ar, 'getUtxos').resolves([mockData.tokenUtxos01])
+      sandbox.stub(uut.ar, 'getUtxos').resolves(mockData.tokenUtxos01)
 
       const utxos = await uut.initUtxoStore(addr)
       // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
