@@ -103,6 +103,24 @@ describe('#adapter-router', () => {
       assert.equal(result, 'test str')
     })
 
+    it('should throw error if communication error with bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchConsumer.bch, 'getUtxos')
+        .resolves([{ success: false, message: 'test error' }])
+
+      try {
+        await uut.getUtxos('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.equal(err.message, 'test error')
+      }
+    })
+
     it('should throw an error if an interface is not specified', async () => {
       try {
         uut.interface = ''
@@ -141,6 +159,21 @@ describe('#adapter-router', () => {
       assert.equal(result, 'txid-str')
     })
 
+    it('should catch full-node errors thrown by bch-js', async () => {
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        .rejects({ error: 'test error' })
+
+      try {
+        await uut.sendTx('fakeHex')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.equal(err.message, 'test error')
+      }
+    })
+
     it('should use wallet service when consumer-api interface is selected', async () => {
       const bchjs = new BCHJS()
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
@@ -151,6 +184,24 @@ describe('#adapter-router', () => {
       const result = await uut.sendTx('fakeHex')
 
       assert.equal(result, 'txid-str')
+    })
+
+    it('should throw error if communication error with bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchConsumer.bch, 'sendTx')
+        .resolves({ success: false, message: 'test error' })
+
+      try {
+        await uut.sendTx('fakeHex')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.equal(err.message, 'test error')
+      }
     })
 
     it('should throw an error if an interface is not specified', async () => {

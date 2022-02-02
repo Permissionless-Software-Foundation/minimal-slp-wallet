@@ -67,7 +67,7 @@ describe('#tokens', () => {
   describe('#listTokensFromUtxos', () => {
     it('should return a list of tokens', () => {
       const tokenInfo = uut.listTokensFromUtxos(mockData.hydratedUtxos)
-      console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
+      // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       // Assert that the returned array is the expected size.
       assert.isArray(tokenInfo)
@@ -84,6 +84,21 @@ describe('#tokens', () => {
 
       // Assert that the quantities are as expected.
       assert.equal(tokenInfo[0].qty, 1)
+    })
+
+    it('should return for non-SLP UTXOs', () => {
+      const tokenInfo = uut.listTokensFromUtxos([{ isSlp: false }])
+      // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.equal(tokenInfo.length, 0)
+    })
+
+    it('should combine UTXOs with the same token', () => {
+      const utxos = [mockData.hydratedUtxos[0], mockData.hydratedUtxos[0]]
+      const tokenInfo = uut.listTokensFromUtxos(utxos)
+      // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.equal(tokenInfo[0].qty, 2)
     })
 
     it('should return aggregate token data', () => {
@@ -145,7 +160,7 @@ describe('#tokens', () => {
       utxos.utxoStore = mockData.tokenUtxos01
       const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
-      console.log('tokenUtxos: ', tokenUtxos)
+      // console.log('tokenUtxos: ', tokenUtxos)
 
       // Modify the BCH UTXO for this test.
       // bchUtxos[0].value = bchUtxos[0].satoshis = 100000
@@ -166,7 +181,7 @@ describe('#tokens', () => {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
           '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
-        qty: 1
+        qty: 0.5
       }
 
       const walletInfo = sendMockData.mockWallet
@@ -400,7 +415,7 @@ describe('#tokens', () => {
       // console.log(`uut.utxos.utxoStore: ${JSON.stringify(uut.utxos.utxoStore, null, 2)}`)
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
-      console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
 
       assert.isArray(tokenInfo)
 

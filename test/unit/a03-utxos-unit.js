@@ -74,7 +74,7 @@ describe('#UTXOs', () => {
       assert.property(utxos, 'address')
     })
 
-    it('should handle network errors', async () => {
+    it('should handle errors', async () => {
       try {
         const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
 
@@ -85,6 +85,24 @@ describe('#UTXOs', () => {
 
         assert.fail('unexpected result')
       } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should handle network errors', async () => {
+      try {
+        const addr = 'bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c'
+
+        // Force an error
+        sandbox
+          .stub(uut.ar, 'getUtxos')
+          .resolves({ status: 422, message: 'test error' })
+
+        await uut.initUtxoStore(addr)
+
+        assert.fail('unexpected result')
+      } catch (err) {
+        // console.log(err)
         assert.include(err.message, 'test error')
       }
     })
