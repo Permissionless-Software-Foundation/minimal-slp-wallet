@@ -71,7 +71,7 @@ describe('#tokens', () => {
 
       // Assert that the returned array is the expected size.
       assert.isArray(tokenInfo)
-      assert.equal(tokenInfo.length, 2)
+      assert.equal(tokenInfo.length, 1)
 
       // Assert the objects in the array have the expected properties.
       assert.property(tokenInfo[0], 'tokenId')
@@ -84,7 +84,21 @@ describe('#tokens', () => {
 
       // Assert that the quantities are as expected.
       assert.equal(tokenInfo[0].qty, 1)
-      assert.equal(tokenInfo[1].qty, 1)
+    })
+
+    it('should return for non-SLP UTXOs', () => {
+      const tokenInfo = uut.listTokensFromUtxos([{ isSlp: false }])
+      // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.equal(tokenInfo.length, 0)
+    })
+
+    it('should combine UTXOs with the same token', () => {
+      const utxos = [mockData.hydratedUtxos[0], mockData.hydratedUtxos[0]]
+      const tokenInfo = uut.listTokensFromUtxos(utxos)
+      // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.equal(tokenInfo[0].qty, 2)
     })
 
     it('should return aggregate token data', () => {
@@ -93,11 +107,10 @@ describe('#tokens', () => {
 
       // Assert that the returned array is the expected size.
       assert.isArray(tokenInfo)
-      assert.equal(tokenInfo.length, 2)
+      assert.equal(tokenInfo.length, 1)
 
       // Assert that the quantities are as expected.
-      assert.equal(tokenInfo[0].qty, 2)
-      assert.equal(tokenInfo[1].qty, 1)
+      assert.equal(tokenInfo[0].qty, 1)
     })
 
     it('should handle and throw errors', async () => {
@@ -147,6 +160,7 @@ describe('#tokens', () => {
       utxos.utxoStore = mockData.tokenUtxos01
       const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
+      // console.log('tokenUtxos: ', tokenUtxos)
 
       // Modify the BCH UTXO for this test.
       // bchUtxos[0].value = bchUtxos[0].satoshis = 100000
@@ -167,7 +181,7 @@ describe('#tokens', () => {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
         tokenId:
           '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
-        qty: 1
+        qty: 0.5
       }
 
       const walletInfo = sendMockData.mockWallet
@@ -224,7 +238,7 @@ describe('#tokens', () => {
       assert.isString(hex)
       assert.isString(txid)
     })
-
+    /*
     it('should send NFT Group token', async () => {
       const output = {
         address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
@@ -353,6 +367,7 @@ describe('#tokens', () => {
 
       assert.isString(hex)
     })
+    */
   })
 
   describe('#sendTokens', () => {
@@ -395,10 +410,8 @@ describe('#tokens', () => {
       const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
 
       // Stub network calls and subfunctions that are not within the scope of testing.
-      // sandbox.stub(uut.utxos, 'getUtxos').resolves({})
-      // sandbox.stub(uut.utxos, 'hydrate').resolves(mockData.tokenUtxos01)
       sandbox.stub(uut.utxos, 'initUtxoStore').resolves({})
-      uut.utxos.utxoStore = mockData.tokenUtxos01
+      uut.utxos.utxoStore = mockData.tokenUtxos03
       // console.log(`uut.utxos.utxoStore: ${JSON.stringify(uut.utxos.utxoStore, null, 2)}`)
 
       const tokenInfo = await uut.listTokensFromAddress(addr)
@@ -516,7 +529,7 @@ describe('#tokens', () => {
         assert.include(err.message, 'tokenId does not match')
       }
     })
-
+    /*
     it('should throw an error for non token type1.', async () => {
       try {
         const tokenId =
@@ -541,7 +554,7 @@ describe('#tokens', () => {
         assert.include(err.message, 'Token must be type 1')
       }
     })
-
+*/
     it('should generate burn transaction', async () => {
       const tokenId =
         'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
