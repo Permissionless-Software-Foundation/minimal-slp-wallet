@@ -360,6 +360,11 @@ class MinimalBCHWallet {
       throw err
     }
   }
+
+  // Get the spot price of BCH in USD.
+  async getUsd () {
+    return await this.ar.getUsd()
+  }
 }
 
 module.exports = MinimalBCHWallet
