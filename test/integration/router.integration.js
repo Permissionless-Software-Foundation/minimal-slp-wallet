@@ -130,4 +130,23 @@ describe('#router.js', () => {
       }
     })
   })
+
+  describe('#getUsd', () => {
+    it('should get USD price from bch-js', async () => {
+      const result = await uut.getUsd()
+      // console.log('result: ', result)
+
+      assert.isAbove(result, 0)
+    })
+
+    it('should get USD price from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new Router({ bchjs, interface: 'consumer-api' })
+
+      const result = await uut.getUsd()
+      // console.log('result: ', result)
+
+      assert.isAbove(result, 0)
+    })
+  })
 })
