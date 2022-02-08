@@ -35,7 +35,7 @@ describe('#UTXOs', () => {
       assert.property(result, 'slpUtxos')
     })
 
-    it('should initialize and return the utxoStore from free-bch.fullstack.cash', async () => {
+    it('should initialize and return the utxoStore using web 3', async () => {
       // Re-initialize UUT for using web 3 infra.
       const bchjs = new BCHJS()
       const config = {
