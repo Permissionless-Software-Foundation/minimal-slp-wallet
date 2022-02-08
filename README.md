@@ -2,11 +2,12 @@
 
 This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end web apps. It contains all the core functionality needed by a wallet:
 
-- Create a new BCH wallet
-- Get balances and UTXOs
+- Create a new BCH wallet or import a mnemonic
+- Encrypt a wallets mnemonic mnemonic for safe storage
 - Send and receive BCH
 - Send and receive SLP tokens
-- Transaction history
+- Get balances and UTXOs
+- Retrieve transaction history & transaction details
 - Burn tokens
 - Price BCH in USD
 
