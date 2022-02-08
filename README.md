@@ -3,7 +3,7 @@
 This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end web apps. It contains all the core functionality needed by a wallet:
 
 - Create a new BCH wallet or import a mnemonic
-- Encrypt a wallets mnemonic mnemonic for safe storage
+- Encrypt a wallets mnemonic for safe storage
 - Send and receive BCH
 - Send and receive SLP tokens
 - Get balances and UTXOs
@@ -78,6 +78,8 @@ const bchjs = new BCHJS()
 const bchWallet = new BchWallet(undefined, {
   interface: 'consumer-api',
   restURL: 'https://free-bch.fullstack.cash'
+  // Connect to your own instance of ipfs-bch-wallet-consumer:
+  // restURL: 'http://localhost:5005'
 })
 ```
 
