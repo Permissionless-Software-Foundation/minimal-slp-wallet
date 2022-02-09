@@ -149,4 +149,35 @@ describe('#router.js', () => {
       assert.isAbove(result, 0)
     })
   })
+
+  describe('#getTxData', () => {
+    it('should get a TX data from bch-js', async () => {
+      const txids = [
+        '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
+      ]
+
+      const result = await uut.getTxData(txids)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.isArray(result)
+      assert.equal(result.length, 1)
+      assert.equal(result[0].txid, txids[0])
+    })
+
+    it('should get TX data from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new Router({ bchjs, interface: 'consumer-api' })
+
+      const txids = [
+        '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
+      ]
+
+      const result = await uut.getTxData(txids)
+      // console.log('result: ', result)
+
+      assert.isArray(result)
+      assert.equal(result.length, 1)
+      assert.equal(result[0].txid, txids[0])
+    })
+  })
 })

@@ -319,4 +319,60 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#getTxData', () => {
+    it('should throw an error if txids is a string', async () => {
+      try {
+        await uut.getTxData('blah')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Input txids must be an array of TXIDs. Up to 20.'
+        )
+      }
+    })
+
+    it('should use bch-js by default', async () => {
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchjs.PsfSlpIndexer, 'tx')
+        .resolves({ txData: { key: 'value' } })
+
+      const result = await uut.getTxData(['fake-txid'])
+      // console.log('result: ', result)
+
+      assert.isArray(result)
+      assert.equal(result[0].key, 'value')
+    })
+
+    it('should get data from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchConsumer.bch, 'getTxData')
+        .resolves([{ key: 'value' }])
+
+      const result = await uut.getTxData(['fake-txid'])
+      // console.log('result: ', result)
+
+      assert.isArray(result)
+      assert.equal(result[0].key, 'value')
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        await uut.getTxData(['fake-addr'])
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+  })
 })

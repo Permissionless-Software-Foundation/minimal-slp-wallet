@@ -235,6 +235,13 @@ class MinimalBCHWallet {
     return transactions
   }
 
+  // Get transaction data for up to 20 TXIDs. txids should be an array.
+  async getTxData (txids = []) {
+    const data = await this.ar.getTxData(txids)
+
+    return data
+  }
+
   // Send BCH. Returns a promise that resolves into a TXID.
   // This is a wrapper for the send-bch.js library.
   send (outputs) {
