@@ -226,16 +226,16 @@ class MinimalBCHWallet {
   }
 
   // Get transactions associated with the wallet.
+  // Returns an array of object. Each object has a 'tx_hash' and 'height' property.
   async getTransactions (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    // const data = await this.bchjs.Electrumx.transactions(addr)
     const data = await this.ar.getTransactions(addr)
 
-    const transactions = data.transactions.map(x => x.tx_hash)
-    return transactions
+    return data.transactions
   }
 
-  // Get transaction data for up to 20 TXIDs. txids should be an array.
+  // Get transaction data for up to 20 TXIDs. txids should be an array. Each
+  // element should be a string containing a TXID.
   async getTxData (txids = []) {
     const data = await this.ar.getTxData(txids)
 
