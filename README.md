@@ -1,8 +1,22 @@
 # minimal-slp-wallet
 
-This is a minimalist Bitcoin Cash (BCH) wallet for use with front end web apps.
-It's token aware, unlike the wallet the code is forked from: [minimal-bch-wallet](https://github.com/Permissionless-Software-Foundation/minimal-bch-wallet).
-It's intended to be used with the [gatsby-ipfs-web-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-ipfs-web-wallet) web-based wallet, and the [bch-js](https://www.npmjs.com/package/@chris.troutner/bch-js) JavaScript library provided by [FullStack.cash](https://fullstack.cash)
+This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end web apps. It contains all the core functionality needed by a wallet:
+
+- Create a new BCH wallet or import a mnemonic
+- Encrypt a wallets mnemonic for safe storage
+- Send and receive BCH
+- Send and receive SLP tokens
+- Get balances and UTXOs
+- Retrieve transaction history & transaction details
+- Burn tokens
+- Price BCH in USD
+
+It is 'token aware' and can work with all SLP tokens. It can interface with Web 2 infrastructure like [FullStack.cash](https://fullstack.cash) or with the [PSF Web 3 infrastructure](https://psfoundation.cash/blog/realizing-the-web-3-cash-stack) via the [bch-consumer library](https://www.npmjs.com/package/bch-consumer).
+
+This target consumers for this library is:
+
+- [gatsby-theme-bch-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-theme-bch-wallet) Gatsby web wallet theme.
+- [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command line wallet.
 
 The default derivation path for the wallet keypair is `m/44'/245'/0'/0/0`. This is the BIP44 standard for SLP token-aware BCH wallets.
 
@@ -37,6 +51,36 @@ import BchWallet from 'minimal-slp-wallet'
 
 // nodejs modules
 const BchWallet = require('minimal-slp-wallet/index')
+```
+
+### Instantiate Library
+
+#### Using Web 2 Infrastructure
+
+```js
+const BCHJS = require('@psf/bch-js')
+const BchWallet = require('minimal-slp-wallet/index')
+
+const bchjs = new BCHJS({ restURL: 'https://api.fullstack.cash/v5/' })
+const bchWallet = new BchWallet(undefined, {
+  interface: 'rest-api',
+  restURL: 'https://api.fullstack.cash'
+})
+```
+
+#### Using Web 3 Interface
+
+```js
+const BCHJS = require('@psf/bch-js')
+const BchWallet = require('minimal-slp-wallet/index')
+
+const bchjs = new BCHJS()
+const bchWallet = new BchWallet(undefined, {
+  interface: 'consumer-api',
+  restURL: 'https://free-bch.fullstack.cash'
+  // Connect to your own instance of ipfs-bch-wallet-consumer:
+  // restURL: 'http://localhost:5005'
+})
 ```
 
 ### Create new wallets

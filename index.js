@@ -56,15 +56,10 @@ class MinimalBCHWallet {
     bchjsOptions.bchjs = this.bchjs
 
     // Instantiate the adapter router.
-    if (advancedOptions.interface === 'json-rpc') {
-      if (!advancedOptions.jsonRpcWalletService) {
-        throw new Error(
-          'Must pass wallet service instance if using json-rpc interface.'
-        )
-      }
-
-      bchjsOptions.interface = 'json-rpc'
-      bchjsOptions.jsonRpcWalletService = advancedOptions.jsonRpcWalletService
+    if (advancedOptions.interface === 'consumer-api') {
+      bchjsOptions.interface = 'consumer-api'
+      // bchjsOptions.walletService = advancedOptions.walletService
+      // bchjsOptions.bchWalletApi = advancedOptions.bchWalletApi
     }
     this.ar = new AdapterRouter(bchjsOptions)
     bchjsOptions.ar = this.ar
@@ -100,41 +95,70 @@ class MinimalBCHWallet {
       // let privateKey, publicKey
       const walletInfo = {}
 
-      // A WIF will start with L or K, will have no spaces, and will be 52
-      // characters long.
-      const startsWithKorL =
-        mnemonicOrWif &&
-        (mnemonicOrWif[0].toString().toLowerCase() === 'k' ||
-        mnemonicOrWif[0].toString().toLowerCase() === 'l')
-      const is52Chars = mnemonicOrWif && mnemonicOrWif.length === 52
-
-      if (startsWithKorL && is52Chars) {
-        // WIF Private Key
-
-        walletInfo.privateKey = mnemonicOrWif
-        const ecPair = this.bchjs.ECPair.fromWIF(mnemonicOrWif)
-        // walletInfo.publicKey = ecPair.toPublicKey().toString('hex')
-        walletInfo.publicKey = this.bchjs.ECPair.toPublicKey(ecPair).toString('hex')
-        walletInfo.mnemonic = null
-        walletInfo.address = walletInfo.cashAddress = this.bchjs.ECPair.toCashAddress(ecPair)
-        walletInfo.legacyAddress = this.bchjs.ECPair.toLegacyAddress(ecPair)
-        walletInfo.hdPath = null
-      } else {
-        // 12-word Mnemonic or no input.
-
-        const mnemonic = mnemonicOrWif || this.bchjs.Mnemonic.generate(128)
+      // No input
+      if (!mnemonicOrWif) {
+        const mnemonic = this.bchjs.Mnemonic.generate(128)
         const rootSeedBuffer = await this.bchjs.Mnemonic.toSeed(mnemonic)
         const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeedBuffer)
         const childNode = masterHDNode.derivePath(this.hdPath)
 
         walletInfo.privateKey = this.bchjs.HDNode.toWIF(childNode)
-        walletInfo.publicKey = this.bchjs.HDNode.toPublicKey(childNode).toString('hex')
+        walletInfo.publicKey = this.bchjs.HDNode.toPublicKey(
+          childNode
+        ).toString('hex')
         walletInfo.mnemonic = mnemonic
         walletInfo.address = walletInfo.cashAddress = this.bchjs.HDNode.toCashAddress(
           childNode
         )
         walletInfo.legacyAddress = this.bchjs.HDNode.toLegacyAddress(childNode)
         walletInfo.hdPath = this.hdPath
+
+        //
+      } else {
+        // A WIF will start with L or K, will have no spaces, and will be 52
+        // characters long.
+        const startsWithKorL =
+          mnemonicOrWif &&
+          (mnemonicOrWif[0].toString().toLowerCase() === 'k' ||
+            mnemonicOrWif[0].toString().toLowerCase() === 'l')
+        const is52Chars = mnemonicOrWif && mnemonicOrWif.length === 52
+
+        if (startsWithKorL && is52Chars) {
+          // WIF Private Key
+
+          walletInfo.privateKey = mnemonicOrWif
+          const ecPair = this.bchjs.ECPair.fromWIF(mnemonicOrWif)
+          // walletInfo.publicKey = ecPair.toPublicKey().toString('hex')
+          walletInfo.publicKey = this.bchjs.ECPair.toPublicKey(ecPair).toString(
+            'hex'
+          )
+          walletInfo.mnemonic = null
+          walletInfo.address = walletInfo.cashAddress = this.bchjs.ECPair.toCashAddress(
+            ecPair
+          )
+          walletInfo.legacyAddress = this.bchjs.ECPair.toLegacyAddress(ecPair)
+          walletInfo.hdPath = null
+        } else {
+          // 12-word Mnemonic
+
+          const mnemonic = mnemonicOrWif || this.bchjs.Mnemonic.generate(128)
+          const rootSeedBuffer = await this.bchjs.Mnemonic.toSeed(mnemonic)
+          const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeedBuffer)
+          const childNode = masterHDNode.derivePath(this.hdPath)
+
+          walletInfo.privateKey = this.bchjs.HDNode.toWIF(childNode)
+          walletInfo.publicKey = this.bchjs.HDNode.toPublicKey(
+            childNode
+          ).toString('hex')
+          walletInfo.mnemonic = mnemonic
+          walletInfo.address = walletInfo.cashAddress = this.bchjs.HDNode.toCashAddress(
+            childNode
+          )
+          walletInfo.legacyAddress = this.bchjs.HDNode.toLegacyAddress(
+            childNode
+          )
+          walletInfo.hdPath = this.hdPath
+        }
       }
 
       // Encrypt the mnemonic if a password is provided.
@@ -195,18 +219,27 @@ class MinimalBCHWallet {
   // Get the balance of the wallet.
   async getBalance (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    const balances = await this.bchjs.Electrumx.balance(addr)
+    // const balances = await this.bchjs.Electrumx.balance(addr)
+    const balances = await this.ar.getBalance(addr)
 
     return balances.balance.confirmed + balances.balance.unconfirmed
   }
 
   // Get transactions associated with the wallet.
+  // Returns an array of object. Each object has a 'tx_hash' and 'height' property.
   async getTransactions (bchAddress) {
     const addr = bchAddress || this.walletInfo.cashAddress
-    const data = await this.bchjs.Electrumx.transactions(addr)
+    const data = await this.ar.getTransactions(addr)
 
-    const transactions = data.transactions.map(x => x.tx_hash)
-    return transactions
+    return data.transactions
+  }
+
+  // Get transaction data for up to 20 TXIDs. txids should be an array. Each
+  // element should be a string containing a TXID.
+  async getTxData (txids = []) {
+    const data = await this.ar.getTxData(txids)
+
+    return data
   }
 
   // Send BCH. Returns a promise that resolves into a TXID.
@@ -245,6 +278,7 @@ class MinimalBCHWallet {
 
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
       const tokenUtxos = this.utxos.getSpendableTokenUtxos()
+      // console.log('msw tokenUtxos: ', tokenUtxos)
 
       return this.tokens.sendTokens(
         output,
@@ -332,6 +366,11 @@ class MinimalBCHWallet {
       console.error('Error in burnAll()')
       throw err
     }
+  }
+
+  // Get the spot price of BCH in USD.
+  async getUsd () {
+    return await this.ar.getUsd()
   }
 }
 

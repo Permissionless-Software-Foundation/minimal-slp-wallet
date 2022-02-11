@@ -187,7 +187,19 @@ describe('#SendBCH', () => {
   })
 
   describe('#getKeyPairFromMnemonic', () => {
-    it('should generate a key pair', async () => {
+    it('should generate a key pair from a wallet with a mnemonic', async () => {
+      const keyPair = await uut.getKeyPairFromMnemonic(mockData.mockWallet)
+      // console.log(`keyPair: ${JSON.stringify(keyPair, null, 2)}`)
+
+      // Ensure the output has the expected properties.
+      assert.property(keyPair, 'compressed')
+      assert.property(keyPair, 'network')
+    })
+
+    it('should generate a key pair from a wallet without a mnemonic', async () => {
+      // Force mnemonic to have a null value
+      mockData.mockWallet.mnemonic = null
+
       const keyPair = await uut.getKeyPairFromMnemonic(mockData.mockWallet)
       // console.log(`keyPair: ${JSON.stringify(keyPair, null, 2)}`)
 
@@ -319,7 +331,8 @@ describe('#SendBCH', () => {
     })
 
     it('should build transaction', async () => {
-      const toAddress = 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
+      const toAddress =
+        'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
 
       const { hex, txid } = await uut.createSendAllTx(
         toAddress,
@@ -334,7 +347,8 @@ describe('#SendBCH', () => {
     })
 
     it('should use default fee if fee is not specified.', async () => {
-      const toAddress = 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
+      const toAddress =
+        'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h'
 
       mockData.mockWallet.fee = undefined
 

@@ -247,33 +247,16 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(uut.tokens.bchjs.restURL, freeUrl)
     })
 
-    it('should throw an error if json-rpc is specified without a wallet service library', () => {
-      try {
-        const advancedOptions = {
-          interface: 'json-rpc'
-        }
-
-        uut = new MinimalBCHWallet(undefined, advancedOptions)
-
-        assert.fail('Unexpected code path.')
-      } catch (err) {
-        assert.include(
-          err.message,
-          'Must pass wallet service instance if using json-rpc interface.'
-        )
-      }
-    })
-
-    it('should switch to json-rpc interface', () => {
+    it('should switch to consumer-api interface', () => {
       const advancedOptions = {
-        interface: 'json-rpc',
-        jsonRpcWalletService: {},
+        interface: 'consumer-api',
+        // jsonRpcWalletService: {},
         noUpdate: true
       }
 
       uut = new MinimalBCHWallet(undefined, advancedOptions)
 
-      assert.equal(uut.ar.interface, 'json-rpc')
+      assert.equal(uut.ar.interface, 'consumer-api')
     })
   })
 
