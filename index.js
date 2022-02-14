@@ -15,6 +15,7 @@ const SendBCH = require('./lib/send-bch')
 const Utxos = require('./lib/utxos')
 const Tokens = require('./lib/tokens')
 const AdapterRouter = require('./lib/adapters/router')
+const OpReturn = require('./lib/op-return')
 
 // let this
 
@@ -68,6 +69,7 @@ class MinimalBCHWallet {
     this.sendBch = new SendBCH(bchjsOptions)
     this.utxos = new Utxos(bchjsOptions)
     this.tokens = new Tokens(bchjsOptions)
+    this.opReturn = new OpReturn(bchjsOptions)
 
     this.temp = []
 
