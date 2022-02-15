@@ -247,10 +247,10 @@ const result = await bchWallet.getUsd()
 
 ### Send Memo.cash TX with OP_RETURN Data
 
-````js
+```js
 // Write a small amount of text to the blockchain, compatible with memo.cash.
 const result = await bchWallet.sendOpReturn('This is a memo.cash post.')
-
+```
 
 ### Error Handling
 
@@ -271,7 +271,7 @@ try {
 
   return alert('Error. Try again later.')
 }
-````
+```
 
 ### Save keys in the browser
 
