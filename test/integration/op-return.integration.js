@@ -66,8 +66,8 @@ describe('#op-return', () => {
         'This is a test message',
         'ffff'
       )
-      console.log('hex: ', hex)
-      console.log('txid: ', txid)
+      // console.log('hex: ', hex)
+      // console.log('txid: ', txid)
 
       assert.isString(hex)
       assert.isString(txid)
