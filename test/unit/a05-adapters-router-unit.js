@@ -375,4 +375,45 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#getUsd', () => {
+    it('should get price from bch-js', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Price, 'getUsd').resolves(100)
+
+      // Force selected interface.
+      uut.interface = 'rest-api'
+
+      const result = await uut.getUsd()
+
+      assert.equal(result, 100)
+    })
+
+    it('should get price from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies
+      sandbox.stub(uut.bchConsumer.bch, 'getUsd').resolves(100)
+
+      // Force selected interface.
+      uut.interface = 'consumer-api'
+
+      const result = await uut.getUsd()
+
+      assert.equal(result, 100)
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        await uut.getUsd()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+  })
 })

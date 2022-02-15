@@ -385,11 +385,11 @@ class MinimalBCHWallet {
   ) {
     try {
       // Wait for the wallet to finish initializing.
-      await this.walletInfo.walletInfoPromise
+      await this.walletInfoPromise
 
-      console.log(
-        `this.utxos.utxoStore ${JSON.stringify(this.utxos.utxoStore, null, 2)}`
-      )
+      // console.log(
+      //   `this.utxos.utxoStore ${JSON.stringify(this.utxos.utxoStore, null, 2)}`
+      // )
 
       const txid = await this.opReturn.sendOpReturn(
         this.walletInfo,

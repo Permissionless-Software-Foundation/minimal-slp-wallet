@@ -540,4 +540,53 @@ describe('#index.js - Minimal BCH Wallet', () => {
       }
     })
   })
+
+  describe('#getUsd', () => {
+    it('should pass data on to adapter router lib', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.ar, 'getUsd').resolves(100)
+
+      const result = await uut.getUsd()
+
+      assert.equal(result, 100)
+    })
+  })
+
+  describe('#sendOpReturn', () => {
+    it('should broadcast OP_RETURN tx and return txid', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.opReturn, 'sendOpReturn').resolves('fake-txid')
+
+      const result = await uut.sendOpReturn()
+
+      assert.equal(result, 'fake-txid')
+    })
+
+    it('should throw an error if there is an issue with broadcasting a tx', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.opReturn, 'sendOpReturn')
+          .throws(new Error('error message'))
+
+        await uut.sendOpReturn()
+
+        assert.fail('unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'error message')
+      }
+    })
+  })
+
+  describe('#getTxData', () => {
+    it('should pass request to adapter router', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.ar, 'getTxData').resolves({ key: 'value' })
+
+      const result = await uut.getTxData()
+
+      assert.equal(result.key, 'value')
+    })
+  })
 })
