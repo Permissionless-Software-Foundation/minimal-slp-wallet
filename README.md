@@ -225,6 +225,33 @@ const txHistoryOfOtherAddress = await bchWallet.getTransactions(
 )
 ```
 
+### Get Detailed Transaction Data
+
+Get transactions details for an array of up to 20 TXIDs.
+
+```js
+// Input is an array of up to 20 TXIDs.
+const txids = [
+  '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
+]
+
+const result = await bchWallet.getTxData(txids)
+```
+
+### Get the Price of BCH in USD
+
+```js
+// Get the current spot price of BCH in USD
+const result = await bchWallet.getUsd()
+```
+
+### Send Memo.cash TX with OP_RETURN Data
+
+```js
+// Write a small amount of text to the blockchain, compatible with memo.cash.
+const result = await bchWallet.sendOpReturn('This is a memo.cash post.')
+```
+
 ### Error Handling
 
 ```js
@@ -266,5 +293,3 @@ const bchWallet2 = new BchWallet(localStorage.getItem('BCH_MNEMONIC'))
 # Licence
 
 [MIT](LICENSE.md)
-
-test

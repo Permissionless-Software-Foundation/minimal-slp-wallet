@@ -15,6 +15,7 @@ const SendBCH = require('./lib/send-bch')
 const Utxos = require('./lib/utxos')
 const Tokens = require('./lib/tokens')
 const AdapterRouter = require('./lib/adapters/router')
+const OpReturn = require('./lib/op-return')
 
 // let this
 
@@ -68,6 +69,7 @@ class MinimalBCHWallet {
     this.sendBch = new SendBCH(bchjsOptions)
     this.utxos = new Utxos(bchjsOptions)
     this.tokens = new Tokens(bchjsOptions)
+    this.opReturn = new OpReturn(bchjsOptions)
 
     this.temp = []
 
@@ -371,6 +373,38 @@ class MinimalBCHWallet {
   // Get the spot price of BCH in USD.
   async getUsd () {
     return await this.ar.getUsd()
+  }
+
+  // Generate and broadcast a transaction with an OP_RETURN output.
+  // Returns the txid of the transactions.
+  async sendOpReturn (
+    msg = '',
+    prefix = '6d02', // Default to memo.cash
+    bchOutput = [],
+    satsPerByte = 1.0
+  ) {
+    try {
+      // Wait for the wallet to finish initializing.
+      await this.walletInfoPromise
+
+      // console.log(
+      //   `this.utxos.utxoStore ${JSON.stringify(this.utxos.utxoStore, null, 2)}`
+      // )
+
+      const txid = await this.opReturn.sendOpReturn(
+        this.walletInfo,
+        this.utxos.utxoStore.bchUtxos,
+        msg,
+        prefix,
+        bchOutput,
+        satsPerByte
+      )
+
+      return txid
+    } catch (err) {
+      console.error('Error in sendOpReturn()')
+      throw err
+    }
   }
 }
 
