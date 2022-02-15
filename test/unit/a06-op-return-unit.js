@@ -195,5 +195,44 @@ describe('#OP_RETURN', () => {
       assert.isString(result.hex)
       assert.isString(result.txid)
     })
+
+    it('should generate OP_RETURN tx with extra outputs', async () => {
+      // const walletInfo = sendMockData.mockWallet
+
+      const outputs = [
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 2525803
+        },
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 2000
+        }
+      ]
+
+      const result = await uut.createTransaction(
+        sendMockData.mockWallet,
+        sendMockData.exampleUtxos01.utxos,
+        'this is a test',
+        '6d02',
+        outputs
+      )
+      // console.log('result: ', result)
+
+      assert.isString(result.hex)
+      assert.isString(result.txid)
+    })
+  })
+
+  describe('#sendOpReturn', () => {
+    it('should broadcast hex and return a txid', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'createTransaction').resolves('fake-hex')
+      sandbox.stub(uut.ar, 'sendTx').resolves('fake-txid')
+
+      const result = await uut.sendOpReturn()
+
+      assert.equal(result, 'fake-txid')
+    })
   })
 })
