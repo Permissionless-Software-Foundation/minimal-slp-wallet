@@ -375,23 +375,34 @@ class MinimalBCHWallet {
     return await this.ar.getUsd()
   }
 
-  // Generates a transaction for broadcasting a transaction with an OP_RETURN
-  // text output. Returns the transaction in hex string format, ready to be
-  // broadcast to the network.
-  async opReturn (msg = '', prefix = '6d02', bchOutput = [], satsPerByte = 1.0) {
+  // Generate and broadcast a transaction with an OP_RETURN output.
+  // Returns the txid of the transactions.
+  async sendOpReturn (
+    msg = '',
+    prefix = '6d02', // Default to memo.cash
+    bchOutput = [],
+    satsPerByte = 1.0
+  ) {
     try {
-      const hex = await this.opReturn.createTransaction(
+      // Wait for the wallet to finish initializing.
+      await this.walletInfo.walletInfoPromise
+
+      console.log(
+        `this.utxos.utxoStore ${JSON.stringify(this.utxos.utxoStore, null, 2)}`
+      )
+
+      const txid = await this.opReturn.sendOpReturn(
         this.walletInfo,
-        this.wallet.utxos.utxoStore.bchUtxos,
+        this.utxos.utxoStore.bchUtxos,
         msg,
         prefix,
         bchOutput,
         satsPerByte
       )
 
-      return hex
+      return txid
     } catch (err) {
-      console.error('Error in opReturn()')
+      console.error('Error in sendOpReturn()')
       throw err
     }
   }
