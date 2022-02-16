@@ -10,6 +10,7 @@ This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end w
 - Retrieve transaction history & transaction details
 - Burn tokens
 - Price BCH in USD
+- Send messages on the blockchain via OP_RETURN data
 
 It is 'token aware' and can work with all SLP tokens. It can interface with Web 2 infrastructure like [FullStack.cash](https://fullstack.cash) or with the [PSF Web 3 infrastructure](https://psfoundation.cash/blog/realizing-the-web-3-cash-stack) via the [bch-consumer library](https://www.npmjs.com/package/bch-consumer).
 
