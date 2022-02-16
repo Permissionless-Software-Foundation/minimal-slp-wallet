@@ -179,7 +179,7 @@ describe('#adapter-router', () => {
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
-      sandbox.stub(uut.bchConsumer.bch, 'sendTx').resolves('txid-str')
+      sandbox.stub(uut.bchConsumer.bch, 'sendTx').resolves({ txid: 'txid-str' })
 
       const result = await uut.sendTx('fakeHex')
 
