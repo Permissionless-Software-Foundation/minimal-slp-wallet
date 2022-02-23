@@ -3,7 +3,9 @@
   Customize the constants at the top to run the test.
 */
 
-const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'
+const WIF = process.env.TEST_WIF
+if (!WIF) throw new Error('TEST_WIF env var not found.')
+
 // BCH Address: bitcoincash:qqkg30ryje97al52htqwvveha538y7gttywut3cdqv
 const TOKEN_ID =
   '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0'
@@ -13,7 +15,10 @@ const BchWallet = require('../../index')
 
 async function burnTest () {
   try {
-    const wallet = new BchWallet(WIF)
+    // Use bch-api
+    // const wallet = new BchWallet(WIF, { interface: 'rest-api' })
+    // Use bch-consumer
+    const wallet = new BchWallet(WIF, { interface: 'consumer-api' })
 
     await wallet.walletInfoPromise
 
