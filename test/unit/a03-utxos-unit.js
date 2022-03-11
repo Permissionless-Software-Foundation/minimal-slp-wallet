@@ -129,7 +129,7 @@ describe('#UTXOs', () => {
         assert.fail('Unexpected result')
       } catch (err) {
         // console.log(err)
-        assert.include(err.message, "Cannot read property 'type1' of undefined")
+        assert.include(err.message, 'Cannot read')
       }
     })
   })
