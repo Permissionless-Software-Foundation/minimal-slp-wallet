@@ -194,8 +194,20 @@ class MinimalBCHWallet {
   }
 
   // Get the UTXO information for this wallet.
-  getUtxos () {
-    return this.utxos.initUtxoStore(this.walletInfo.address)
+  async getUtxos (bchAddress) {
+    let addr = bchAddress
+
+    // If no address is passed in, but the wallet has been initialized, use the
+    // wallet's address.
+    if (!bchAddress && this.walletInfo && this.walletInfo.cashAddress) {
+      addr = this.walletInfo.cashAddress
+      return this.utxos.initUtxoStore(addr)
+    }
+
+    const utxos = await this.ar.getUtxos(addr)
+    // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+    return utxos
   }
 
   // Encrypt the mnemonic of the wallet.
@@ -241,6 +253,7 @@ class MinimalBCHWallet {
     // wallet's address.
     if (!bchAddress && this.walletInfo && this.walletInfo.cashAddress) { addr = this.walletInfo.cashAddress }
 
+    // console.log(`Getting transactions for ${addr}`)
     const data = await this.ar.getTransactions(addr)
 
     return data.transactions

@@ -462,6 +462,23 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
       assert.deepEqual(obj, {})
     })
+
+    it('should get UTXOs for a given address', async () => {
+      // Mock network calls.
+      sandbox.stub(uut.ar, 'getUtxos').resolves(mockUtxos.tokenUtxos01)
+
+      await uut.walletInfoPromise
+
+      const addr = 'test-addr'
+
+      const result = await uut.getUtxos(addr)
+      // console.log('result: ', result)
+
+      assert.property(result, 'bchUtxos')
+      assert.property(result, 'nullUtxos')
+      assert.property(result, 'slpUtxos')
+      assert.property(result, 'address')
+    })
   })
 
   describe('#listTokens', () => {
