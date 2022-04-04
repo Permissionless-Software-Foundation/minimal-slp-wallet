@@ -236,9 +236,10 @@ class MinimalBCHWallet {
 
     // If no address is passed in, but the wallet has been initialized, use the
     // wallet's address.
-    if (!bchAddress && this.walletInfo && this.walletInfo.cashAddress) { addr = this.walletInfo.cashAddress }
+    if (!bchAddress && this.walletInfo && this.walletInfo.cashAddress) {
+      addr = this.walletInfo.cashAddress
+    }
 
-    // const balances = await this.bchjs.Electrumx.balance(addr)
     const balances = await this.ar.getBalance(addr)
 
     return balances.balance.confirmed + balances.balance.unconfirmed
@@ -251,7 +252,9 @@ class MinimalBCHWallet {
 
     // If no address is passed in, but the wallet has been initialized, use the
     // wallet's address.
-    if (!bchAddress && this.walletInfo && this.walletInfo.cashAddress) { addr = this.walletInfo.cashAddress }
+    if (!bchAddress && this.walletInfo && this.walletInfo.cashAddress) {
+      addr = this.walletInfo.cashAddress
+    }
 
     // console.log(`Getting transactions for ${addr}`)
     const data = await this.ar.getTransactions(addr)
