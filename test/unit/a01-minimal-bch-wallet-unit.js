@@ -311,7 +311,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
   })
 
   describe('#getBalance', () => {
-    it('should return combined balance', async () => {
+    it('should return balance of given address', async () => {
       // Mock live network call.
       sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves({
         success: true,
@@ -324,6 +324,23 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const addr = 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
 
       const balance = await uut.getBalance(addr)
+
+      assert.equal(balance, 1000)
+    })
+
+    it('should return balance of wallet address', async () => {
+      // Mock live network call.
+      sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves({
+        success: true,
+        balance: {
+          confirmed: 1000,
+          unconfirmed: 0
+        }
+      })
+
+      await uut.walletInfoPromise
+
+      const balance = await uut.getBalance()
 
       assert.equal(balance, 1000)
     })
@@ -346,6 +363,27 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const addr = 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
 
       const transactions = await uut.getTransactions(addr)
+      // console.log(`transactions: ${JSON.stringify(transactions, null, 2)}`)
+
+      assert.isArray(transactions)
+    })
+
+    it('should get transactions', async () => {
+      // Mock live network calls
+      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves({
+        success: true,
+        transactions: [
+          {
+            height: 603416,
+            tx_hash:
+              'eef683d236d88e978bd406419f144057af3fe1b62ef59162941c1a9f05ded62c'
+          }
+        ]
+      })
+
+      await uut.walletInfoPromise
+
+      const transactions = await uut.getTransactions()
       // console.log(`transactions: ${JSON.stringify(transactions, null, 2)}`)
 
       assert.isArray(transactions)
@@ -461,6 +499,23 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const obj = await uut.getUtxos()
 
       assert.deepEqual(obj, {})
+    })
+
+    it('should get UTXOs for a given address', async () => {
+      // Mock network calls.
+      sandbox.stub(uut.ar, 'getUtxos').resolves(mockUtxos.tokenUtxos01)
+
+      await uut.walletInfoPromise
+
+      const addr = 'test-addr'
+
+      const result = await uut.getUtxos(addr)
+      // console.log('result: ', result)
+
+      assert.property(result, 'bchUtxos')
+      assert.property(result, 'nullUtxos')
+      assert.property(result, 'slpUtxos')
+      assert.property(result, 'address')
     })
   })
 
