@@ -38,6 +38,11 @@ class MinimalBCHWallet {
       bchjsOptions.apiToken = advancedOptions.apiToken
     }
 
+    // Basic Auth token for private installations of bch-api.
+    if(this.advancedOptions.authPass) {
+      bchjsOptions.authPass = advancedOptions.authPass
+    }
+
     // Set the sats-per-byte fee rate.
     this.fee = 1.2
     if (this.advancedOptions.fee) {
