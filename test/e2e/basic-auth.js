@@ -12,18 +12,18 @@
 // Local libraries
 const BchWallet = require('../../index')
 
-async function startTest() {
+async function startTest () {
   try {
     const wallet = new BchWallet(undefined, {
       authPass: process.env.BCHJSAUTHPASS_TEMP,
       restURL: process.env.BCHAPIURL
     })
 
-    for(let i=0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       const result = await wallet.getUtxos('bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d')
       console.log(`result ${i}: ${JSON.stringify(result, null, 2)}`)
     }
-  } catch(err) {
+  } catch (err) {
     console.log('Error: ', err)
   }
 }

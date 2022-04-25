@@ -39,7 +39,7 @@ class MinimalBCHWallet {
     }
 
     // Basic Auth token for private installations of bch-api.
-    if(this.advancedOptions.authPass) {
+    if (this.advancedOptions.authPass) {
       bchjsOptions.authPass = advancedOptions.authPass
     }
 
