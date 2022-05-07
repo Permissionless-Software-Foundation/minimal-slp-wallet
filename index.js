@@ -316,9 +316,7 @@ class MinimalBCHWallet {
       return this.tokens.sendTokens(
         output,
         this.walletInfo,
-        // this.utxos.bchUtxos,
         this.utxos.utxoStore.bchUtxos,
-        // this.utxos.tokenUtxos,
         tokenUtxos,
         satsPerByte
       )

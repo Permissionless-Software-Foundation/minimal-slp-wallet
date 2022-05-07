@@ -155,9 +155,11 @@ const tokenUtxos01 = {
       ]
     },
     nft: {
-      groupMintBatons: [],
-      groupTokens: [],
       tokens: []
+    },
+    group: {
+      tokens: [],
+      mintBatons: []
     }
   }
 }
@@ -216,7 +218,13 @@ const tokenUtxos03 = {
       ],
       mintBatons: []
     },
-    nft: {}
+    nft: {
+      tokens: []
+    },
+    group: {
+      tokens: [],
+      mintBatons: []
+    }
   },
   nullUtxos: []
 }
@@ -334,9 +342,8 @@ const mockNFTGroupUtxos = {
         }
       ]
     },
-    nft: {
-      groupMintBatons: [],
-      groupTokens: [
+    group: {
+      tokens: [
         {
           height: 0,
           tx_hash:
@@ -361,6 +368,9 @@ const mockNFTGroupUtxos = {
           isValid: true
         }
       ],
+      mintBatons: []
+    },
+    nft: {
       tokens: []
     }
   }
