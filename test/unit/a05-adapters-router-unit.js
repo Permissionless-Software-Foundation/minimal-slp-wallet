@@ -416,4 +416,138 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#utxoIsValid', () => {
+    it('should validate UTXO from bch-js', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Utxo, 'isValid').resolves(true)
+
+      // Force selected interface.
+      uut.interface = 'rest-api'
+
+      const utxo = {
+        tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+        tx_pos: 0
+      }
+
+      const result = await uut.utxoIsValid(utxo)
+
+      assert.equal(result, true)
+    })
+
+    it('should validate UTXO from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies
+      sandbox.stub(uut.bchConsumer.bch, 'utxoIsValid').resolves({ isValid: true })
+
+      // Force selected interface.
+      uut.interface = 'consumer-api'
+
+      const utxo = {
+        tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+        tx_pos: 0
+      }
+
+      const result = await uut.utxoIsValid(utxo)
+
+      assert.equal(result, true)
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        const utxo = {
+          tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+          tx_pos: 0
+        }
+
+        await uut.utxoIsValid(utxo)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+
+    it('should throw an error if utxo is not specified', async () => {
+      try {
+        await uut.utxoIsValid()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'utxo required as input.')
+      }
+    })
+  })
+
+  describe('#getTokenData', () => {
+    it('should get token data from bch-js', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.PsfSlpIndexer, 'getTokenData').resolves({
+        genesisData: {},
+        immutableData: {},
+        mutableData: {}
+      })
+
+      // Force selected interface.
+      uut.interface = 'rest-api'
+
+      const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+      const result = await uut.getTokenData(tokenId)
+
+      assert.property(result, 'genesisData')
+      assert.property(result, 'immutableData')
+      assert.property(result, 'mutableData')
+    })
+
+    it('should get token data from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies
+      sandbox.stub(uut.bchConsumer.bch, 'getTokenData').resolves({
+        tokenData: {
+          genesisData: {},
+          immutableData: {},
+          mutableData: {}
+        }
+      })
+
+      const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+      const result = await uut.getTokenData(tokenId)
+
+      assert.property(result, 'genesisData')
+      assert.property(result, 'immutableData')
+      assert.property(result, 'mutableData')
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+        await uut.getTokenData(tokenId)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+
+    it('should throw an error if token ID is not provided', async () => {
+      try {
+        await uut.getTokenData()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'tokenId required as input.')
+      }
+    })
+  })
 })
