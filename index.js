@@ -435,6 +435,16 @@ class MinimalBCHWallet {
       throw err
     }
   }
+
+  // Validate that a UTXO can be spent.
+  async utxoIsValid (utxo) {
+    return await this.ar.utxoIsValid(utxo)
+  }
+
+  // Get mutable and immutable data associated with a token.
+  async getTokenData (tokenId) {
+    return await this.ar.getTokenData(tokenId)
+  }
 }
 
 module.exports = MinimalBCHWallet
