@@ -139,7 +139,7 @@ describe('#BchWallet', () => {
 
     it('should get token data from free-bch', async () => {
       uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
-      
+
       const tokenId = 'eb93f05553ff088bffb0ec687519e83c59e5108c160f7c25a4b6c45109d7e40b'
 
       const result = await uut.getTokenData(tokenId)
