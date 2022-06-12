@@ -284,7 +284,7 @@ const mockTokenUtxos = [
     satoshis: 546,
     txid: '7fd05098bad5acb6c3ec15723227eeaf0437615a5665e5715cbc4a54a67dfe6b',
     vout: 1,
-    utxoType: 'token',
+    type: 'token',
     transactionType: 'send',
     tokenId: 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
     tokenTicker: 'TROUT',
