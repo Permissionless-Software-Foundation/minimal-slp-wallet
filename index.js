@@ -387,12 +387,14 @@ class MinimalBCHWallet {
       // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
 
       // Generate the transaction.
-      return this.tokens.burnAll(
+      const txid = await this.tokens.burnAll(
         tokenId,
         this.walletInfo,
         this.utxos.utxoStore.bchUtxos,
         tokenUtxos
       )
+
+      return txid
     } catch (err) {
       console.error('Error in burnAll()')
       throw err
