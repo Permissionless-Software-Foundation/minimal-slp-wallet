@@ -55,7 +55,7 @@
     "lodash.clonedeep": "4.5.0",
     "mocha": "9.2.1",
     "nyc": "15.1.0",
-    "semantic-release": "19.0.2",
+    "semantic-release": "19.0.3",
     "sinon": "9.2.0",
     "standard": "16.0.4",
     "tinyify": "3.0.0"
