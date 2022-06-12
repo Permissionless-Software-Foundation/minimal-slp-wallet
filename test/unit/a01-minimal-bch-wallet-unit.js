@@ -200,7 +200,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const advancedOptions = {
         noUpdate: true,
         restURL: exampleURL,
-        apiToken: exampleApiToken
+        apiToken: exampleApiToken,
+        authPass: 'test'
       }
 
       uut = new MinimalBCHWallet(undefined, advancedOptions)
@@ -642,6 +643,28 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const result = await uut.getTxData()
 
       assert.equal(result.key, 'value')
+    })
+  })
+
+  describe('#utxoIsValid', async () => {
+    it('shoudl wrap the utxoIsValid() function', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.ar, 'utxoIsValid').resolves(true)
+
+      const result = await uut.utxoIsValid()
+
+      assert.equal(result, true)
+    })
+  })
+
+  describe('#getTokenData', async () => {
+    it('shoudl wrap the getTokenData() function', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.ar, 'getTokenData').resolves(true)
+
+      const result = await uut.getTokenData()
+
+      assert.equal(result, true)
     })
   })
 })

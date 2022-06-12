@@ -354,7 +354,7 @@ const mockNFTGroupUtxos = {
           txid:
             'ed934cf70830fda6c2a0b00e8e9d797172ff459c6dcd9112710fa6bd87f02aae',
           vout: 1,
-          utxoType: 'token',
+          type: 'token',
           transactionType: 'send',
           tokenId:
             '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299',
@@ -398,8 +398,6 @@ const mockNFTChildUtxos = {
       tokens: []
     },
     nft: {
-      groupMintBatons: [],
-      groupTokens: [],
       tokens: [
         {
           height: 650696,
@@ -411,7 +409,7 @@ const mockNFTChildUtxos = {
           txid:
             '6458885509a8eec6b4e10a515d3834638acc7e6e49b9b5969ee2a1d03224565d',
           vout: 1,
-          utxoType: 'token',
+          type: 'token',
           transactionType: 'send',
           tokenId:
             '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e716b6a5',
@@ -425,6 +423,10 @@ const mockNFTChildUtxos = {
           isValid: true
         }
       ]
+    },
+    group: {
+      mintBatons: [],
+      tokens: []
     }
   }
 }
@@ -525,7 +527,7 @@ const cornerCase1TokenUtxos = {
           txid:
             'ad5c4626297068f28d9ba6d45fb218cb622911e07ebe3003be33e9b7e8f0bc7f',
           vout: 2,
-          utxoType: 'token',
+          type: 'token',
           transactionType: 'send',
           tokenId:
             '1a1fd545b922c8ee4ecd89bc312904f4e3ba4cf7850141066ad3e3f281668188',
@@ -548,7 +550,7 @@ const cornerCase1TokenUtxos = {
           txid:
             '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
           vout: 1,
-          utxoType: 'token',
+          type: 'token',
           transactionType: 'send',
           tokenId:
             '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0',
@@ -571,7 +573,7 @@ const cornerCase1TokenUtxos = {
           txid:
             '99c9061f9afb8a201d32edfca2a5f3e753f8d218c69aa085d23ecf86c2a5744b',
           vout: 2,
-          utxoType: 'token',
+          type: 'token',
           transactionType: 'send',
           tokenId:
             '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0',
@@ -587,9 +589,11 @@ const cornerCase1TokenUtxos = {
       ]
     },
     nft: {
-      groupMintBatons: [],
-      groupTokens: [],
       tokens: []
+    },
+    group: {
+      tokens: [],
+      mintBatons: []
     }
   }
 }
