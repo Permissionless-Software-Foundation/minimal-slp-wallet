@@ -37,5 +37,14 @@ describe('#tokens.js', () => {
       assert.property(tokenInfo[0], 'url')
       assert.property(tokenInfo[0], 'qty')
     })
+
+    it('should return info on NFTs', async () => {
+      const addr = 'bitcoincash:qzjs5l0a3gvmfuqw9szs4glzpf4j63jjkvfj9hqedl'
+
+      const tokenInfo = await uut.listTokensFromAddress(addr)
+      // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+
+      assert.equal(tokenInfo[0].tokenType, 65)
+    })
   })
 })
