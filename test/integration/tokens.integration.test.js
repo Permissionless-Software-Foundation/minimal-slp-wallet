@@ -47,6 +47,4 @@ describe('#tokens.js', () => {
       assert.equal(tokenInfo[0].tokenType, 65)
     })
   })
-
-
 })
