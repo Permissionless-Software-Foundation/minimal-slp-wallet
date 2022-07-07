@@ -309,6 +309,11 @@ class MinimalBCHWallet {
       // If mining fee is not specified, use the value assigned in the constructor.
       if (!satsPerByte) satsPerByte = this.fee
 
+      // If output was passed in as an array, use only the first element of the Array.
+      if (Array.isArray(output)) {
+        output = output[0]
+      }
+
       // Combine all Type 1, Group, and NFT token UTXOs. Ignore minting batons.
       const tokenUtxos = this.utxos.getSpendableTokenUtxos()
       // console.log('msw tokenUtxos: ', tokenUtxos)
@@ -368,7 +373,8 @@ class MinimalBCHWallet {
           mnemonic: this.walletInfo.mnemonic,
           cashAddress: this.walletInfo.address,
           hdPath: this.walletInfo.hdPath,
-          fee: this.fee
+          fee: this.fee,
+          privateKey: this.walletInfo.privateKey
         },
         // this.utxos.bchUtxos
         this.utxos.utxoStore.bchUtxos
