@@ -489,6 +489,26 @@ describe('#index.js - Minimal BCH Wallet', () => {
         assert.include(err.message, 'error message')
       }
     })
+
+    it('should broadcast a transaction and return a txid', async () => {
+      const txid =
+        '66b7d1fced6df27feb7faf305de2e3d6470decb0276648411fd6a2f69fec8543'
+
+      const outputs = [{
+        address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+        tokenId:
+          '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e7165555',
+        qty: 1
+      }]
+
+      // Mock live network calls.
+      uut.utxos.utxoStore = mockUtxos.tokenUtxos01
+      sandbox.stub(uut.tokens, 'sendTokens').resolves(txid)
+
+      const output = await uut.sendTokens(outputs)
+
+      assert.equal(output, txid)
+    })
   })
 
   describe('#getUtxos', () => {

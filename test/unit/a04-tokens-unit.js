@@ -326,10 +326,34 @@ describe('#tokens', () => {
 
         await uut.createTransaction(output, walletInfo, bchUtxos, tokenUtxos)
 
-        assert.equal(true, false, 'unexpected result')
+        assert.fail('Unexpected result')
       } catch (err) {
         // console.log('err: ', err)
         assert.include(err.message, 'Token Type 888 unknown')
+      }
+    })
+
+    it('should throw an error if expected token UTXOs are not in the wallet', async () => {
+      try {
+        const output = {
+          address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+          tokenId:
+            '82e3d97b3cd033e60ffa755450b9075cf44fe1b2f6d5dc13657d8263e7165555',
+          qty: 1
+        }
+
+        const walletInfo = sendMockData.mockWallet
+
+        // Prep the utxo data.
+        utxos.utxoStore = mockData.mockNFTChildUtxos
+        const bchUtxos = utxos.utxoStore.bchUtxos
+        const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+        await uut.createTransaction(output, walletInfo, bchUtxos, tokenUtxos)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'Token UTXO with token ID')
       }
     })
   })
