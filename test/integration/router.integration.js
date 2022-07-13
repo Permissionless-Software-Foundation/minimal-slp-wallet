@@ -12,6 +12,7 @@ const Router = require('../../lib/adapters/router')
 
 // const restURL = 'http://localhost:5005'
 const restURL = 'https://free-bch.fullstack.cash'
+// const restURL = 'https://bc01-ca-bch-consumer.fullstackcash.nl'
 
 describe('#router.js', () => {
   let uut
@@ -225,7 +226,7 @@ describe('#router.js', () => {
       assert.property(result, 'mutableData')
     })
 
-    it('should validate UTXO from bch-consumer', async () => {
+    it('should get token data from web 3 infra', async () => {
       const bchjs = new BCHJS()
       uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
@@ -237,6 +238,27 @@ describe('#router.js', () => {
       assert.property(result, 'genesisData')
       assert.property(result, 'immutableData')
       assert.property(result, 'mutableData')
+    })
+
+    it('should get token data with TX history from web 2', async () => {
+      const tokenId = '43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d'
+
+      const result = await uut.getTokenData(tokenId, true)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.isArray(result.genesisData.txs)
+    })
+
+    it('should get token data with TX history from web 3', async () => {
+      const bchjs = new BCHJS()
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
+
+      const tokenId = '43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d'
+
+      const result = await uut.getTokenData(tokenId, true)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.isArray(result.genesisData.txs)
     })
   })
 })

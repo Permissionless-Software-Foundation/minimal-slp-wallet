@@ -450,8 +450,8 @@ class MinimalBCHWallet {
   }
 
   // Get mutable and immutable data associated with a token.
-  async getTokenData (tokenId) {
-    return await this.ar.getTokenData(tokenId)
+  async getTokenData (tokenId, withTxHistory = false) {
+    return await this.ar.getTokenData(tokenId, withTxHistory)
   }
 }
 
