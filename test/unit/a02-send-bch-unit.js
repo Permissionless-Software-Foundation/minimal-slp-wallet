@@ -184,6 +184,25 @@ describe('#SendBCH', () => {
         assert.include(err.message, 'Insufficient balance')
       }
     })
+
+    it('should use custom sorting function', () => {
+      const outputs = [
+        {
+          address: 'bitcoincash:qp2rmj8heytjrksxm2xrjs0hncnvl08xwgkweawu9h',
+          amountSat: 600
+        }
+      ]
+
+      const sortingStub = sinon.stub().returnsArg(0)
+      uut.getNecessaryUtxosAndChange(
+        outputs,
+        mockData.exampleUtxos01.utxos,
+        1.0,
+        { utxoSortingFn: sortingStub }
+      )
+
+      assert.ok(sortingStub.calledOnceWith(mockData.exampleUtxos01.utxos))
+    })
   })
 
   describe('#getKeyPairFromMnemonic', () => {

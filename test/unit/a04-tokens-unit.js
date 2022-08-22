@@ -356,6 +356,71 @@ describe('#tokens', () => {
         assert.include(err.message, 'Token UTXO with token ID')
       }
     })
+
+    it('should use custom token utxo filtering function', async () => {
+      const output = {
+        address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+        tokenId:
+          '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
+        qty: 1
+      }
+
+      const walletInfo = sendMockData.mockWallet
+
+      // Prep the utxo data.
+      utxos.utxoStore = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+      const utxosFilterStub = sinon.stub().returnsArg(0)
+      await uut.createTransaction(
+        output,
+        walletInfo,
+        bchUtxos,
+        tokenUtxos,
+        1.0,
+        { tokenUtxosFilter: utxosFilterStub }
+      )
+
+      assert.ok(utxosFilterStub.calledOnce)
+    })
+
+    it('should pass opts to sendBch.getNecessaryUtxosAndChange', async () => {
+      const output = {
+        address: 'simpleledger:qqwsylce7r5ufe4mfc94xkd56t30ncnanqahwq6kvv',
+        tokenId:
+          '497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7',
+        qty: 1
+      }
+
+      const walletInfo = sendMockData.mockWallet
+
+      // Prep the utxo data.
+      utxos.utxoStore = mockData.tokenUtxos01
+      const bchUtxos = utxos.utxoStore.bchUtxos
+      const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+      const fn = sandbox.stub(uut.sendBch, 'getNecessaryUtxosAndChange').returns({
+        necessaryUtxos: mockData.simpleUtxos.utxos,
+        change: 0
+      })
+
+      await uut.createTransaction(
+        output,
+        walletInfo,
+        bchUtxos,
+        tokenUtxos,
+        1.0,
+        { config: 'ok' }
+      )
+
+      assert.ok(fn.calledOnceWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        { config: 'ok' }
+      ))
+    })
   })
 
   describe('#sendTokens', () => {
@@ -390,6 +455,23 @@ describe('#tokens', () => {
         // console.log('err: ', err)
         assert.include(err.message, 'error message')
       }
+    })
+
+    it('should pass options to createTransaction', async () => {
+      // Mock live network calls.
+      const ct = sandbox.stub(uut, 'createTransaction').resolves('ok')
+      sandbox.stub(uut.ar, 'sendTx').resolves('ok')
+
+      await uut.sendTokens(null, null, null, null, null, { utxoSortingFn: 'sortingFn' })
+
+      assert.ok(ct.calledOnceWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        { utxoSortingFn: 'sortingFn' }
+      ))
     })
   })
 
