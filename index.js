@@ -302,7 +302,7 @@ class MinimalBCHWallet {
 
   // Send Tokens. Returns a promise that resolves into a TXID.
   // This is a wrapper for the tokens.js library.
-  sendTokens (output, satsPerByte) {
+  sendTokens (output, satsPerByte, opts = {}) {
     try {
       // console.log(`utxoStore: ${JSON.stringify(this.utxos.utxoStore, null, 2)}`)
 
@@ -323,7 +323,8 @@ class MinimalBCHWallet {
         this.walletInfo,
         this.utxos.utxoStore.bchUtxos,
         tokenUtxos,
-        satsPerByte
+        satsPerByte,
+        opts
       )
     } catch (err) {
       console.error('Error in send()')
