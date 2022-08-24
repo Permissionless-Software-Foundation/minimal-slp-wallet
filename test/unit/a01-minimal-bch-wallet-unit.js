@@ -295,7 +295,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
   describe('#initialize', () => {
     it('should initialize the UTXO store', async () => {
       // Mock dependencies
-      sandbox.stub(uut.utxos,'initUtxoStore').resolves()
+      sandbox.stub(uut.utxos, 'initUtxoStore').resolves()
 
       const result = await uut.initialize()
 

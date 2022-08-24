@@ -10,7 +10,7 @@ async function getTokenDataExample () {
     const tokenId = '59a62f35b0882b7c0ed80407d9190b460cc566cb6c01ed4817ad64f9d2508702'
 
     // Instantiate the wallet library.
-    const slpWallet = new SlpWallet(undefined, {interface: 'consumer-api'})
+    const slpWallet = new SlpWallet(undefined, { interface: 'consumer-api' })
 
     // Wait for the wallet to be created.
     await slpWallet.walletInfoPromise

@@ -12,7 +12,7 @@ async function validateUtxo () {
     }
 
     // Instantiate the wallet library.
-    const slpWallet = new SlpWallet(undefined, {interface: 'consumer-api'})
+    const slpWallet = new SlpWallet(undefined, { interface: 'consumer-api' })
 
     // Wait for the wallet to be created.
     await slpWallet.walletInfoPromise
