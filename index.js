@@ -48,11 +48,6 @@ class MinimalBCHWallet {
     if (this.advancedOptions.fee) {
       this.fee = this.advancedOptions.fee
     }
-
-    // Allow passing of noUpdate flag, to prevent automatic UTXO retrieval
-    // after wallet is created.
-    this.noUpdate = false
-    if (this.advancedOptions.noUpdate) this.noUpdate = true
     // END Handle advanced options.
 
     // Encapsulae the external libraries.
@@ -77,8 +72,7 @@ class MinimalBCHWallet {
     this.opReturn = new OpReturn(bchjsOptions)
 
     this.temp = []
-
-    // this = this
+    this.isInitialized = false
 
     // The create() function returns a promise. When it resolves, the
     // walletInfoCreated flag will be set to true. The instance will also
@@ -102,7 +96,7 @@ class MinimalBCHWallet {
       // let privateKey, publicKey
       const walletInfo = {}
 
-      // No input
+      // No input. Generate a new mnemonic.
       if (!mnemonicOrWif) {
         const mnemonic = this.bchjs.Mnemonic.generate(128)
         const rootSeedBuffer = await this.bchjs.Mnemonic.toSeed(mnemonic)
@@ -180,12 +174,6 @@ class MinimalBCHWallet {
         walletInfo.address
       )
 
-      // Do not update the wallet UTXOs if noUpdate flag is set.
-      if (!this.noUpdate) {
-        // Get any  UTXOs for this wallet.
-        await this.utxos.initUtxoStore(walletInfo.address)
-      }
-
       this.walletInfoCreated = true
       this.walletInfo = walletInfo
 
@@ -196,6 +184,16 @@ class MinimalBCHWallet {
       throw err
     }
     // })
+  }
+
+  // Initialize is called to initialize the UTXO store, download token data, and
+  // get a balance of the wallet.
+  async initialize () {
+    await this.utxos.initUtxoStore(this.walletInfo.address)
+
+    this.isInitialized = true
+
+    return true
   }
 
   // Get the UTXO information for this wallet.
