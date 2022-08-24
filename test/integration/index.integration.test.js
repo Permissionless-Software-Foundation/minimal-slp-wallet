@@ -89,7 +89,7 @@ describe('#BchWallet', () => {
     })
 
     it('should return true for valid UTXO using consumer-api interface', async () => {
-      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
+      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL })
 
       const utxo = {
         txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',

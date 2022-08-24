@@ -2,7 +2,7 @@
 
 This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end web apps. It contains all the core functionality needed by a wallet:
 
-- Create a new BCH wallet or import a mnemonic
+- Create a new BCH wallet, import a mnemonic, or import a private key (WIF)
 - Encrypt a wallets mnemonic for safe storage
 - Send and receive BCH
 - Send and receive SLP tokens
@@ -11,12 +11,13 @@ This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end w
 - Burn tokens
 - Price BCH in USD
 - Send messages on the blockchain via OP_RETURN data
+- Verify that a UTXO is unspent
 
-It is 'token aware' and can work with all SLP tokens. It can interface with Web 2 infrastructure like [FullStack.cash](https://fullstack.cash) or with the [PSF Web 3 infrastructure](https://psfoundation.cash/blog/realizing-the-web-3-cash-stack) via the [bch-consumer library](https://www.npmjs.com/package/bch-consumer).
+It is 'token aware' and can work with all SLP tokens, including NFTs. It can interface with Web 2 infrastructure like [FullStack.cash](https://fullstack.cash) or with the [Cash Stack Web 3 infrastructure](https://cashstack.info) via the [bch-consumer library](https://www.npmjs.com/package/bch-consumer).
 
 This target consumers for this library is:
 
-- [gatsby-theme-bch-wallet](https://github.com/Permissionless-Software-Foundation/gatsby-theme-bch-wallet) Gatsby web wallet theme.
+- [bch-wallet-web3-android](https://permissionless-software-foundation.github.io/bch-wallet-web3-android/) Bitcoin Cash wallet app that runs on Web and Android.
 - [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command line wallet.
 
 The default derivation path for the wallet keypair is `m/44'/245'/0'/0/0`. This is the BIP44 standard for SLP token-aware BCH wallets.
@@ -56,32 +57,37 @@ const BchWallet = require('minimal-slp-wallet/index')
 
 ### Instantiate Library
 
+The wallet has different configuration parameters, that allow it to use web2 or web3 infrastructure. After instantiating a class, two Promises should be awaited:
+
+- `await bchWallet.walletInfoPromise` will resolve when the BCH has been fully created. It only takes a few microseconds. Once resolves, the object `bchWallet.walletInfo` will contain all the wallet information.
+- `await bchWallet.initialize()` will reach out to the blockchain and initialize the wallet by fetching its balance, tokens, and UTXO information. This is not necessary to call when creating a new wallet without a transaction history.
+
 #### Using Web 2 Infrastructure
 
 ```js
-const BCHJS = require('@psf/bch-js')
 const BchWallet = require('minimal-slp-wallet/index')
 
-const bchjs = new BCHJS({ restURL: 'https://api.fullstack.cash/v5/' })
 const bchWallet = new BchWallet(undefined, {
   interface: 'rest-api',
-  restURL: 'https://api.fullstack.cash'
+  restURL: 'https://api.fullstack.cash/v5/'
 })
+await bchWallet.walletInfoPromise
+await bchWallet.initialize()
 ```
 
 #### Using Web 3 Interface
 
 ```js
-const BCHJS = require('@psf/bch-js')
 const BchWallet = require('minimal-slp-wallet/index')
 
-const bchjs = new BCHJS()
 const bchWallet = new BchWallet(undefined, {
   interface: 'consumer-api',
   restURL: 'https://free-bch.fullstack.cash'
   // Connect to your own instance of ipfs-bch-wallet-consumer:
   // restURL: 'http://localhost:5005'
 })
+await bchWallet.walletInfoPromise
+await bchWallet.initialize()
 ```
 
 ### Create new wallets
@@ -139,6 +145,13 @@ const bchWallet2 = new BchWallet(
     HdPath: "m/44'/245'/0'/1'"
   }
 )
+```
+
+### Initialize wallet with private key
+Private keys are in WIF format, and start with a capital 'K' or 'L'.
+
+```js
+const bchWallet = new BchWallet('L3BUek8oq1iijZTkfdRYo8RDxEe3PpB8MyJnh2FSGWAoCjAffQCp')
 ```
 
 ### Send transactions
@@ -210,6 +223,17 @@ const myBalance = await bchWallet.listTokens()
 const balanceOfOtherAddress = await bchWallet.listTokens(
   'simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk'
 )
+```
+
+### Get Token Data
+Given a Token ID for an SLP token, retrieve data about the token. This includes mutable and immutable data using the [PS002 specification](https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps002-slp-mutable-data.md) which controls token icons and other metadata.
+
+```js
+const bchWallet = new BchWallet()
+
+const tokenId = '59a62f35b0882b7c0ed80407d9190b460cc566cb6c01ed4817ad64f9d2508702'
+
+const tokenData = await slpWallet.getTokenData(tokenId)
 ```
 
 ### Get Wallet Transaction History
@@ -289,6 +313,20 @@ localStorage.setItem('BCH_MNEMONIC', bchWallet1.walletInfo.mnemonic)
 
 // retrieve mnemonic to initialize the wallet
 const bchWallet2 = new BchWallet(localStorage.getItem('BCH_MNEMONIC'))
+```
+
+### Validate a UTXO
+In BCH applications, it's often necessary to validate if a UTXO is still alive and spendable, or if it's already been spent. This function returns true if the UTXO is still spendable, false if not.
+
+```js
+const bchWallet = new BchWallet()
+
+const utxo = {
+  txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+  vout: 0
+}
+
+const isValid = await bchWallet.utxoIsValid(utxo)
 ```
 
 # Licence
