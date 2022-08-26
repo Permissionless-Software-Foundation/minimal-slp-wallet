@@ -6,12 +6,15 @@
 const assert = require('chai').assert
 const sinon = require('sinon')
 const BCHJS = require('@psf/bch-js')
+const clone = require('lodash.clonedeep')
 
+// Local libraries
 const SendBCH = require('../../lib/send-bch')
 const AdapterRouter = require('../../lib/adapters/router')
 let uut // Unit Under Test
 
-const mockData = require('./mocks/send-bch-mocks')
+const mockDataLib = require('./mocks/send-bch-mocks')
+let mockData
 
 describe('#SendBCH', () => {
   let sandbox
@@ -27,6 +30,8 @@ describe('#SendBCH', () => {
     config.bchjs = bchjs
     config.ar = new AdapterRouter(config)
     uut = new SendBCH(config)
+
+    mockData = clone(mockDataLib)
   })
 
   afterEach(() => sandbox.restore())
@@ -225,6 +230,20 @@ describe('#SendBCH', () => {
       // Ensure the output has the expected properties.
       assert.property(keyPair, 'compressed')
       assert.property(keyPair, 'network')
+    })
+
+    it('should throw error if wallet has neither mnemonic or private key', async () => {
+      try {
+        // Force desired code path
+        mockData.mockWallet.mnemonic = null
+        mockData.mockWallet.privateKey = null
+
+        await uut.getKeyPairFromMnemonic(mockData.mockWallet)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Wallet has no mnemonic or private key!')
+      }
     })
   })
 
