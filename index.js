@@ -287,7 +287,8 @@ class MinimalBCHWallet {
           mnemonic: this.walletInfo.mnemonic,
           cashAddress: this.walletInfo.address,
           hdPath: this.walletInfo.hdPath,
-          fee: this.fee
+          fee: this.fee,
+          privateKey: this.walletInfo.privateKey
         },
         // this.utxos.bchUtxos
         this.utxos.utxoStore.bchUtxos
