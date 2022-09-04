@@ -445,6 +445,11 @@ class MinimalBCHWallet {
   }
 
   // Validate that a UTXO can be spent.
+  // const utxo = {
+  //   tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+  //   tx_pos: 0
+  // }
+  // isValid = await wallet.utxoIsValid(utxo)
   async utxoIsValid (utxo) {
     return await this.ar.utxoIsValid(utxo)
   }
