@@ -93,7 +93,6 @@ class MinimalBCHWallet {
         )
       }
 
-      // let privateKey, publicKey
       const walletInfo = {}
 
       // No input. Generate a new mnemonic.
@@ -457,6 +456,46 @@ class MinimalBCHWallet {
   // Get mutable and immutable data associated with a token.
   async getTokenData (tokenId, withTxHistory = false) {
     return await this.ar.getTokenData(tokenId, withTxHistory)
+  }
+
+  // This method returns an object that contains a private key WIF, public key,
+  // public address, and the index of the HD wallet that the key pair was
+  // generated from. If no index is provided, it generates the root key pair
+  // (index 0).
+  async getKeyPair (hdIndex = 0) {
+    await this.walletInfoPromise
+
+    const mnemonic = this.walletInfo.mnemonic
+
+    if (!mnemonic) {
+      throw new Error('Wallet does not have a mnemonic. Can not generate a new key pair.')
+    }
+
+    // root seed buffer
+    const rootSeed = await this.bchjs.Mnemonic.toSeed(mnemonic)
+
+    const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeed)
+
+    const childNode = masterHDNode.derivePath(`m/44'/245'/0'/0/${hdIndex}`)
+
+    const cashAddress = this.bchjs.HDNode.toCashAddress(childNode)
+    console.log('Generating a new key pair for cashAddress: ', cashAddress)
+
+    const wif = this.bchjs.HDNode.toWIF(childNode)
+
+    const publicKey = this.bchjs.HDNode.toPublicKey(childNode).toString('hex')
+
+    const slpAddress = this.bchjs.SLP.Address.toSLPAddress(cashAddress)
+
+    const outObj = {
+      hdIndex,
+      wif,
+      publicKey,
+      cashAddress,
+      slpAddress
+    }
+
+    return outObj
   }
 }
 

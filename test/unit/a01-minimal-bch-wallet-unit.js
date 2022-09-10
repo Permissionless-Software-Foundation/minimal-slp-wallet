@@ -680,4 +680,40 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(result, true)
     })
   })
+
+  describe('#getKeyPair', () => {
+    it('should return an object with a key pair', async () => {
+      const result = await uut.getKeyPair(5)
+      // console.log('result: ', result)
+
+      assert.property(result, 'hdIndex')
+      assert.property(result, 'wif')
+      assert.property(result, 'publicKey')
+      assert.property(result, 'cashAddress')
+      assert.property(result, 'slpAddress')
+    })
+
+    it('should throw an error if wallet does not have a mnemonic', async () => {
+      try {
+        uut.walletInfo.mnemonic = ''
+
+        await uut.getKeyPair()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Wallet does not have a mnemonic. Can not generate a new key pair.')
+      }
+    })
+
+    it('should return root keypair if no argument is passed', async () => {
+      const result = await uut.getKeyPair()
+      // console.log('result: ', result)
+
+      assert.equal(result.hdIndex, 0)
+      assert.equal(result.wif, uut.walletInfo.privateKey)
+      assert.equal(result.publicKey, uut.walletInfo.publicKey)
+      assert.equal(result.cashAddress, uut.walletInfo.cashAddress)
+      assert.equal(result.slpAddress, uut.walletInfo.slpAddress)
+    })
+  })
 })

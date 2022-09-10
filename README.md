@@ -33,7 +33,7 @@ The [examples](./examples) directory shows how to write node.js JavaScript apps 
 
 ## How to use it?
 
-### Import
+### Browser
 
 #### Add to your HTML scripts
 
@@ -41,17 +41,19 @@ The [examples](./examples) directory shows how to write node.js JavaScript apps 
 <script src="https://unpkg.com/minimal-slp-wallet"></script>
 ```
 
-#### Node module
+This will load the wallet into `window.SlpAddress`
+
+#### Node.js
 
 ```bash
 npm install minimal-slp-wallet --save
 ```
 
 ```js
-// module import
-import BchWallet from 'minimal-slp-wallet'
+// ESM
+import BchWallet from 'minimal-slp-wallet/index.js'
 
-// nodejs modules
+// CommonJS
 const BchWallet = require('minimal-slp-wallet/index')
 ```
 
@@ -319,14 +321,19 @@ const bchWallet2 = new BchWallet(localStorage.getItem('BCH_MNEMONIC'))
 In BCH applications, it's often necessary to validate if a UTXO is still alive and spendable, or if it's already been spent. This function returns true if the UTXO is still spendable, false if not.
 
 ```js
-const bchWallet = new BchWallet()
-
 const utxo = {
   txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
   vout: 0
 }
 
 const isValid = await bchWallet.utxoIsValid(utxo)
+```
+
+### Generate a Key Pair
+If a wallet is generated from a 12-word mnemonic, it can generate a key pair from the HD wallet.
+
+```js
+const keyPair = await bchWallet.getKeyPair(5)
 ```
 
 # Licence
