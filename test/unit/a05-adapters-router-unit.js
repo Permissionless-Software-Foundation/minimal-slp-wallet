@@ -152,7 +152,7 @@ describe('#adapter-router', () => {
       // Mock dependencies.
       sandbox
         .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
-        .resolves('txid-str')
+        .resolves(['txid-str'])
 
       const result = await uut.sendTx('fakeHex')
 
