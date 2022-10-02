@@ -79,6 +79,25 @@ class MinimalBCHWallet {
     // have a new `walletInfo` property that will contain the wallet information.
     this.walletInfoCreated = false
     this.walletInfoPromise = this.create(hdPrivateKeyOrMnemonic)
+
+    // Bind the 'this' object to all functions
+    this.create = this.create.bind(this)
+    this.initialize = this.initialize.bind(this)
+    this.getUtxos = this.getUtxos.bind(this)
+    this.getBalance = this.getBalance.bind(this)
+    this.getTransactions = this.getTransactions.bind(this)
+    this.getTxData = this.getTxData.bind(this)
+    this.send = this.send.bind(this)
+    this.sendTokens = this.sendTokens.bind(this)
+    this.burnTokens = this.burnTokens.bind(this)
+    this.listTokens = this.listTokens.bind(this)
+    this.sendAll = this.sendAll.bind(this)
+    this.burnAll = this.burnAll.bind(this)
+    this.getUsd = this.getUsd.bind(this)
+    this.sendOpReturn = this.sendOpReturn.bind(this)
+    this.utxoIsValid = this.utxoIsValid.bind(this)
+    this.getTokenData = this.getTokenData.bind(this)
+    this.getKeyPair = this.getKeyPair.bind(this)
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
