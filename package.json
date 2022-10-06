@@ -79,7 +79,7 @@
         "default": "./dist/minimal-slp-wallet.min.js"
       },
       "require": {
-        "default": "index.js"
+        "default": "./index.js"
       }
     }
   }
