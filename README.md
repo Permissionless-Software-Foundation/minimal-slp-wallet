@@ -51,10 +51,10 @@ npm install minimal-slp-wallet --save
 
 ```js
 // ESM
-import BchWallet from 'minimal-slp-wallet/index.js'
+import BchWallet from 'minimal-slp-wallet'
 
 // CommonJS
-const BchWallet = require('minimal-slp-wallet/index')
+const BchWallet = require('minimal-slp-wallet')
 ```
 
 ### Instantiate Library
@@ -67,7 +67,7 @@ The wallet has different configuration parameters, that allow it to use web2 or 
 #### Using Web 2 Infrastructure
 
 ```js
-const BchWallet = require('minimal-slp-wallet/index')
+const BchWallet = require('minimal-slp-wallet')
 
 const bchWallet = new BchWallet(undefined, {
   interface: 'rest-api',
@@ -80,7 +80,7 @@ await bchWallet.initialize()
 #### Using Web 3 Interface
 
 ```js
-const BchWallet = require('minimal-slp-wallet/index')
+const BchWallet = require('minimal-slp-wallet')
 
 const bchWallet = new BchWallet(undefined, {
   interface: 'consumer-api',
