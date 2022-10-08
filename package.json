@@ -75,10 +75,9 @@
   },
   "exports": {
     ".": {
-      "browser": {
-        "default": "./dist/minimal-slp-wallet.min.js"
-      },
       "import": {
+        "browser": "./dist/minimal-slp-wallet.min.js",
+        "node": "./index.js",
         "default": "./index.js"
       },
       "require": {
