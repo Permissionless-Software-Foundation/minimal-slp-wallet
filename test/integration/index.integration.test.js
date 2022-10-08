@@ -149,4 +149,31 @@ describe('#BchWallet', () => {
       assert.include(result.mutableData, 'ipfs')
     })
   })
+
+  describe('#getTokenData2', () => {
+    it('should get token data from fullstack.cash', async () => {
+      const tokenId = 'b93137050d6a6dcdba12432f018660541ffb4b457bf4020258272632c13e92d9'
+
+      const result = await uut.getTokenData2(tokenId)
+      console.log('result: ', result)
+
+      assert.property(result, 'tokenIcon')
+      assert.property(result, 'tokenStats')
+      assert.property(result, 'optimizedTokenIcon')
+      assert.property(result, 'iconRepoCompatible')
+      assert.property(result, 'ps002Compatible')
+    })
+
+    // it('should get token data from free-bch', async () => {
+    //   uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
+    //
+    //   const tokenId = 'eb93f05553ff088bffb0ec687519e83c59e5108c160f7c25a4b6c45109d7e40b'
+    //
+    //   const result = await uut.getTokenData(tokenId)
+    //   // console.log('result: ', result)
+    //
+    //   assert.include(result.immutableData, 'ipfs')
+    //   assert.include(result.mutableData, 'ipfs')
+    // })
+  })
 })

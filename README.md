@@ -12,6 +12,7 @@ This is a minimalist Bitcoin Cash (BCH) wallet 'engine' for use with front end w
 - Price BCH in USD
 - Send messages on the blockchain via OP_RETURN data
 - Verify that a UTXO is unspent
+- Get token icons and other media associated with a token
 
 It is 'token aware' and can work with all SLP tokens, including NFTs. It can interface with Web 2 infrastructure like [FullStack.cash](https://fullstack.cash) or with the [Cash Stack Web 3 infrastructure](https://cashstack.info) via the [bch-consumer library](https://www.npmjs.com/package/bch-consumer).
 
@@ -236,6 +237,19 @@ const bchWallet = new BchWallet()
 const tokenId = '59a62f35b0882b7c0ed80407d9190b460cc566cb6c01ed4817ad64f9d2508702'
 
 const tokenData = await slpWallet.getTokenData(tokenId)
+```
+
+### Get Token Media
+Given a Token ID for an SLP token, retrieve the token icon URL and other associated media. This includes mutable and immutable data using the [PS007 specification](https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps007-token-data-schema.md) which controls token icons and other metadata.
+
+`getTokenData()` returns much faster, but the client has to lookup the data on IPFS. `getTokenData2()` has the server lookup the token data. This can sometimes be faster, or sometimes it can take several seconds.
+
+```js
+const bchWallet = new BchWallet()
+
+const tokenId = '59a62f35b0882b7c0ed80407d9190b460cc566cb6c01ed4817ad64f9d2508702'
+
+const tokenData = await slpWallet.getTokenData2(tokenId)
 ```
 
 ### Get Wallet Transaction History

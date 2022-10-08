@@ -477,6 +477,11 @@ class MinimalBCHWallet {
     return await this.ar.getTokenData(tokenId, withTxHistory)
   }
 
+  // Get token icon and other media
+  async getTokenData2 (tokenId) {
+    return await this.ar.getTokenData2(tokenId)
+  }
+
   // This method returns an object that contains a private key WIF, public key,
   // public address, and the index of the HD wallet that the key pair was
   // generated from. If no index is provided, it generates the root key pair
