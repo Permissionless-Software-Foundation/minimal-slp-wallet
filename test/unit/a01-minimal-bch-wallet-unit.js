@@ -681,6 +681,17 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
   })
 
+  describe('#getTokenData2', async () => {
+    it('shoudl wrap the getTokenData2() function', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.ar, 'getTokenData2').resolves(true)
+
+      const result = await uut.getTokenData2()
+
+      assert.equal(result, true)
+    })
+  })
+
   describe('#getKeyPair', () => {
     it('should return an object with a key pair', async () => {
       const result = await uut.getKeyPair(5)

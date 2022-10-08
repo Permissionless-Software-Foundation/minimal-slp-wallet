@@ -550,4 +550,80 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#getTokenData2', () => {
+    it('should get token data from bch-js', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.PsfSlpIndexer, 'getTokenData2').resolves({
+        tokenIcon: {},
+        tokenStats: {},
+        optimizedTokenIcon: {},
+        iconRepoCompatible: {},
+        ps002Compatible: {}
+      })
+
+      // Force selected interface.
+      uut.interface = 'rest-api'
+
+      const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+      const result = await uut.getTokenData2(tokenId)
+
+      assert.property(result, 'tokenIcon')
+      assert.property(result, 'tokenStats')
+      assert.property(result, 'optimizedTokenIcon')
+      assert.property(result, 'iconRepoCompatible')
+      assert.property(result, 'ps002Compatible')
+    })
+
+    it('should get token data from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies
+      sandbox.stub(uut.bchConsumer.bch, 'getTokenData2').resolves({
+        tokenData: {
+          tokenIcon: {},
+          tokenStats: {},
+          optimizedTokenIcon: {},
+          iconRepoCompatible: {},
+          ps002Compatible: {}
+        }
+      })
+
+      const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+      const result = await uut.getTokenData2(tokenId)
+
+      assert.property(result, 'tokenIcon')
+      assert.property(result, 'tokenStats')
+      assert.property(result, 'optimizedTokenIcon')
+      assert.property(result, 'iconRepoCompatible')
+      assert.property(result, 'ps002Compatible')
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+        await uut.getTokenData2(tokenId)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+
+    it('should throw an error if token ID is not provided', async () => {
+      try {
+        await uut.getTokenData2()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'tokenId required as input.')
+      }
+    })
+  })
 })
