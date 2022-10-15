@@ -48,7 +48,7 @@ describe('#tokens', () => {
       } catch (err) {
         assert.include(
           err.message,
-          'Must pass instance of bch-js when instantiating AdapterRouter.'
+          'Must pass instance of bch-js when instantiating Tokens library.'
         )
       }
     })
