@@ -524,7 +524,7 @@ class MinimalBCHWallet {
     return outObj
   }
 
-  async optimize() {
+  async optimize () {
     return await this.consolidateUtxos.start()
   }
 }

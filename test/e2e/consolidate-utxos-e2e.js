@@ -12,13 +12,13 @@ const mnemonic = 'vital man apology edge load license rubber whip blue menu lens
 // bitcoincash:qq2tk7vedkp5hj3smpmz6let49q9u4wu9ga9tmyfcc
 
 // Top-level function for this test.
-async function testOptimization() {
+async function testOptimization () {
   try {
     const wallet = new SlpWallet(mnemonic, { interface: 'consumer-api' })
 
     const result = await wallet.optimize()
     console.log('result: ', result)
-  } catch(err) {
+  } catch (err) {
     console.error('Error in testOptimization(): ', err)
   }
 }
