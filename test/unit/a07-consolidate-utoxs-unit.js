@@ -159,7 +159,7 @@ describe('#Consolidate-UTXOs', () => {
     it('should catch and throw errors', async () => {
       try {
         // Mock dependencies and force desired code path
-        sandbox.stub(uut, 'updateUtxos').rejects(new Error('fake error'))
+        sandbox.stub(uut.retryQueue, 'addToQueue').rejects(new Error('fake error'))
 
         await uut.start()
 
