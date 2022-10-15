@@ -16,6 +16,7 @@ const Utxos = require('./lib/utxos')
 const Tokens = require('./lib/tokens')
 const AdapterRouter = require('./lib/adapters/router')
 const OpReturn = require('./lib/op-return')
+const ConsolidateUtxos = require('./lib/consolidate-utxos.js')
 
 // let this
 
@@ -70,6 +71,7 @@ class MinimalBCHWallet {
     this.utxos = new Utxos(bchjsOptions)
     this.tokens = new Tokens(bchjsOptions)
     this.opReturn = new OpReturn(bchjsOptions)
+    this.consolidateUtxos = new ConsolidateUtxos(bchjsOptions, this)
 
     this.temp = []
     this.isInitialized = false
@@ -520,6 +522,10 @@ class MinimalBCHWallet {
     }
 
     return outObj
+  }
+
+  async optimize() {
+    return await this.consolidateUtxos.start()
   }
 }
 
