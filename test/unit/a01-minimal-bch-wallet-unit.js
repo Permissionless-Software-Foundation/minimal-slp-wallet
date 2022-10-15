@@ -731,7 +731,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
   describe('#optimize', () => {
     it('should call the consolidate-utoxs library', async () => {
       // Mock dependencies and force desired code path
-      sandbox.stub(uut.consolidateUtxos,'start').resolves(1)
+      sandbox.stub(uut.consolidateUtxos, 'start').resolves(1)
 
       const result = await uut.optimize()
 

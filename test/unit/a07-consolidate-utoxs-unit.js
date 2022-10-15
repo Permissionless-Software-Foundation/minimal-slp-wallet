@@ -96,9 +96,9 @@ describe('#Consolidate-UTXOs', () => {
   describe('#consolidateTokenUtxos', () => {
     it('should consolidate token UTXOs and return an array of TXIDs', async () => {
       // Mock dependencies and force desired code path
-      sandbox.stub(uut.wallet,'sendTokens').resolves('fake-txid')
-      sandbox.stub(uut.bchjs.Util,'sleep').resolves()
-      sandbox.stub(uut,'updateUtxos').resolves()
+      sandbox.stub(uut.wallet, 'sendTokens').resolves('fake-txid')
+      sandbox.stub(uut.bchjs.Util, 'sleep').resolves()
+      sandbox.stub(uut, 'updateUtxos').resolves()
 
       const result = await uut.consolidateTokenUtxos(mockData.countTokenUtxosOut01)
       // console.log('result: ', result)
@@ -111,9 +111,9 @@ describe('#Consolidate-UTXOs', () => {
   describe('#start', () => {
     it('should return expected properties and values if there are no UTXOs to consolidate', async () => {
       // Mock dependencies and force desired code path
-      sandbox.stub(uut,'updateUtxos').resolves()
-      sandbox.stub(uut,'countBchUtxos').returns(1)
-      sandbox.stub(uut,'countTokenUtxos').returns([])
+      sandbox.stub(uut, 'updateUtxos').resolves()
+      sandbox.stub(uut, 'countBchUtxos').returns(1)
+      sandbox.stub(uut, 'countTokenUtxos').returns([])
 
       const result = await uut.start()
       // console.log('result: ', result)
@@ -133,11 +133,11 @@ describe('#Consolidate-UTXOs', () => {
 
     it('should consolidate BCH and token UTXOs', async () => {
       // Mock dependencies and force desired code path
-      sandbox.stub(uut,'updateUtxos').resolves()
-      sandbox.stub(uut,'countBchUtxos').returns(2)
-      sandbox.stub(uut.wallet,'sendAll').resolves('fake-bch-txid')
-      sandbox.stub(uut.bchjs.Util,'sleep').resolves()
-      sandbox.stub(uut,'countTokenUtxos').returns(mockData.countTokenUtxosOut01)
+      sandbox.stub(uut, 'updateUtxos').resolves()
+      sandbox.stub(uut, 'countBchUtxos').returns(2)
+      sandbox.stub(uut.wallet, 'sendAll').resolves('fake-bch-txid')
+      sandbox.stub(uut.bchjs.Util, 'sleep').resolves()
+      sandbox.stub(uut, 'countTokenUtxos').returns(mockData.countTokenUtxosOut01)
       sandbox.stub(uut, 'consolidateTokenUtxos').resolves(['fake-token-txid'])
 
       const result = await uut.start()
@@ -164,7 +164,7 @@ describe('#Consolidate-UTXOs', () => {
         await uut.start()
 
         assert.fail('Unexpected code path')
-      } catch(err) {
+      } catch (err) {
         // console.log('err.message: ', err.message)
         assert.include(err.message, 'fake error')
       }
