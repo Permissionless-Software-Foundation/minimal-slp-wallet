@@ -341,9 +341,8 @@ describe('#index.js - Minimal BCH Wallet', () => {
   })
 
   describe('#getTransactions', () => {
-    it('should get transactions', async () => {
-      // Mock live network calls
-      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves({
+    it('should get transactions address is specified', async () => {
+      sandbox.stub(uut.ar, 'getTransactions').resolves({
         success: true,
         transactions: [
           {
@@ -362,9 +361,9 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.isArray(transactions)
     })
 
-    it('should get transactions', async () => {
+    it('should get transactions for wallet if address is not specified', async () => {
       // Mock live network calls
-      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves({
+      sandbox.stub(uut.ar, 'getTransactions').resolves({
         success: true,
         transactions: [
           {
