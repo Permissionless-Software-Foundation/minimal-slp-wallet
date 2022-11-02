@@ -284,11 +284,13 @@ describe('#adapter-router', () => {
 
     it('should use bch-js by default', async () => {
       // Mock dependencies.
-      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves('test str')
+      sandbox.stub(uut.bchjs.Electrumx, 'transactions').resolves({ transactions: 'test str' })
+      sandbox.stub(uut.bchjs.Electrumx, 'sortAllTxs').resolves('test str')
 
       const result = await uut.getTransactions('fake-addr')
+      // console.log('result: ', result)
 
-      assert.equal(result, 'test str')
+      assert.equal(result.transactions, 'test str')
     })
 
     it('should use wallet service when consumer interface is selected', async () => {
