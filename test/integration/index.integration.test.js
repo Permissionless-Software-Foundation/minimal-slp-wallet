@@ -176,4 +176,50 @@ describe('#BchWallet', () => {
     //   assert.include(result.mutableData, 'ipfs')
     // })
   })
+
+  describe('#getTransactions', () => {
+    it('should sort descending by default from bch-js', async () => {
+      const addr = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+
+      const result = await uut.getTransactions(addr)
+      // console.log('result: ', result)
+      // console.log(`result[0].height: ${result[0].height}, result[40].height: ${result[40].height}`)
+
+      assert.isAbove(result[0].height, result[40].height)
+    })
+
+    it('should sort descending by default from consumer-api', async () => {
+      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
+
+      const addr = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+
+      const result = await uut.getTransactions(addr)
+      // console.log('result: ', result)
+      // console.log(`result[0]: ${JSON.stringify(result[0])}, result[40]: ${JSON.stringify(result[40])}`)
+
+      assert.isAbove(result[0].height, result[40].height)
+    })
+
+    it('should sort ascending from bch-js', async () => {
+      const addr = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+
+      const result = await uut.getTransactions(addr, 'ASCENDING')
+      // console.log('result: ', result)
+      // console.log(`result[0].height: ${result[0].height}, result[40].height: ${result[40].height}`)
+
+      assert.isAbove(result[40].height, result[0].height)
+    })
+
+    it('should sort ascending by default from consumer-api', async () => {
+      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
+
+      const addr = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+
+      const result = await uut.getTransactions(addr, 'ASCENDING')
+      // console.log('result: ', result)
+      // console.log(`result[0]: ${JSON.stringify(result[0])}, result[40]: ${JSON.stringify(result[40])}`)
+
+      assert.isAbove(result[40].height, result[0].height)
+    })
+  })
 })

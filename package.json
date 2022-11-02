@@ -39,7 +39,7 @@
     "@chris.troutner/retry-queue-commonjs": "1.0.8",
     "@psf/bch-js": "6.5.3",
     "apidoc": "0.51.0",
-    "bch-consumer": "1.4.0",
+    "bch-consumer": "1.4.1",
     "bch-donation": "1.1.2",
     "crypto-js": "4.0.0"
   },

@@ -270,7 +270,7 @@ class MinimalBCHWallet {
 
   // Get transactions associated with the wallet.
   // Returns an array of object. Each object has a 'tx_hash' and 'height' property.
-  async getTransactions (bchAddress) {
+  async getTransactions (bchAddress, sortingOrder = 'DESCENDING') {
     let addr = bchAddress
 
     // If no address is passed in, but the wallet has been initialized, use the
@@ -280,7 +280,7 @@ class MinimalBCHWallet {
     }
 
     // console.log(`Getting transactions for ${addr}`)
-    const data = await this.ar.getTransactions(addr)
+    const data = await this.ar.getTransactions(addr, sortingOrder)
 
     return data.transactions
   }
