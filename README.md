@@ -74,7 +74,6 @@ const bchWallet = new BchWallet(undefined, {
   interface: 'rest-api',
   restURL: 'https://api.fullstack.cash/v5/'
 })
-await bchWallet.walletInfoPromise
 await bchWallet.initialize()
 ```
 
@@ -89,7 +88,6 @@ const bchWallet = new BchWallet(undefined, {
   // Connect to your own instance of ipfs-bch-wallet-consumer:
   // restURL: 'http://localhost:5005'
 })
-await bchWallet.walletInfoPromise
 await bchWallet.initialize()
 ```
 

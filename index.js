@@ -209,6 +209,8 @@ class MinimalBCHWallet {
   // Initialize is called to initialize the UTXO store, download token data, and
   // get a balance of the wallet.
   async initialize () {
+    await this.walletInfoPromise
+
     await this.utxos.initUtxoStore(this.walletInfo.address)
 
     this.isInitialized = true
