@@ -348,6 +348,13 @@ If a wallet is generated from a 12-word mnemonic, it can generate a key pair fro
 const keyPair = await bchWallet.getKeyPair(5)
 ```
 
+### Optimize Wallet
+Every [UTXO](https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch06.asciidoc#transaction-outputs-and-inputs) in the wallet results in an API call. Calling the `optimize()` function will consolidate the number of UTXOs in the wallet. This speeds up performance and leads to a better user experience overall.
+
+```js
+await bchWallet.optimize()
+```
+
 # Licence
 
 [MIT](LICENSE.md)
