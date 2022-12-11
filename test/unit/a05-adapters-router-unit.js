@@ -569,7 +569,7 @@ describe('#adapter-router', () => {
           mutableData: {}
         }
       })
-      sandbox.stub(uut.bchjs.Electrumx,'sortAllTxs').resolves([])
+      sandbox.stub(uut.bchjs.Electrumx, 'sortAllTxs').resolves([])
 
       const result = await uut.getTokenData(tokenId, true)
       // console.log(`result: ${JSON.stringify(result, null, 2)}`)
