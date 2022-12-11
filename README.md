@@ -237,6 +237,14 @@ const tokenId = '59a62f35b0882b7c0ed80407d9190b460cc566cb6c01ed4817ad64f9d250870
 const tokenData = await slpWallet.getTokenData(tokenId)
 ```
 
+This function call can also retrieve the transaction history for a token. This is particularly useful for NFTs, for applications that need to find the current address holding the NFT.
+
+`const tokenData = await slpWallet.getTokenData(tokenId, true)`
+
+The TX history is sorted in descending order by default. It can be sorted in ascending order like this:
+
+`const tokenData = await slpWallet.getTokenData(tokenId, true, 'ASCENDING')`
+
 ### Get Token Media
 Given a Token ID for an SLP token, retrieve the token icon URL and other associated media. This includes mutable and immutable data using the [PS007 specification](https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps007-token-data-schema.md) which controls token icons and other metadata.
 

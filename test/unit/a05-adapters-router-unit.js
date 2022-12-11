@@ -528,19 +528,19 @@ describe('#adapter-router', () => {
       assert.property(result, 'mutableData')
     })
 
-    it('should throw an error if an interface is not specified', async () => {
-      try {
-        uut.interface = ''
-
-        const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
-
-        await uut.getTokenData(tokenId)
-
-        assert.fail('Unexpected code path')
-      } catch (err) {
-        assert.include(err.message, 'this.interface is not specified')
-      }
-    })
+    // it('should throw an error if an interface is not specified', async () => {
+    //   try {
+    //     uut.interface = ''
+    //
+    //     const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+    //
+    //     await uut.getTokenData(tokenId)
+    //
+    //     assert.fail('Unexpected code path')
+    //   } catch (err) {
+    //     assert.include(err.message, 'this.interface is not specified')
+    //   }
+    // })
 
     it('should throw an error if token ID is not provided', async () => {
       try {
@@ -550,6 +550,31 @@ describe('#adapter-router', () => {
       } catch (err) {
         assert.include(err.message, 'tokenId required as input.')
       }
+    })
+
+    it('should sent token txs to Electrum library for sorting', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      const tokenId =
+        '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
+
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut.bchConsumer.bch, 'getTokenData').resolves({
+        tokenData: {
+          genesisData: {
+            txs: []
+          },
+          immutableData: {},
+          mutableData: {}
+        }
+      })
+      sandbox.stub(uut.bchjs.Electrumx, 'sortAllTxs').resolves([])
+
+      const result = await uut.getTokenData(tokenId, true)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.isArray(result.genesisData.txs)
     })
   })
 
