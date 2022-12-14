@@ -532,6 +532,11 @@ class MinimalBCHWallet {
   async optimize () {
     return await this.consolidateUtxos.start()
   }
+
+  // Get token icon and other media
+  async getPubKey (addr) {
+    return await this.ar.getPubKey(addr)
+  }
 }
 
 module.exports = MinimalBCHWallet

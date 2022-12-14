@@ -653,4 +653,113 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#getPubKey', () => {
+    it('should return pubkey from bch-js', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.bchjs.encryption, 'getPubKey').resolves({
+        success: true,
+        publicKey: '033a24d13b45eaf53bebc7da5b7ee79a39615790b4fb16dab048fdcc5abd3764ef'
+      })
+
+      const addr =
+        'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+
+      const result = await uut.getPubKey(addr)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.isString(result)
+    })
+
+    it('should return pubkey from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.bchConsumer.msg, 'getPubKey').resolves({
+        success: true,
+        status: 200,
+        endpoint: 'pubkey',
+        pubkey: {
+          success: true,
+          publicKey: '033a24d13b45eaf53bebc7da5b7ee79a39615790b4fb16dab048fdcc5abd3764ef'
+        }
+      })
+
+      const addr =
+        'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+
+      const result = await uut.getPubKey(addr)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.isString(result)
+    })
+
+    it('should handle address without a pubkey from bch-js', async () => {
+      try {
+        // Mock dependencies and force desired code path
+        sandbox.stub(uut.bchjs.encryption, 'getPubKey').rejects({
+          success: false,
+          error: 'No transaction history.'
+        })
+
+        const addr =
+          'bitcoincash:qzxeg2p27ls5mkgcy56spadfydau0cyk0y4g90sgtl'
+
+        await uut.getPubKey(addr)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'No transaction history')
+      }
+    })
+
+    it('should handle address without a pubkey from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.bchConsumer.msg, 'getPubKey').resolves({
+        success: false,
+        status: 422,
+        message: 'No transaction history.',
+        endpoint: 'pubkey'
+      })
+
+      try {
+        const addr =
+          'bitcoincash:qzxeg2p27ls5mkgcy56spadfydau0cyk0y4g90sgtl'
+
+        await uut.getPubKey(addr)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'No transaction history')
+      }
+    })
+
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
+
+        await uut.getPubKey('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+
+    it('should throw an error if token ID is not provided', async () => {
+      try {
+        await uut.getPubKey()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'addr required as input.')
+      }
+    })
+  })
 })
