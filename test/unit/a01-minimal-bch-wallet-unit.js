@@ -737,4 +737,15 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(result, 1)
     })
   })
+
+  describe('#getPubKey', () => {
+    it('should pass call to the router', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.ar, 'getPubKey').resolves(1)
+
+      const result = await uut.getPubKey('fake-addr')
+
+      assert.equal(result, 1)
+    })
+  })
 })

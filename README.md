@@ -363,6 +363,15 @@ Every [UTXO](https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch06.asciid
 await bchWallet.optimize()
 ```
 
+### Get a Public Key
+If an address has made at least one send transaction, the it is possible to lookup the addresses public key from the blockchain. This public key can then be used to send encrypted messages to that address. If successful, this function will return a string that contains a hex-encoded public key.
+
+
+```js
+const addr = 'bitcoincash:...'
+const pubKey = await bchWallet.getPubKey(addr)
+```
+
 # Licence
 
 [MIT](LICENSE.md)
