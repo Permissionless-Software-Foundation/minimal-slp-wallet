@@ -372,6 +372,19 @@ const addr = 'bitcoincash:...'
 const pubKey = await bchWallet.getPubKey(addr)
 ```
 
+### Get UTXOs for an Address
+This function can retrieve the UTXOs controlled by the wallet:
+
+```js
+const utxos = await bchWallet.getUtxos()
+```
+
+Or the UTXOs held by another address can be retrieved:
+
+```js
+const utxos = awiat bchWallet.getUtxos('bitcoincash...')
+```
+
 # Licence
 
 [MIT](LICENSE.md)
