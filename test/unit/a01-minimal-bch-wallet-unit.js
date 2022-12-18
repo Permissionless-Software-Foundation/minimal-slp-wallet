@@ -748,4 +748,15 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(result, 1)
     })
   })
+
+  describe('#broadcast', () => {
+    it('should pass call to the router', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.ar, 'sendTx').resolves(1)
+
+      const result = await uut.broadcast('fake-hex')
+
+      assert.equal(result, 1)
+    })
+  })
 })

@@ -382,7 +382,14 @@ const utxos = await bchWallet.getUtxos()
 Or the UTXOs held by another address can be retrieved:
 
 ```js
-const utxos = awiat bchWallet.getUtxos('bitcoincash...')
+const utxos = await bchWallet.getUtxos('bitcoincash...')
+```
+
+### Broadcast a Transaction
+If you have a hex-encoded transaction, you can broadcast it to the network:
+
+```js
+const txid = await bchWallet.broadcast(hex)
 ```
 
 # Licence

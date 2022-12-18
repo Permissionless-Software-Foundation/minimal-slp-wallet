@@ -537,6 +537,11 @@ class MinimalBCHWallet {
   async getPubKey (addr) {
     return await this.ar.getPubKey(addr)
   }
+
+  // Broadcast a hex-encoded TX to the network
+  async broadcast (hex) {
+    return await this.ar.sendTx(hex)
+  }
 }
 
 module.exports = MinimalBCHWallet
