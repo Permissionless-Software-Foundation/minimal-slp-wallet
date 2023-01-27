@@ -483,8 +483,8 @@ class MinimalBCHWallet {
   }
 
   // Get token icon and other media
-  async getTokenData2 (tokenId) {
-    return await this.ar.getTokenData2(tokenId)
+  async getTokenData2 (tokenId, updateCache) {
+    return await this.ar.getTokenData2(tokenId, updateCache)
   }
 
   // This method returns an object that contains a private key WIF, public key,
