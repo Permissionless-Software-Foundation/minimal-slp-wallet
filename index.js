@@ -530,7 +530,7 @@ class MinimalBCHWallet {
   // Optimize the wallet by consolidating UTXOs. This has the effect of speeding
   // up all API calls and improving the UX.
   async optimize (dryRun = false) {
-    return await this.consolidateUtxos.start({dryRun})
+    return await this.consolidateUtxos.start({ dryRun })
   }
 
   // Get token icon and other media
