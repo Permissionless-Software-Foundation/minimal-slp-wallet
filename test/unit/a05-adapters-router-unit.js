@@ -530,6 +530,7 @@ describe('#adapter-router', () => {
 
       // Mock dependencies
       sandbox.stub(uut.bchConsumer.bch, 'getTokenData').resolves({
+        success: true,
         tokenData: {
           genesisData: {},
           immutableData: {},
@@ -579,6 +580,7 @@ describe('#adapter-router', () => {
 
       // Mock dependencies and force desired code path.
       sandbox.stub(uut.bchConsumer.bch, 'getTokenData').resolves({
+        success: true,
         tokenData: {
           genesisData: {
             txs: []
@@ -593,6 +595,58 @@ describe('#adapter-router', () => {
       // console.log(`result: ${JSON.stringify(result, null, 2)}`)
 
       assert.isArray(result.genesisData.txs)
+    })
+
+    // CT 4/6/23 Saw this error in the wild. Created an error handler for it.
+    it('should throw error if genesis data has no txs', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      const tokenId =
+        '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
+
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut.bchConsumer.bch, 'getTokenData').resolves({
+        success: true,
+        tokenData: {
+          genesisData: {
+          },
+          immutableData: {},
+          mutableData: {}
+        }
+      })
+      sandbox.stub(uut.bchjs.Electrumx, 'sortAllTxs').resolves([])
+
+      try {
+        await uut.getTokenData(tokenId, true)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'No transaction history included with genesis data.')
+      }
+    })
+
+    // CT 4/6/23 Saw this error in the wild
+    it('should throw error if timeout occurs with wallet service', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies
+      sandbox.stub(uut.bchConsumer.bch, 'getTokenData').resolves({
+        success: false,
+        message: 'request timed out',
+        data: ''
+      })
+
+      const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+
+      try {
+        await uut.getTokenData(tokenId)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'request timed out')
+      }
     })
   })
 
