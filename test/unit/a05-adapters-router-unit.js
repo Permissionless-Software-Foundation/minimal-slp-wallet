@@ -266,6 +266,24 @@ describe('#adapter-router', () => {
         assert.include(err.message, 'this.interface is not specified')
       }
     })
+
+    it('should throw errors passed from service', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies.
+      sandbox
+        .stub(uut.bchConsumer.bch, 'getBalance')
+        .resolves({ success: false, message: 'test-error' })
+
+      try {
+        await uut.getBalance('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'test-error')
+      }
+    })
   })
 
   describe('#getTransactions', () => {
