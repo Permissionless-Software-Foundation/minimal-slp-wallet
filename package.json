@@ -37,7 +37,7 @@
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
     "@chris.troutner/retry-queue-commonjs": "1.0.8",
-    "@psf/bch-js": "6.7.0",
+    "@psf/bch-js": "6.7.2",
     "apidoc": "0.51.0",
     "bch-consumer": "1.4.3",
     "bch-donation": "1.1.2",
