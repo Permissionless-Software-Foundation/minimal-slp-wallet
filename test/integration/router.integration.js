@@ -18,7 +18,7 @@ describe('#router.js', () => {
   let uut
 
   beforeEach(() => {
-    const bchjs = new BCHJS()
+    const bchjs = new BCHJS({ restURL: 'http://localhost:3000/v5/' })
     uut = new Router({ bchjs })
   })
 
@@ -188,7 +188,7 @@ describe('#router.js', () => {
   describe('#utxoIsValid', async () => {
     it('should validate UTXO from bch-js', async () => {
       const utxo = {
-        tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+        tx_hash: 'a2059b1321e96a90a386894a68fa5829756118895b3cdb9a0393d94fd2ceed93',
         tx_pos: 0
       }
 
@@ -203,12 +203,12 @@ describe('#router.js', () => {
       uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const utxo = {
-        tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+        tx_hash: 'a2059b1321e96a90a386894a68fa5829756118895b3cdb9a0393d94fd2ceed93',
         tx_pos: 0
       }
 
       const result = await uut.utxoIsValid(utxo)
-      console.log(`result: ${JSON.stringify(result, null, 2)}`)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
 
       assert.equal(result, true)
     })
@@ -261,7 +261,7 @@ describe('#router.js', () => {
       assert.isArray(result.genesisData.txs)
     })
 
-    it('should return token txs in descending order from bch-consumer', async () => {
+    it('should return token txs in ascending order from bch-consumer', async () => {
       const bchjs = new BCHJS()
       uut = new Router({ bchjs, interface: 'consumer-api' })
 
@@ -275,10 +275,10 @@ describe('#router.js', () => {
       const lastTx = result.genesisData.txs.length - 1
       const lastHeight = result.genesisData.txs[lastTx].height
 
-      assert.isAbove(firstHeight, lastHeight)
+      assert.isAbove(lastHeight, firstHeight)
     })
 
-    it('should return token txs in descending order from bch-js', async () => {
+    it('should return token txs in ascending order from bch-js', async () => {
       // const bchjs = new BCHJS()
       // uut = new Router({ bchjs, interface: 'consumer-api' })
 
@@ -292,7 +292,7 @@ describe('#router.js', () => {
       const lastTx = result.genesisData.txs.length - 1
       const lastHeight = result.genesisData.txs[lastTx].height
 
-      assert.isAbove(firstHeight, lastHeight)
+      assert.isAbove(lastHeight, firstHeight)
     })
 
     it('should return token txs in ascending order from bch-consumer', async () => {
