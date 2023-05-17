@@ -386,6 +386,13 @@ class MinimalBCHWallet {
     return this.tokens.listTokensFromAddress(addr)
   }
 
+  // Get the balance for a specific SLP token.
+  getTokenBalance (tokenId, slpAddress) {
+    const addr = slpAddress || this.walletInfo.slpAddress
+
+    return this.tokens.getTokenBalance(tokenId, addr)
+  }
+
   // Send BCH. Returns a promise that resolves into a TXID.
   // This is a wrapper for the send-bch.js library.
   sendAll (toAddress) {

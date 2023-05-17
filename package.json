@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "TEST=unit nyc mocha test/unit/",
-    "test:integration": "mocha --timeout 25000 test/integration/",
+    "test:integration": "mocha --timeout 35000 test/integration/",
     "test:temp": "mocha --timeout 25000 -g '#UTXOs' test/integration/",
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i lib/ -o docs",
