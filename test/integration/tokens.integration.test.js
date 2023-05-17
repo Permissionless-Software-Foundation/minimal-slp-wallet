@@ -51,7 +51,7 @@ describe('#tokens.js', () => {
   describe('#getTokenBalance', () => {
     it('should get the token balance for a wallet', async () => {
       const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
-      const tokenId = "a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2"
+      const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
 
       const tokenBalance = await uut.getTokenBalance(tokenId, addr)
       console.log(`tokenBalance: ${JSON.stringify(tokenBalance, null, 2)}`)
