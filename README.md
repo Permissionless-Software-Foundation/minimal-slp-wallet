@@ -226,6 +226,20 @@ const balanceOfOtherAddress = await bchWallet.listTokens(
 )
 ```
 
+### Get Token Balance
+
+Given a token ID, list the balance held by an address
+
+```js
+// Get the token balance for the wallet.
+const myBalance = await bchWallet.listTokens('a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2')
+
+// Get a token balance for any address
+const balanceOfOtherAddress = await bchWallet.listTokens('a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
+  'simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk'
+)
+```
+
 ### Get Token Data
 Given a Token ID for an SLP token, retrieve data about the token. This includes mutable and immutable data using the [PS002 specification](https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps002-slp-mutable-data.md) which controls token icons and other metadata.
 

@@ -544,6 +544,19 @@ describe('#index.js - Minimal BCH Wallet', () => {
     })
   })
 
+  describe('#getTokenBalance', () => {
+    it('should wrap the getTokenBalance() function from the token library', async () => {
+      await uut.walletInfoPromise
+
+      sandbox.stub(uut.tokens, 'getTokenBalance').resolves(0)
+
+      const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+      const result = await uut.getTokenBalance(tokenId)
+
+      assert.equal(result, 0)
+    })
+  })
+
   describe('#burnTokens', () => {
     it('should broadcast a transaction and return a txid', async () => {
       const txid =

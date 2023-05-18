@@ -18,7 +18,8 @@ describe('#router.js', () => {
   let uut
 
   beforeEach(() => {
-    const bchjs = new BCHJS({ restURL: 'http://localhost:3000/v5/' })
+    // const bchjs = new BCHJS({ restURL: 'http://localhost:3000/v5/' })
+    const bchjs = new BCHJS()
     uut = new Router({ bchjs })
   })
 

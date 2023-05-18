@@ -79,7 +79,7 @@ describe('#BchWallet', () => {
   describe('#utxoIsValid', () => {
     it('should return true for valid UTXO using fullstack interface', async () => {
       const utxo = {
-        txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+        txid: '53d24b3a0388c6a410745d58d2172e65eaa24cbc074c0c420292887284d7723b',
         vout: 0
       }
 
@@ -92,7 +92,7 @@ describe('#BchWallet', () => {
       uut = new BchWallet(undefined, { interface: 'consumer-api', restURL })
 
       const utxo = {
-        txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+        txid: '53d24b3a0388c6a410745d58d2172e65eaa24cbc074c0c420292887284d7723b',
         vout: 0
       }
 
@@ -127,20 +127,23 @@ describe('#BchWallet', () => {
   })
 
   describe('#getTokenData', () => {
-    it('should get token data from fullstack.cash', async () => {
-      const tokenId = 'eb93f05553ff088bffb0ec687519e83c59e5108c160f7c25a4b6c45109d7e40b'
+    // CT 5/17/23 Disabling this test. There is an internal issue with bch-api
+    // which causes this test to fail. When bch-api internally tries to retrieve
+    // the mutable token data, it hits a rate limit.
+    // it('should get token data from fullstack.cash', async () => {
+    //   const tokenId = 'f212a3ab2141dcd34f7e800253f1a61344523e6886fdfa2421bbedf3aa52617a'
 
-      const result = await uut.getTokenData(tokenId)
-      // console.log('result: ', result)
+    //   const result = await uut.getTokenData(tokenId)
+    //   console.log('result: ', result)
 
-      assert.include(result.immutableData, 'ipfs')
-      assert.include(result.mutableData, 'ipfs')
-    })
+    //   assert.include(result.immutableData, 'ipfs')
+    //   assert.include(result.mutableData, 'ipfs')
+    // })
 
     it('should get token data from free-bch', async () => {
       uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
 
-      const tokenId = 'eb93f05553ff088bffb0ec687519e83c59e5108c160f7c25a4b6c45109d7e40b'
+      const tokenId = 'f212a3ab2141dcd34f7e800253f1a61344523e6886fdfa2421bbedf3aa52617a'
 
       const result = await uut.getTokenData(tokenId)
       // console.log('result: ', result)
