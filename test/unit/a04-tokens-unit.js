@@ -510,6 +510,66 @@ describe('#tokens', () => {
     })
   })
 
+  describe('#getTokenBalance', () => {
+    it('should get token information for an address', async () => {
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut, 'listTokensFromAddress').resolves([
+        {
+          tokenId: 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
+          ticker: 'TROUT',
+          name: "Trout's test token",
+          decimals: 2,
+          tokenType: 1,
+          url: 'troutsblog.com',
+          qty: 1
+        }
+      ])
+
+      const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
+      const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+
+      const tokenBalance = await uut.getTokenBalance(tokenId, addr)
+      // console.log(`tokenBalance: ${JSON.stringify(tokenBalance, null, 2)}`)
+
+      assert.equal(tokenBalance, 1)
+    })
+
+    it('should throw an error if token ID is not specified', async () => {
+      try {
+        await uut.getTokenBalance()
+
+        assert.equal(true, false, 'Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'token ID not provided')
+      }
+    })
+
+    it('should throw an error if address is not specified', async () => {
+      try {
+        await uut.getTokenBalance('fake-token-id')
+
+        assert.equal(true, false, 'Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'Address not provided')
+      }
+    })
+
+    it('should return zero if address has not tokens', async () => {
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut, 'listTokensFromAddress').resolves([])
+
+      const addr = 'simpleledger:qqmjqwsplscmx0aet355p4l0j8q74thv7vf5epph4z'
+      const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+
+      const tokenBalance = await uut.getTokenBalance(tokenId, addr)
+      // console.log(`tokenBalance: ${JSON.stringify(tokenBalance, null, 2)}`)
+
+      assert.equal(tokenBalance, 0)
+    })
+  })
+
   describe('#createBurnTransaction', () => {
     it('should throw an error if qty input is not provided.', async () => {
       try {

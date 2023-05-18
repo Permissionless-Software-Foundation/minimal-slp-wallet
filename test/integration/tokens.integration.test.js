@@ -55,6 +55,8 @@ describe('#tokens.js', () => {
 
       const tokenBalance = await uut.getTokenBalance(tokenId, addr)
       console.log(`tokenBalance: ${JSON.stringify(tokenBalance, null, 2)}`)
+
+      assert.isAbove(tokenBalance, 0)
     })
   })
 })
