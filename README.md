@@ -232,10 +232,11 @@ Given a token ID, list the balance held by an address
 
 ```js
 // Get the token balance for the wallet.
-const myBalance = await bchWallet.listTokens('a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2')
+const myBalance = await bchWallet.getTokenBalance('a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2')
 
 // Get a token balance for any address
-const balanceOfOtherAddress = await bchWallet.listTokens('a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
+const balanceOfOtherAddress = await bchWallet.getTokenBalance(
+  'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2',
   'simpleledger:qpeq7xx5x3a2jfa0x0w8cjqp4v9cm842vgsjqwzvfk'
 )
 ```
