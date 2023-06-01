@@ -258,7 +258,9 @@ class MinimalBCHWallet {
   }
 
   // Get the balance of the wallet.
-  async getBalance (bchAddress) {
+  async getBalance (inObj = {}) {
+    const { bchAddress } = inObj
+
     let addr = bchAddress
 
     // If no address is passed in, but the wallet has been initialized, use the
