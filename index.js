@@ -101,6 +101,7 @@ class MinimalBCHWallet {
     this.getTokenData = this.getTokenData.bind(this)
     this.getKeyPair = this.getKeyPair.bind(this)
     this.optimize = this.optimize.bind(this)
+    this.getTokenBalance = this.getTokenBalance.bind(this)
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
@@ -387,7 +388,9 @@ class MinimalBCHWallet {
   }
 
   // Get the balance for a specific SLP token.
-  getTokenBalance (tokenId, slpAddress) {
+  getTokenBalance (inObj = {}) {
+    const { tokenId, slpAddress } = inObj
+
     const addr = slpAddress || this.walletInfo.slpAddress
 
     return this.tokens.getTokenBalance(tokenId, addr)
