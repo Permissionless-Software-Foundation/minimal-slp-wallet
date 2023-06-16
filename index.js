@@ -102,6 +102,7 @@ class MinimalBCHWallet {
     this.getKeyPair = this.getKeyPair.bind(this)
     this.optimize = this.optimize.bind(this)
     this.getTokenBalance = this.getTokenBalance.bind(this)
+    this.getPubKey = this.getPubKey.bind(this)
     this.broadcast = this.broadcast.bind(this)
   }
 
@@ -548,14 +549,24 @@ class MinimalBCHWallet {
 
   // Get token icon and other media
   async getPubKey (addr) {
-    return await this.ar.getPubKey(addr)
+    try {
+      return await this.ar.getPubKey(addr)
+    } catch (err) {
+      console.error('Error in minimal-slp-wallet/getPubKey()')
+      throw err
+    }
   }
 
   // Broadcast a hex-encoded TX to the network
   async broadcast (inObj = {}) {
-    const { hex } = inObj
+    try {
+      const { hex } = inObj
 
-    return await this.ar.sendTx(hex)
+      return await this.ar.sendTx(hex)
+    } catch (err) {
+      console.error('Error in minimal-slp-wallet/broadcast()')
+      throw err
+    }
   }
 }
 
