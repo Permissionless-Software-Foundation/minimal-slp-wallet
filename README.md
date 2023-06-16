@@ -406,7 +406,9 @@ const utxos = await bchWallet.getUtxos('bitcoincash...')
 If you have a hex-encoded transaction, you can broadcast it to the network:
 
 ```js
-const txid = await bchWallet.broadcast(hex)
+const hex = '0200...tx-in-hex-format'
+const txid = await bchWallet.broadcast({hex})
+console.log(txid)
 ```
 
 # Licence

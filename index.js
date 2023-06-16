@@ -102,6 +102,7 @@ class MinimalBCHWallet {
     this.getKeyPair = this.getKeyPair.bind(this)
     this.optimize = this.optimize.bind(this)
     this.getTokenBalance = this.getTokenBalance.bind(this)
+    this.broadcast = this.broadcast.bind(this)
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
@@ -551,7 +552,9 @@ class MinimalBCHWallet {
   }
 
   // Broadcast a hex-encoded TX to the network
-  async broadcast (hex) {
+  async broadcast (inObj = {}) {
+    const { hex } = inObj
+
     return await this.ar.sendTx(hex)
   }
 }
