@@ -654,11 +654,36 @@ describe('#tokens', () => {
           tokenUtxos
         )
 
-        assert.equal(true, false, 'unexpecte result')
+        assert.equal(true, false, 'unexpected result')
       } catch (err) {
         assert.include(err.message, 'tokenId does not match')
       }
     })
+
+    it('should throw an error if wallet contains fewer tokens than are requested to burn', async () => {
+      try {
+        const tokenId = 'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'
+        const walletInfo = sendMockData.mockWallet
+
+        // Prep the utxo data.
+        utxos.utxoStore = mockData.tokenUtxos01
+        const bchUtxos = utxos.utxoStore.bchUtxos
+        const tokenUtxos = utxos.getSpendableTokenUtxos()
+
+        await uut.createBurnTransaction(
+          100.5,
+          tokenId,
+          walletInfo,
+          bchUtxos,
+          tokenUtxos
+        )
+
+        assert.equal(true, false, 'unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'which is less than quantity to burn')
+      }
+    })
+
     /*
     it('should throw an error for non token type1.', async () => {
       try {
@@ -694,6 +719,7 @@ describe('#tokens', () => {
       utxos.utxoStore = mockData.tokenUtxos01
       const bchUtxos = utxos.utxoStore.bchUtxos
       const tokenUtxos = utxos.getSpendableTokenUtxos()
+      // console.log('tokenUtxos: ', tokenUtxos)
 
       const { hex, txid } = await uut.createBurnTransaction(
         1,
