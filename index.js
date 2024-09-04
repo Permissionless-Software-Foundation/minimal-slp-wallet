@@ -568,6 +568,17 @@ class MinimalBCHWallet {
       throw err
     }
   }
+
+  // Get the cost in PSF tokens to write 1MB of data to the PSFFPP IPFS pinning
+  // network. Find out more at psffpp.com.
+  async getPsfWritePrice () {
+    try {
+      return await this.ar.getPsfWritePrice()
+    } catch (err) {
+      console.error('Error in minimal-slp-wallet/getPsfWritePrice()')
+      throw err
+    }
+  }
 }
 
 module.exports = MinimalBCHWallet

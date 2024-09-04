@@ -411,6 +411,16 @@ const txid = await bchWallet.broadcast({hex})
 console.log(txid)
 ```
 
+### Get the PSF Write Price
+This function retrieves the cost in PSF tokens to pin 1MB of content to the
+decentralized PSFFPP IPFS pinning network. Find out more at [PSFFPP.com](https://psffpp.com).
+
+```js
+const price = await bchWallet.getPsfWritePrice()
+console.log(price)
+// 0.08335233
+```
+
 # Licence
 
 [MIT](LICENSE.md)
