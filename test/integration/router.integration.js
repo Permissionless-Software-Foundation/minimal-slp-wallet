@@ -386,4 +386,23 @@ describe('#router.js', () => {
       }
     })
   })
+
+  describe('#getPsfWritePrice', () => {
+    it('should get getPsfWritePrice price from bch-js', async () => {
+      const result = await uut.getPsfWritePrice()
+      console.log('result: ', result)
+
+      assert.isNumber(result)
+    })
+
+    it('should get getPsfWritePrice price from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new Router({ bchjs, interface: 'consumer-api' })
+
+      const result = await uut.getPsfWritePrice()
+      // console.log('result: ', result)
+
+      assert.isNumber(result)
+    })
+  })
 })
