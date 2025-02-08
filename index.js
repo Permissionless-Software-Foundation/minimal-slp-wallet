@@ -99,11 +99,13 @@ class MinimalBCHWallet {
     this.sendOpReturn = this.sendOpReturn.bind(this)
     this.utxoIsValid = this.utxoIsValid.bind(this)
     this.getTokenData = this.getTokenData.bind(this)
+    this.getTokenData2 = this.getTokenData2.bind(this)
     this.getKeyPair = this.getKeyPair.bind(this)
     this.optimize = this.optimize.bind(this)
     this.getTokenBalance = this.getTokenBalance.bind(this)
     this.getPubKey = this.getPubKey.bind(this)
     this.broadcast = this.broadcast.bind(this)
+    this.getPsfWritePrice = this.getPsfWritePrice.bind(this)
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
