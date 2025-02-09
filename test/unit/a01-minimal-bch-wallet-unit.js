@@ -772,4 +772,15 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(result, 1)
     })
   })
+
+  describe('#cid2json', () => {
+    it('should convert a CID to a JSON object', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.ar, 'cid2json').resolves({ key: 'value' })
+
+      const result = await uut.cid2json({ cid: 'fake-cid' })
+
+      assert.equal(result.key, 'value')
+    })
+  })
 })
