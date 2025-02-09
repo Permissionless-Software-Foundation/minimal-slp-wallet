@@ -875,4 +875,43 @@ describe('#adapter-router', () => {
       }
     })
   })
+
+  describe('#cid2json', () => {
+    it('should convert a CID to a JSON object for bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.bchConsumer.bch, 'cid2json').resolves({ key: 'value' })
+
+      // Force selected interface.
+      uut.interface = 'consumer-api'
+
+      const result = await uut.cid2json({ cid: 'fake-cid' })
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should throw an error for rest-api interface', async () => {
+      try {
+        uut.interface = 'rest-api'
+
+        await uut.cid2json({ cid: 'fake-cid' })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'cid2json() is not supported with the rest-api interface.')
+      }
+    })
+
+    it('should throw an error if no CID is provided', async () => {
+      try {
+        await uut.cid2json()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'cid required as input.')
+      }
+    })
+  })
 })

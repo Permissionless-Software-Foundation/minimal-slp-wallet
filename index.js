@@ -106,6 +106,7 @@ class MinimalBCHWallet {
     this.getPubKey = this.getPubKey.bind(this)
     this.broadcast = this.broadcast.bind(this)
     this.getPsfWritePrice = this.getPsfWritePrice.bind(this)
+    this.cid2json = this.cid2json.bind(this)
   }
 
   // Create a new wallet. Returns a promise that resolves into a wallet object.
@@ -578,6 +579,18 @@ class MinimalBCHWallet {
       return await this.ar.getPsfWritePrice()
     } catch (err) {
       console.error('Error in minimal-slp-wallet/getPsfWritePrice()')
+      throw err
+    }
+  }
+
+  // Convert a CID to a JSON object.
+  async cid2json (inObj = {}) {
+    try {
+      const { cid } = inObj
+
+      return await this.ar.cid2json(cid)
+    } catch (err) {
+      console.error('Error in minimal-slp-wallet/cid2json()')
       throw err
     }
   }

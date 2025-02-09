@@ -421,6 +421,29 @@ console.log(price)
 // 0.08335233
 ```
 
+### Convert a CID to a JSON object
+When using the `getTokenData()` the mutable and immutable token data is returned as an IPFS CID. The data is stored as a JSON file on the IPFS network. In that case, the JSON object can be retrieved from the CID.
+
+```js
+const cid = 'bafkreigbgrvpagnmrqz2vhofifrqobigsxkdvnvikf5iqrkrbwrzirazhm'
+const json = await bchWallet.cid2json({ cid })
+console.log(json)
+/*
+{
+  "success":true,
+  "json":{
+    "schema":"1",
+    "tokenIcon":"https://pin.fullstack.cash/ipfs/view/bafkreibmtefm7h75bre6fglddm3ehzev4kl4q2ohk2a2omv2pfmcmc3rpm",
+    "fullSizedUrl":"https://pin.fullstack.cash/ipfs/view/bafkreibmtefm7h75bre6fglddm3ehzev4kl4q2ohk2a2omv2pfmcmc3rpm",
+    "nsfw":false,
+    "userData":{},
+    "jsonLd":{},
+    "about":"This Type 128 Group token controls a series of NFTs that represent edu..."
+  }
+}
+*/
+```
+
 # Licence
 
 [MIT](LICENSE.md)
