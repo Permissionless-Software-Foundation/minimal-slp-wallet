@@ -11,8 +11,8 @@ const BCHJS = require('@psf/bch-js')
 const Router = require('../../lib/adapters/router')
 
 // const restURL = 'http://localhost:5005'
-const restURL = 'https://free-bch.fullstack.cash'
-// const restURL = 'https://bc01-ca-bch-consumer.fullstackcash.nl'
+// const restURL = 'https://free-bch.fullstack.cash'
+const restURL = 'https://dev-consumer.psfoundation.info'
 
 describe('#router.js', () => {
   let uut
@@ -37,7 +37,7 @@ describe('#router.js', () => {
 
     it('should get a balance from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const addr = 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
 
@@ -64,7 +64,7 @@ describe('#router.js', () => {
 
     it('should get UTXOs from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const addr = 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
 
@@ -91,7 +91,7 @@ describe('#router.js', () => {
 
     it('should get a transaction history from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const addr = 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
 
@@ -122,7 +122,7 @@ describe('#router.js', () => {
     it('should send a tx through bch-consumer', async () => {
       try {
         const bchjs = new BCHJS()
-        uut = new Router({ bchjs, interface: 'consumer-api' })
+        uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
         const hex =
           '01000000013ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a000000006a4730440220540986d1c58d6e76f8f05501c520c38ce55393d0ed7ed3c3a82c69af04221232022058ea43ed6c05fec0eccce749a63332ed4525460105346f11108b9c26df93cd72012103083dfc5a0254613941ddc91af39ff90cd711cdcde03a87b144b883b524660c39ffffffff01807c814a000000001976a914d7e7c4e0b70eaa67ceff9d2823d1bbb9f6df9a5188ac00000000'
@@ -146,7 +146,7 @@ describe('#router.js', () => {
 
     it('should get USD price from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const result = await uut.getUsd()
       // console.log('result: ', result)
@@ -171,7 +171,7 @@ describe('#router.js', () => {
 
     it('should get TX data from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const txids = [
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
@@ -264,7 +264,7 @@ describe('#router.js', () => {
 
     it('should return token txs in ascending order from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const tokenId =
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
@@ -281,7 +281,7 @@ describe('#router.js', () => {
 
     it('should return token txs in ascending order from bch-js', async () => {
       // const bchjs = new BCHJS()
-      // uut = new Router({ bchjs, interface: 'consumer-api' })
+      // uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const tokenId =
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
@@ -298,7 +298,7 @@ describe('#router.js', () => {
 
     it('should return token txs in ascending order from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const tokenId =
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
@@ -315,7 +315,7 @@ describe('#router.js', () => {
 
     it('should return token txs in ascending order from bch-js', async () => {
       // const bchjs = new BCHJS()
-      // uut = new Router({ bchjs, interface: 'consumer-api' })
+      // uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const tokenId =
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
@@ -344,7 +344,7 @@ describe('#router.js', () => {
 
     it('should return pubkey from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const addr =
         'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
@@ -371,7 +371,7 @@ describe('#router.js', () => {
 
     it('should handle address without a pubkey from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       try {
         const addr =
@@ -397,12 +397,29 @@ describe('#router.js', () => {
 
     it('should get getPsfWritePrice price from bch-consumer', async () => {
       const bchjs = new BCHJS()
-      uut = new Router({ bchjs, interface: 'consumer-api' })
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
 
       const result = await uut.getPsfWritePrice()
       // console.log('result: ', result)
 
       assert.isNumber(result)
+    })
+  })
+
+  describe('#cid2json', () => {
+    it('should convert a CID to a JSON object from bch-consumer', async () => {
+      const bchjs = new BCHJS()
+      uut = new Router({ bchjs, interface: 'consumer-api', restURL })
+
+      const cid = 'bafkreigbgrvpagnmrqz2vhofifrqobigsxkdvnvikf5iqrkrbwrzirazhm'
+
+      const result = await uut.cid2json({ cid })
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.property(result, 'success')
+      assert.property(result, 'json')
+
+      assert.equal(result.success, true)
     })
   })
 })

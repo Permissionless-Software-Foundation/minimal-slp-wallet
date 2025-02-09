@@ -588,7 +588,9 @@ class MinimalBCHWallet {
     try {
       const { cid } = inObj
 
-      return await this.ar.cid2json(cid)
+      console.log('index.js/cid2json() cid: ', cid)
+
+      return await this.ar.cid2json({ cid })
     } catch (err) {
       console.error('Error in minimal-slp-wallet/cid2json()')
       throw err
