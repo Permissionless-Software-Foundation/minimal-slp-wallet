@@ -847,6 +847,20 @@ describe('#adapter-router', () => {
 
       assert.equal(result, 100)
     })
+    it('should handle bchjs error', async () => {
+      try {
+        // Mock dependencies
+        sandbox.stub(uut.bchjs.Price, 'getPsffppPrice').throws(new Error('error message'))
+        // Force selected interface.
+        uut.interface = 'rest-api'
+
+        await uut.getPsfWritePrice()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'error message')
+      }
+    })
 
     it('should get price from bch-consumer', async () => {
       const bchjs = new BCHJS()
@@ -903,7 +917,37 @@ describe('#adapter-router', () => {
         assert.include(err.message, 'cid2json() is not supported with the rest-api interface.')
       }
     })
+    it('should throw an error if an interface is not specified', async () => {
+      try {
+        uut.interface = ''
 
+        await uut.cid2json({ cid: 'fake-cid' })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'this.interface is not specified')
+      }
+    })
+    it('should handle axios error', async () => {
+      try {
+        const bchjs = new BCHJS()
+        uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
+
+        const axiosErr = new Error('axios error')
+        axiosErr.isAxiosError = true
+        axiosErr.response = { data: 'axios error data' }
+
+        sandbox.stub(uut.bchConsumer.bch, 'cid2json').throws(axiosErr)
+
+        uut.interface = 'consumer-api'
+
+        await uut.cid2json({ cid: 'fake-cid' })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'axios error data')
+      }
+    })
     it('should throw an error if no CID is provided', async () => {
       try {
         await uut.cid2json()

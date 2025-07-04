@@ -27,6 +27,12 @@ describe('#index.js - Minimal BCH Wallet', () => {
   afterEach(() => sandbox.restore())
 
   describe('#constructor', () => {
+    it('should instantiate with default interface and restURL', async () => {
+      uut = new MinimalBCHWallet()
+
+      assert.equal(uut.ar.interface, 'consumer-api')
+      assert.equal(uut.ar.bchjs.restURL, 'https://free-bch.fullstack.cash')
+    })
     it('should create a new wallet without encrypted mnemonic', async () => {
       uut = new MinimalBCHWallet(undefined)
       await uut.walletInfoPromise
@@ -244,14 +250,14 @@ describe('#index.js - Minimal BCH Wallet', () => {
       assert.equal(uut.tokens.bchjs.restURL, freeUrl)
     })
 
-    it('should switch to consumer-api interface', () => {
+    it('should switch to rest-api interface', () => {
       const advancedOptions = {
-        interface: 'consumer-api'
+        interface: 'rest-api'
       }
 
       uut = new MinimalBCHWallet(undefined, advancedOptions)
 
-      assert.equal(uut.ar.interface, 'consumer-api')
+      assert.equal(uut.ar.interface, 'rest-api')
     })
   })
 
@@ -307,12 +313,14 @@ describe('#index.js - Minimal BCH Wallet', () => {
   describe('#getBalance', () => {
     it('should return balance of given address', async () => {
       // Mock live network call.
-      sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves({
+      sandbox.stub(uut.ar.bchConsumer.bch, 'getBalance').resolves({
         success: true,
-        balance: {
-          confirmed: 1000,
-          unconfirmed: 0
-        }
+        balances: [
+          {
+            balance: { confirmed: 1000, unconfirmed: 0 },
+            address: 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
+          }
+        ]
       })
 
       const addr = 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
@@ -324,12 +332,14 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
     it('should return balance of wallet address', async () => {
       // Mock live network call.
-      sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves({
+      sandbox.stub(uut.ar.bchConsumer.bch, 'getBalance').resolves({
         success: true,
-        balance: {
-          confirmed: 1000,
-          unconfirmed: 0
-        }
+        balances: [
+          {
+            balance: { confirmed: 1000, unconfirmed: 0 },
+            address: 'bitcoincash:qr69kyzha07dcecrsvjwsj4s6slnlq4r8c30lxnur3'
+          }
+        ]
       })
 
       await uut.walletInfoPromise
@@ -760,6 +770,18 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
       assert.equal(result, 1)
     })
+    it('should handle and catch router error', async () => {
+      try {
+        // Mock dependencies and force desired code path
+        sandbox.stub(uut.ar, 'getPubKey').throws(new Error('error message'))
+
+        await uut.getPubKey('fake-addr')
+
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        assert.equal(error.message, 'error message')
+      }
+    })
   })
 
   describe('#broadcast', () => {
@@ -771,6 +793,18 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
       assert.equal(result, 1)
     })
+    it('should handle and catch router error', async () => {
+      try {
+        // Mock dependencies and force desired code path
+        sandbox.stub(uut.ar, 'sendTx').throws(new Error('error message'))
+
+        await uut.broadcast('fake-hex')
+
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        assert.equal(error.message, 'error message')
+      }
+    })
   })
 
   describe('#cid2json', () => {
@@ -781,6 +815,40 @@ describe('#index.js - Minimal BCH Wallet', () => {
       const result = await uut.cid2json({ cid: 'fake-cid' })
 
       assert.equal(result.key, 'value')
+    })
+    it('should handle and catch router error', async () => {
+      try {
+        // Mock dependencies and force desired code path
+        sandbox.stub(uut.ar, 'cid2json').throws(new Error('error message'))
+
+        await uut.cid2json({ cid: 'fake-cid' })
+
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        assert.equal(error.message, 'error message')
+      }
+    })
+  })
+  describe('#getPsfWritePrice', () => {
+    it('should get psf write price', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.ar, 'getPsfWritePrice').resolves(0.03570889)
+
+      const result = await uut.getPsfWritePrice()
+
+      assert.isNumber(result)
+    })
+    it('should handle and catch router error', async () => {
+      try {
+        // Mock dependencies and force desired code path
+        sandbox.stub(uut.ar, 'getPsfWritePrice').throws(new Error('error message'))
+
+        await uut.getPsfWritePrice()
+
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        assert.equal(error.message, 'error message')
+      }
     })
   })
 })
