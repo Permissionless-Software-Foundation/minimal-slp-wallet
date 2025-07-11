@@ -28,8 +28,12 @@ class MinimalBCHWallet {
     // HD Derivation path.
     this.hdPath = this.advancedOptions.hdPath || "m/44'/245'/0'/0/0"
 
-    // bch-js options.
-    const bchjsOptions = {}
+    // bch-js default options.
+    const bchjsOptions = {
+      restURL: 'https://free-bch.fullstack.cash',
+      interface: 'consumer-api'
+    }
+
     if (this.advancedOptions.restURL) {
       bchjsOptions.restURL = advancedOptions.restURL
     }
@@ -58,11 +62,12 @@ class MinimalBCHWallet {
     bchjsOptions.bchjs = this.bchjs
 
     // Instantiate the adapter router.
-    if (advancedOptions.interface === 'consumer-api') {
-      bchjsOptions.interface = 'consumer-api'
+    if (advancedOptions.interface === 'rest-api') {
+      bchjsOptions.interface = 'rest-api'
       // bchjsOptions.walletService = advancedOptions.walletService
       // bchjsOptions.bchWalletApi = advancedOptions.bchWalletApi
     }
+
     this.ar = new AdapterRouter(bchjsOptions)
     bchjsOptions.ar = this.ar
 
