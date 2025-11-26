@@ -38,7 +38,7 @@
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
     "@chris.troutner/retry-queue": "1.0.11",
-    "@psf/bch-js": "/home/trout/work/psf/code/api-dev/bch-js",
+    "@psf/bch-js": "7.1.0",
     "bch-consumer": "1.6.2",
     "bch-donation": "1.1.2",
     "crypto-js": "4.0.0"
@@ -49,7 +49,7 @@
     "chai": "4.2.0",
     "coveralls": "3.1.0",
     "esbuild": "0.20.0",
-    "esbuild-plugin-polyfill-node": "^0.3.0",
+    "esbuild-plugin-polyfill-node": "0.3.0",
     "eslint": "7.17.0",
     "eslint-config-prettier": "7.1.0",
     "eslint-config-standard": "16.0.2",
