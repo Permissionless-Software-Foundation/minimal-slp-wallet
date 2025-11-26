@@ -283,7 +283,6 @@ describe('#router.js', () => {
     })
 
     it('should return token txs in ascending order from bch-js', async () => {
-
       const tokenId =
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
 
@@ -315,7 +314,6 @@ describe('#router.js', () => {
     })
 
     it('should return token txs in ascending order from bch-js', async () => {
-
       const tokenId =
         '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
 

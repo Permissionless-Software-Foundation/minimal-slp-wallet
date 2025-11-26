@@ -39,7 +39,7 @@ describe('#UTXOs', () => {
 
     it('should initialize and return the utxoStore using web 3', async () => {
       // Re-initialize UUT for using web 3 infra.
-      const bchjs = new BCHJS({restURL: process.env.CONSUMER_URL})
+      const bchjs = new BCHJS({ restURL: process.env.CONSUMER_URL })
       const config = {
         bchjs,
         interface: 'consumer-api',
