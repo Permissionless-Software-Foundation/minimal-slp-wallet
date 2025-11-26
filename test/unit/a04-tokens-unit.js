@@ -2,19 +2,24 @@
   Unit tests for the token library.
 */
 
-const assert = require('chai').assert
-const sinon = require('sinon')
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import sinon from 'sinon'
+import BCHJS from '@psf/bch-js'
 
-const Tokens = require('../../lib/tokens')
-const Utxos = require('../../lib/utxos')
-const AdapterRouter = require('../../lib/adapters/router')
+import Tokens from '../../lib/tokens.js'
+import Utxos from '../../lib/utxos.js'
+import AdapterRouter from '../../lib/adapters/router.js'
+
+import {
+  hydratedUtxos, tokenUtxos01, tokenUtxos02, tokenUtxos03,
+  mockNFTGroupUtxos, mockNFTChildUtxos, mockBchUtxos, mockTokenUtxos, simpleUtxos
+} from './mocks/utxo-mocks.js'
+import { mockWallet } from './mocks/send-bch-mocks.js'
+
+const { assert } = chai
 
 let uut
-
-const mockDataLib = require('./mocks/utxo-mocks')
 let mockData
-const sendMockDataLib = require('./mocks/send-bch-mocks')
 let sendMockData
 
 describe('#tokens', () => {
@@ -33,8 +38,18 @@ describe('#tokens', () => {
 
     sandbox = sinon.createSandbox()
 
-    mockData = Object.assign({}, mockDataLib)
-    sendMockData = Object.assign({}, sendMockDataLib)
+    mockData = {
+      hydratedUtxos,
+      tokenUtxos01,
+      tokenUtxos02,
+      tokenUtxos03,
+      mockNFTGroupUtxos,
+      mockNFTChildUtxos,
+      mockBchUtxos,
+      mockTokenUtxos,
+      simpleUtxos
+    }
+    sendMockData = { mockWallet }
   })
 
   afterEach(() => sandbox.restore())
@@ -94,8 +109,8 @@ describe('#tokens', () => {
     })
 
     it('should combine UTXOs with the same token', () => {
-      const utxos = [mockData.hydratedUtxos[0], mockData.hydratedUtxos[0]]
-      const tokenInfo = uut.listTokensFromUtxos(utxos)
+      const utxosArr = [mockData.hydratedUtxos[0], mockData.hydratedUtxos[0]]
+      const tokenInfo = uut.listTokensFromUtxos(utxosArr)
       // console.log(`tokenInfo:  ${JSON.stringify(tokenInfo, null, 2)}`)
 
       assert.equal(tokenInfo[0].qty, 2)
@@ -189,18 +204,18 @@ describe('#tokens', () => {
       // Prep the utxo data.
       utxos.utxoStore = mockData.tokenUtxos01
       const bchUtxos = utxos.utxoStore.bchUtxos
-      let tokenUtxos = utxos.getSpendableTokenUtxos()
+      let tokenUtxosArr = utxos.getSpendableTokenUtxos()
 
       // modify tokenUtxo for this test.
-      tokenUtxos = tokenUtxos.find(elem => elem.tokenId === output.tokenId)
+      tokenUtxosArr = tokenUtxosArr.find(elem => elem.tokenId === output.tokenId)
       // console.log(`tokenUtxos: ${JSON.stringify(tokenUtxos, null, 2)}`)
-      tokenUtxos.tokenQty = '2'
+      tokenUtxosArr.tokenQty = '2'
 
       const { hex, txid } = await uut.createTransaction(
         output,
         walletInfo,
         bchUtxos,
-        [tokenUtxos]
+        [tokenUtxosArr]
       )
 
       assert.isString(hex)
@@ -684,32 +699,6 @@ describe('#tokens', () => {
       }
     })
 
-    /*
-    it('should throw an error for non token type1.', async () => {
-      try {
-        const tokenId =
-          '8cd26481aaed66198e22e05450839fda763daadbb9938b0c71521ef43c642299'
-        const walletInfo = sendMockData.mockWallet
-
-        // Prep the utxo data.
-        utxos.utxoStore = mockData.mockNFTGroupUtxos
-        const bchUtxos = utxos.utxoStore.bchUtxos
-        const tokenUtxos = utxos.getSpendableTokenUtxos()
-
-        await uut.createBurnTransaction(
-          1,
-          tokenId,
-          walletInfo,
-          bchUtxos,
-          tokenUtxos
-        )
-
-        assert.equal(true, false, 'unexpecte result')
-      } catch (err) {
-        assert.include(err.message, 'Token must be type 1')
-      }
-    })
-*/
     it('should generate burn transaction', async () => {
       const tokenId =
         'a4fb5c2da1aa064e25018a43f9165040071d9e984ba190c222a7f59053af84b2'

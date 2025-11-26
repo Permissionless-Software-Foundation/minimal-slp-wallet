@@ -52,7 +52,7 @@ const exampleUtxos02 = {
   ]
 }
 
-module.exports = {
+export {
   mockWallet,
   exampleUtxos01,
   exampleUtxos02

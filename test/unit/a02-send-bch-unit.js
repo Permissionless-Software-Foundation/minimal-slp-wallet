@@ -3,17 +3,19 @@
 */
 
 // npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
-const BCHJS = require('@psf/bch-js')
-const clone = require('lodash.clonedeep')
+import chai from 'chai'
+import sinon from 'sinon'
+import BCHJS from '@psf/bch-js'
+import clone from 'lodash.clonedeep'
 
 // Local libraries
-const SendBCH = require('../../lib/send-bch')
-const AdapterRouter = require('../../lib/adapters/router')
-let uut // Unit Under Test
+import SendBCH from '../../lib/send-bch.js'
+import AdapterRouter from '../../lib/adapters/router.js' // Unit Under Test
 
-const mockDataLib = require('./mocks/send-bch-mocks')
+import { mockWallet, exampleUtxos01, exampleUtxos02 } from './mocks/send-bch-mocks.js'
+
+const { assert } = chai
+let uut
 let mockData
 
 describe('#SendBCH', () => {
@@ -31,7 +33,11 @@ describe('#SendBCH', () => {
     config.ar = new AdapterRouter(config)
     uut = new SendBCH(config)
 
-    mockData = clone(mockDataLib)
+    mockData = {
+      mockWallet: clone(mockWallet),
+      exampleUtxos01: clone(exampleUtxos01),
+      exampleUtxos02: clone(exampleUtxos02)
+    }
   })
 
   afterEach(() => sandbox.restore())

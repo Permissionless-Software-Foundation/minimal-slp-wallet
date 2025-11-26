@@ -2,16 +2,18 @@
   Unit tests for the utxos.js library
 */
 
-const assert = require('chai').assert
-const sinon = require('sinon')
-const cloneDeep = require('lodash.clonedeep')
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import sinon from 'sinon'
+import cloneDeep from 'lodash.clonedeep'
+import BCHJS from '@psf/bch-js'
 
-const UTXOs = require('../../lib/utxos')
-const AdapterRouter = require('../../lib/adapters/router')
+import UTXOs from '../../lib/utxos.js'
+import AdapterRouter from '../../lib/adapters/router.js'
+
+import { tokenUtxos01 } from './mocks/utxo-mocks.js'
+
+const { assert } = chai
 let uut
-
-const mockDataLib = require('./mocks/utxo-mocks')
 let mockData
 
 describe('#UTXOs', () => {
@@ -26,7 +28,9 @@ describe('#UTXOs', () => {
     config.ar = new AdapterRouter(config)
     uut = new UTXOs(config)
 
-    mockData = cloneDeep(mockDataLib)
+    mockData = {
+      tokenUtxos01: cloneDeep(tokenUtxos01)
+    }
 
     sandbox = sinon.createSandbox()
   })

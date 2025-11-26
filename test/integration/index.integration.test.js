@@ -3,18 +3,26 @@
 */
 
 // Public npm libraries.
-const assert = require('chai').assert
+import chai from 'chai'
 
 // Local libraries
-const BchWallet = require('../../index')
+import BchWallet from '../../index.js'
 
-const restURL = 'https://free-bch.fullstack.cash'
+const { assert } = chai
+
+// const restURL = 'https://free-bch.fullstack.cash'
+const restURL = process.env.CONSUMER_URL
 
 describe('#BchWallet', () => {
   let uut
 
   beforeEach(() => {
-    uut = new BchWallet()
+    // Instantiate the library for psf-bch-api (default)
+    uut = new BchWallet(undefined, {
+      interface: 'rest-api',
+      // restURL: 'http://localhost:5942/v6/'
+      restURL: process.env.REST_URL
+    })
   })
 
   describe('#constructor', () => {
@@ -69,7 +77,17 @@ describe('#BchWallet', () => {
   describe('#getBalance', () => {
     it('should get the balance for an address', async () => {
       const addr = 'bitcoincash:qqh793x9au6ehvh7r2zflzguanlme760wuzehgzjh9'
-      const result = await uut.getBalance(addr)
+      const result = await uut.getBalance({ bchAddress: addr })
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`);
+
+      assert.isAbove(result, 546)
+    })
+
+    it('should get the balance for an address using consumer-api interface', async () => {
+      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL })
+
+      const addr = 'bitcoincash:qqh793x9au6ehvh7r2zflzguanlme760wuzehgzjh9'
+      const result = await uut.getBalance({ bchAddress: addr })
       // console.log(`result: ${JSON.stringify(result, null, 2)}`);
 
       assert.isAbove(result, 546)
@@ -127,58 +145,60 @@ describe('#BchWallet', () => {
   })
 
   describe('#getTokenData', () => {
-    // CT 5/17/23 Disabling this test. There is an internal issue with bch-api
-    // which causes this test to fail. When bch-api internally tries to retrieve
-    // the mutable token data, it hits a rate limit.
-    // it('should get token data from fullstack.cash', async () => {
-    //   const tokenId = 'f212a3ab2141dcd34f7e800253f1a61344523e6886fdfa2421bbedf3aa52617a'
-
-    //   const result = await uut.getTokenData(tokenId)
-    //   console.log('result: ', result)
-
-    //   assert.include(result.immutableData, 'ipfs')
-    //   assert.include(result.mutableData, 'ipfs')
-    // })
-
-    it('should get token data from free-bch', async () => {
-      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
-
-      const tokenId = 'f212a3ab2141dcd34f7e800253f1a61344523e6886fdfa2421bbedf3aa52617a'
+    it('should get token data from fullstack.cash', async () => {
+      const tokenId = '64056b564de401bac094a0c4b70a52ccf7a918714d124aff769b025662f0d251'
 
       const result = await uut.getTokenData(tokenId)
       // console.log('result: ', result)
 
-      assert.include(result.immutableData, 'ipfs')
-      assert.include(result.mutableData, 'ipfs')
+      assert.include(result.immutableData, 'bafy')
+      assert.include(result.mutableData, 'bafy')
+    })
+
+    it('should get token data from free-bch', async () => {
+      uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
+
+      const tokenId = '64056b564de401bac094a0c4b70a52ccf7a918714d124aff769b025662f0d251'
+
+      const result = await uut.getTokenData(tokenId)
+      // console.log('result: ', result)
+
+      assert.include(result.immutableData, 'bafy')
+      assert.include(result.mutableData, 'bafy')
     })
   })
 
-  describe('#getTokenData2', () => {
-    it('should get token data from fullstack.cash', async () => {
-      const tokenId = 'b93137050d6a6dcdba12432f018660541ffb4b457bf4020258272632c13e92d9'
+  // CT 11/26/25
+  // getTokenData2() requires a lot of infrastructure to function correctly
+  // (the same as getTokenData() plus ipfs-file-pin-service). For that
+  // reason, I may deprecate that function.
+  //
+  // describe('#getTokenData2', () => {
+  //   it('should get token data from fullstack.cash', async () => {
+  //     const tokenId = 'b93137050d6a6dcdba12432f018660541ffb4b457bf4020258272632c13e92d9'
 
-      const result = await uut.getTokenData2(tokenId)
-      console.log('result: ', result)
+  //     const result = await uut.getTokenData2(tokenId)
+  //     console.log('result: ', result)
 
-      assert.property(result, 'tokenIcon')
-      assert.property(result, 'tokenStats')
-      assert.property(result, 'optimizedTokenIcon')
-      assert.property(result, 'iconRepoCompatible')
-      assert.property(result, 'ps002Compatible')
-    })
+  //     assert.property(result, 'tokenIcon')
+  //     assert.property(result, 'tokenStats')
+  //     assert.property(result, 'optimizedTokenIcon')
+  //     assert.property(result, 'iconRepoCompatible')
+  //     assert.property(result, 'ps002Compatible')
+  //   })
 
-    // it('should get token data from free-bch', async () => {
-    //   uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
-    //
-    //   const tokenId = 'eb93f05553ff088bffb0ec687519e83c59e5108c160f7c25a4b6c45109d7e40b'
-    //
-    //   const result = await uut.getTokenData(tokenId)
-    //   // console.log('result: ', result)
-    //
-    //   assert.include(result.immutableData, 'ipfs')
-    //   assert.include(result.mutableData, 'ipfs')
-    // })
-  })
+  //   it('should get token data from free-bch', async () => {
+  //     uut = new BchWallet(undefined, { interface: 'consumer-api', restURL, noUpdate: true })
+
+  //     const tokenId = 'eb93f05553ff088bffb0ec687519e83c59e5108c160f7c25a4b6c45109d7e40b'
+
+  //     const result = await uut.getTokenData(tokenId)
+  //     // console.log('result: ', result)
+
+  //     assert.include(result.immutableData, 'ipfs')
+  //     assert.include(result.mutableData, 'ipfs')
+  //   })
+  // })
 
   describe('#getTransactions', () => {
     it('should sort descending by default from bch-js', async () => {

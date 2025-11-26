@@ -598,7 +598,7 @@ const cornerCase1TokenUtxos = {
   }
 }
 
-module.exports = {
+export {
   simpleUtxos,
   mixedUtxos,
   hydratedUtxos,

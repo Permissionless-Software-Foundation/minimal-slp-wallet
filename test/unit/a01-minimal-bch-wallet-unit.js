@@ -3,15 +3,17 @@
 */
 
 // npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
+import chai from 'chai'
+import sinon from 'sinon'
 
 // Mocking data libraries.
 // const mockData = require('./mocks/util-mocks')
-const mockUtxos = require('./mocks/utxo-mocks')
+import * as mockUtxos from './mocks/utxo-mocks.js'
 
 // Unit under test
-const MinimalBCHWallet = require('../../index')
+import MinimalBCHWallet from '../../index.js'
+
+const { assert } = chai
 
 describe('#index.js - Minimal BCH Wallet', () => {
   let sandbox, uut
@@ -31,7 +33,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
       uut = new MinimalBCHWallet()
 
       assert.equal(uut.ar.interface, 'consumer-api')
-      assert.equal(uut.ar.bchjs.restURL, 'https://free-bch.fullstack.cash')
+      assert.equal(uut.ar.bchjs.restURL, 'https://free-bch.fullstack.cash/')
     })
     it('should create a new wallet without encrypted mnemonic', async () => {
       uut = new MinimalBCHWallet(undefined)

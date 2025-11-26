@@ -2,17 +2,19 @@
   Integration tests for the utxos.js library
 */
 
-const assert = require('chai').assert
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import BCHJS from '@psf/bch-js'
 
-const AdapterRouter = require('../../lib/adapters/router')
-const UTXOs = require('../../lib/utxos')
+import AdapterRouter from '../../lib/adapters/router.js'
+import UTXOs from '../../lib/utxos.js'
+
+const { assert } = chai
 let uut
 
 describe('#UTXOs', () => {
   beforeEach(() => {
     const config = {
-      restURL: 'https://bchn.fullstack.cash/v5/'
+      restURL: process.env.REST_URL
     }
 
     const bchjs = new BCHJS(config)
@@ -37,7 +39,7 @@ describe('#UTXOs', () => {
 
     it('should initialize and return the utxoStore using web 3', async () => {
       // Re-initialize UUT for using web 3 infra.
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({ restURL: process.env.CONSUMER_URL })
       const config = {
         bchjs,
         interface: 'consumer-api',

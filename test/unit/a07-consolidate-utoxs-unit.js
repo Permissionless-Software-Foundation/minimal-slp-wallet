@@ -3,15 +3,17 @@
 */
 
 // Public npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
+import chai from 'chai'
+import sinon from 'sinon'
 // const BCHJS = require('@psf/bch-js')
-const clone = require('lodash.clonedeep')
+import clone from 'lodash.clonedeep'
 
 // Local libraries
-const ConsolidateUtxos = require('../../lib/consolidate-utxos.js')
-const SlpWallet = require('../../index.js')
-const mockDataLib = require('./mocks/consolidate-utxos-mocks')
+import ConsolidateUtxos from '../../lib/consolidate-utxos.js'
+import SlpWallet from '../../index.js'
+import { tokenUtxos01, tokenList01, countTokenUtxosOut01 } from './mocks/consolidate-utxos-mocks.js'
+
+const { assert } = chai
 
 describe('#Consolidate-UTXOs', () => {
   let sandbox
@@ -26,8 +28,11 @@ describe('#Consolidate-UTXOs', () => {
 
     sandbox = sinon.createSandbox()
 
-    // mockData = Object.assign({}, mockDataLib)
-    mockData = clone(mockDataLib)
+    mockData = {
+      tokenUtxos01: clone(tokenUtxos01),
+      tokenList01: clone(tokenList01),
+      countTokenUtxosOut01: clone(countTokenUtxosOut01)
+    }
   })
 
   afterEach(() => sandbox.restore())

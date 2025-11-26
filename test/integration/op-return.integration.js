@@ -7,12 +7,14 @@
 */
 
 // public npm libraries
-const assert = require('chai').assert
-const BCHJS = require('@psf/bch-js')
-const bchjs = new BCHJS()
+import chai from 'chai'
+import BCHJS from '@psf/bch-js'
 
 // local libraries
-const BchWallet = require('../../index')
+import BchWallet from '../../index.js'
+
+const { assert } = chai
+const bchjs = new BCHJS({ restURL: process.env.REST_URL })
 
 // constants
 const WIF = 'L1tcvcqa5PztqqDH4ZEcUmHA9aSHhTau5E2Zwp1xEK5CrKBrjP3m'

@@ -1,19 +1,20 @@
 {
   "name": "minimal-slp-wallet",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "A minimalist Bitcoin Cash (BCH) wallet npm library, for use in a web apps.",
+  "type": "module",
   "main": "./index.js",
   "module": "./dist/minimal-slp-wallet.min.js",
   "scripts": {
     "start": "node index.js",
-    "test": "TEST=unit nyc mocha test/unit/",
-    "test:integration": "mocha --timeout 35000 test/integration/",
+    "test": "TEST=unit c8 mocha test/unit/",
+    "test:integration": "export REST_URL=http://localhost:5942/v6 && export CONSUMER_URL=https://free-bch.fullstack.cash && mocha --timeout 35000 test/integration/",
     "test:temp": "mocha --timeout 25000 -g '#UTXOs' test/integration/",
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i lib/ -o docs",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coverage:report": "nyc --reporter=html mocha test/unit/ --exit",
-    "build": "browserify index.js -p tinyify --s SlpWallet -o dist/minimal-slp-wallet.min.js"
+    "coverage": "c8 --reporter=html mocha test/unit/ --exit",
+    "build": "node esbuild.config.js",
+    "build:cjs": "esbuild index.js --bundle --platform=node --format=cjs --outfile=dist/minimal-slp-wallet.cjs"
   },
   "keywords": [
     "bitcoin",
@@ -36,17 +37,19 @@
   },
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
-    "@chris.troutner/retry-queue-commonjs": "1.0.8",
-    "@psf/bch-js": "6.8.1",
-    "apidoc": "0.51.0",
+    "@chris.troutner/retry-queue": "1.0.11",
+    "@psf/bch-js": "7.1.0",
     "bch-consumer": "1.6.2",
     "bch-donation": "1.1.2",
     "crypto-js": "4.0.0"
   },
   "devDependencies": {
-    "browserify": "17.0.0",
+    "apidoc": "1.2.0",
+    "c8": "10.1.3",
     "chai": "4.2.0",
     "coveralls": "3.1.0",
+    "esbuild": "0.20.0",
+    "esbuild-plugin-polyfill-node": "0.3.0",
     "eslint": "7.17.0",
     "eslint-config-prettier": "7.1.0",
     "eslint-config-standard": "16.0.2",
@@ -56,11 +59,9 @@
     "husky": "4.3.8",
     "lodash.clonedeep": "4.5.0",
     "mocha": "9.2.1",
-    "nyc": "15.1.0",
     "semantic-release": "19.0.3",
     "sinon": "9.2.0",
-    "standard": "16.0.4",
-    "tinyify": "3.0.0"
+    "standard": "16.0.4"
   },
   "release": {
     "publish": [
@@ -77,14 +78,8 @@
   },
   "exports": {
     ".": {
-      "import": {
-        "browser": "./dist/minimal-slp-wallet.min.js",
-        "node": "./index.js",
-        "default": "./index.js"
-      },
-      "require": {
-        "default": "./index.js"
-      }
+      "import": "./index.js",
+      "require": "./dist/minimal-slp-wallet.cjs"
     }
   }
 }
