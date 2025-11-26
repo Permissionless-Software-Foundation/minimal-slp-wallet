@@ -1,6 +1,6 @@
 {
   "name": "minimal-slp-wallet",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "A minimalist Bitcoin Cash (BCH) wallet npm library, for use in a web apps.",
   "type": "module",
   "main": "./index.js",
@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "TEST=unit c8 mocha test/unit/",
-    "test:integration": "mocha --timeout 35000 test/integration/",
+    "test:integration": "export REST_URL=http://localhost:5942/v6 && export CONSUMER_URL=https://free-bch.fullstack.cash && mocha --timeout 35000 test/integration/",
     "test:temp": "mocha --timeout 25000 -g '#UTXOs' test/integration/",
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i lib/ -o docs",
@@ -38,7 +38,7 @@
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
     "@chris.troutner/retry-queue": "1.0.11",
-    "@psf/bch-js": "7.0.1",
+    "@psf/bch-js": "/home/trout/work/psf/code/api-dev/bch-js",
     "bch-consumer": "1.6.2",
     "bch-donation": "1.1.2",
     "crypto-js": "4.0.0"

@@ -2,11 +2,13 @@
   Integration tests for the tokens.js library
 */
 
-const assert = require('chai').assert
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import BCHJS from '@psf/bch-js'
 
-const Tokens = require('../../lib/tokens')
-const AdapterRouter = require('../../lib/adapters/router')
+import Tokens from '../../lib/tokens.js'
+import AdapterRouter from '../../lib/adapters/router.js'
+
+const { assert } = chai
 let uut
 
 describe('#tokens.js', () => {

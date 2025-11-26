@@ -2,11 +2,13 @@
   Integration tests for the utxos.js library
 */
 
-const assert = require('chai').assert
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import BCHJS from '@psf/bch-js'
 
-const AdapterRouter = require('../../lib/adapters/router')
-const UTXOs = require('../../lib/utxos')
+import AdapterRouter from '../../lib/adapters/router.js'
+import UTXOs from '../../lib/utxos.js'
+
+const { assert } = chai
 let uut
 
 describe('#UTXOs', () => {
