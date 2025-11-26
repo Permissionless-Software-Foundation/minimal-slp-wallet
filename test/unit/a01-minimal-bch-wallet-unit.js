@@ -33,7 +33,7 @@ describe('#index.js - Minimal BCH Wallet', () => {
       uut = new MinimalBCHWallet()
 
       assert.equal(uut.ar.interface, 'consumer-api')
-      assert.equal(uut.ar.bchjs.restURL, 'https://free-bch.fullstack.cash')
+      assert.equal(uut.ar.bchjs.restURL, 'https://free-bch.fullstack.cash/')
     })
     it('should create a new wallet without encrypted mnemonic', async () => {
       uut = new MinimalBCHWallet(undefined)

@@ -18,7 +18,7 @@ describe('#adapter-router', () => {
   // let utxos
 
   beforeEach(() => {
-    const bchjs = new BCHJS()
+    const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
     uut = new AdapterRouter({ bchjs })
 
     sandbox = sinon.createSandbox()
@@ -44,21 +44,21 @@ describe('#adapter-router', () => {
     })
 
     it('should select rest-api by default', () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs })
 
       assert.equal(uut.interface, 'rest-api')
     })
 
     it('should select consumer-api interface', () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       assert.equal(uut.interface, 'consumer-api')
     })
 
     it('should override restURL for consumer API', () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({
         bchjs,
         interface: 'consumer-api',
@@ -94,7 +94,7 @@ describe('#adapter-router', () => {
     })
 
     it('should use wallet service when consumer interface is selected', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -106,7 +106,7 @@ describe('#adapter-router', () => {
     })
 
     it('should throw error if communication error with bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -177,7 +177,7 @@ describe('#adapter-router', () => {
     })
 
     it('should use wallet service when consumer-api interface is selected', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -189,7 +189,7 @@ describe('#adapter-router', () => {
     })
 
     it('should throw error if communication error with bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -243,7 +243,7 @@ describe('#adapter-router', () => {
     })
 
     it('should use wallet service when consumer interface is selected', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -270,7 +270,7 @@ describe('#adapter-router', () => {
     })
 
     it('should throw errors passed from service', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -314,7 +314,7 @@ describe('#adapter-router', () => {
     })
 
     it('should use wallet service when consumer interface is selected', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -370,7 +370,7 @@ describe('#adapter-router', () => {
     })
 
     it('should get data from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies.
@@ -412,7 +412,7 @@ describe('#adapter-router', () => {
     })
 
     it('should get price from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies
@@ -458,7 +458,7 @@ describe('#adapter-router', () => {
     })
 
     it('should validate UTXO from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies
@@ -527,7 +527,7 @@ describe('#adapter-router', () => {
     })
 
     it('should get token data from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies
@@ -560,7 +560,7 @@ describe('#adapter-router', () => {
     })
 
     it('should sent token txs to Electrum library for sorting', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       const tokenId =
@@ -587,7 +587,7 @@ describe('#adapter-router', () => {
 
     // CT 4/6/23 Saw this error in the wild. Created an error handler for it.
     it('should throw error if genesis data has no txs', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       const tokenId =
@@ -616,7 +616,7 @@ describe('#adapter-router', () => {
 
     // CT 4/6/23 Saw this error in the wild
     it('should throw error if timeout occurs with wallet service', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies
@@ -664,7 +664,7 @@ describe('#adapter-router', () => {
     })
 
     it('should get token data from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies
@@ -732,7 +732,7 @@ describe('#adapter-router', () => {
     })
 
     it('should return pubkey from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies and force desired code path
@@ -776,7 +776,7 @@ describe('#adapter-router', () => {
     })
 
     it('should handle address without a pubkey from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies and force desired code path
@@ -851,7 +851,7 @@ describe('#adapter-router', () => {
     })
 
     it('should get price from bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies
@@ -880,7 +880,7 @@ describe('#adapter-router', () => {
 
   describe('#cid2json', () => {
     it('should convert a CID to a JSON object for bch-consumer', async () => {
-      const bchjs = new BCHJS()
+      const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
       uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
       // Mock dependencies and force desired code path
@@ -918,7 +918,7 @@ describe('#adapter-router', () => {
     })
     it('should handle axios error', async () => {
       try {
-        const bchjs = new BCHJS()
+        const bchjs = new BCHJS({restURL: 'http://localhost:5942/v6'})
         uut = new AdapterRouter({ bchjs, interface: 'consumer-api' })
 
         const axiosErr = new Error('axios error')
