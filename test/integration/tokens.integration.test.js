@@ -14,7 +14,7 @@ let uut
 describe('#tokens.js', () => {
   beforeEach(() => {
     const config = {
-      restURL: 'https://bchn.fullstack.cash/v5/'
+      restURL: process.env.REST_URL
     }
     const bchjs = new BCHJS(config)
     config.bchjs = bchjs
