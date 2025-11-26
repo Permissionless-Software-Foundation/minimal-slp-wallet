@@ -3,16 +3,18 @@
 */
 
 // Public npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import sinon from 'sinon'
+import BCHJS from '@psf/bch-js'
 
 // Local libraries
-const OpReturn = require('../../lib/op-return')
+import OpReturn from '../../lib/op-return.js'
 // const Tokens = require('../../lib/tokens')
 // const Utxos = require('../../lib/utxos')
-const AdapterRouter = require('../../lib/adapters/router')
-const sendMockData = require('./mocks/send-bch-mocks')
+import AdapterRouter from '../../lib/adapters/router.js'
+import * as sendMockData from './mocks/send-bch-mocks.js'
+
+const { assert } = chai
 
 describe('#OP_RETURN', () => {
   let sandbox

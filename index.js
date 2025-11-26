@@ -5,18 +5,16 @@
 
 /* eslint-disable no-async-promise-executor */
 
-'use strict'
-
-const BCHJS = require('@psf/bch-js')
-const crypto = require('crypto-js')
+import BCHJS from '@psf/bch-js'
+import crypto from 'crypto-js'
 
 // Local libraries
-const SendBCH = require('./lib/send-bch')
-const Utxos = require('./lib/utxos')
-const Tokens = require('./lib/tokens')
-const AdapterRouter = require('./lib/adapters/router')
-const OpReturn = require('./lib/op-return')
-const ConsolidateUtxos = require('./lib/consolidate-utxos.js')
+import SendBCH from './lib/send-bch.js'
+import Utxos from './lib/utxos.js'
+import Tokens from './lib/tokens.js'
+import AdapterRouter from './lib/adapters/router.js'
+import OpReturn from './lib/op-return.js'
+import ConsolidateUtxos from './lib/consolidate-utxos.js'
 
 // let this
 
@@ -603,4 +601,4 @@ class MinimalBCHWallet {
   }
 }
 
-module.exports = MinimalBCHWallet
+export default MinimalBCHWallet

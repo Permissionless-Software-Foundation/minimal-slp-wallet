@@ -173,7 +173,7 @@ const countTokenUtxosOut01 = [
   }
 ]
 
-module.exports = {
+export {
   tokenUtxos01,
   tokenList01,
   countTokenUtxosOut01

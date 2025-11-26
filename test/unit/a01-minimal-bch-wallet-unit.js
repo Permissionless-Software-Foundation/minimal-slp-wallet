@@ -3,15 +3,17 @@
 */
 
 // npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
+import chai from 'chai'
+import sinon from 'sinon'
 
 // Mocking data libraries.
 // const mockData = require('./mocks/util-mocks')
-const mockUtxos = require('./mocks/utxo-mocks')
+import * as mockUtxos from './mocks/utxo-mocks.js'
 
 // Unit under test
-const MinimalBCHWallet = require('../../index')
+import MinimalBCHWallet from '../../index.js'
+
+const { assert } = chai
 
 describe('#index.js - Minimal BCH Wallet', () => {
   let sandbox, uut

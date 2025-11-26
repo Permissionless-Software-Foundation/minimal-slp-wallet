@@ -3,11 +3,13 @@
 */
 
 // Public npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
-const BCHJS = require('@psf/bch-js')
+import chai from 'chai'
+import sinon from 'sinon'
+import BCHJS from '@psf/bch-js'
 
-const AdapterRouter = require('../../lib/adapters/router')
+import AdapterRouter from '../../lib/adapters/router.js'
+
+const { assert } = chai
 
 let uut
 
@@ -546,20 +548,6 @@ describe('#adapter-router', () => {
       assert.property(result, 'immutableData')
       assert.property(result, 'mutableData')
     })
-
-    // it('should throw an error if an interface is not specified', async () => {
-    //   try {
-    //     uut.interface = ''
-    //
-    //     const tokenId = 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
-    //
-    //     await uut.getTokenData(tokenId)
-    //
-    //     assert.fail('Unexpected code path')
-    //   } catch (err) {
-    //     assert.include(err.message, 'this.interface is not specified')
-    //   }
-    // })
 
     it('should throw an error if token ID is not provided', async () => {
       try {
