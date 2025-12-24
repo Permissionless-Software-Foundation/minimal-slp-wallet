@@ -64,7 +64,7 @@
     "eslint-plugin-standard": "4.0.1",
     "husky": "4.3.8",
     "lodash.clonedeep": "4.5.0",
-    "mocha": "9.2.1",
+    "mocha": "11.7.5",
     "semantic-release": "19.0.3",
     "sinon": "9.2.0",
     "standard": "16.0.4"
