@@ -35,6 +35,11 @@
     "title": "minimal-slp-wallet",
     "url": "localhost:5000"
   },
+  "standard": {
+    "ignore": [
+      "dist/**"
+    ]
+  },
   "repository": "Permissionless-Software-Foundation/minimal-slp-wallet",
   "dependencies": {
     "@chris.troutner/retry-queue": "1.0.11",
