@@ -46,6 +46,23 @@ class MinimalBCHWallet {
       bchjsOptions.authPass = advancedOptions.authPass
     }
 
+    // START x402 payment configuration
+    // If a WIF private key is provided, enable x402 automatic payment handling
+    if (this.advancedOptions.wif) {
+      bchjsOptions.wif = this.advancedOptions.wif
+    }
+
+    // Payment amount for x402 (optional, defaults to 2000 * 5 in bch-js)
+    if (this.advancedOptions.paymentAmountSats) {
+      bchjsOptions.paymentAmountSats = this.advancedOptions.paymentAmountSats
+    }
+
+    // BCH server URL for x402 payments (optional, separate from REST API server)
+    if (this.advancedOptions.bchServerURL) {
+      bchjsOptions.bchServerURL = this.advancedOptions.bchServerURL
+    }
+    // END x402 payment configuration
+
     // Set the sats-per-byte fee rate.
     this.fee = 1.2
     if (this.advancedOptions.fee) {
