@@ -91,6 +91,64 @@ const bchWallet = new BchWallet(undefined, {
 await bchWallet.initialize()
 ```
 
+#### Using x402 Payment Protocol
+
+The x402 protocol enables automatic payment for API services using Bitcoin Cash. When enabled, the wallet will automatically detect HTTP 402 (Payment Required) responses and handle payments using BCH UTXOs.
+
+**Option A: Use explicit WIF for x402 payments**
+
+```js
+const BchWallet = require('minimal-slp-wallet')
+
+const bchWallet = new BchWallet(undefined, {
+  interface: 'rest-api',
+  restURL: 'https://x402-bch.fullstack.cash/v5/',
+  wif: 'L...', // Private key in WIF format for x402 payments
+  paymentAmountSats: 10000, // Optional: amount to send per payment (default: 10000)
+  bchServerURL: 'https://bch.fullstack.cash/v6/' // Optional: BCH server for broadcasting payments
+})
+await bchWallet.initialize()
+```
+
+**Option B: Use wallet's private key for x402 payments**
+
+If you want to use the wallet's own private key for x402 payments, you can pass it after wallet creation:
+
+```js
+const BchWallet = require('minimal-slp-wallet')
+
+// First, create the wallet
+const bchWallet = new BchWallet(undefined, {
+  interface: 'rest-api',
+  restURL: 'https://x402-bch.fullstack.cash/v5/'
+})
+await bchWallet.walletInfoPromise
+
+// Then create a new instance with the wallet's private key for x402
+const bchWalletWithX402 = new BchWallet(undefined, {
+  interface: 'rest-api',
+  restURL: 'https://x402-bch.fullstack.cash/v5/',
+  wif: bchWallet.walletInfo.privateKey, // Use wallet's private key
+  paymentAmountSats: 10000
+})
+await bchWalletWithX402.initialize()
+```
+
+**x402 Configuration Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `wif` | string | - | Private key in WIF format. When provided, enables automatic x402 payment handling for all API calls. |
+| `paymentAmountSats` | number | `10000` | Default amount of satoshis to send when making x402 payments. |
+| `bchServerURL` | string | `'https://bch.fullstack.cash/v6/'` | BCH server URL used for broadcasting payment transactions to the blockchain. This is separate from `restURL` and is specifically for x402 payment processing. |
+
+**Understanding restURL vs bchServerURL:**
+
+- **`restURL`**: The REST API server used for all regular API calls (utxo queries, transaction history, etc.). This can be any bch-api compatible server, such as `https://x402-bch.fullstack.cash/v5/` or `https://bch.fullstack.cash/v5/`.
+- **`bchServerURL`**: The BCH infrastructure server used specifically for broadcasting x402 payment transactions to the blockchain. This defaults to `https://bch.fullstack.cash/v6/` and should typically remain unchanged unless you have specific infrastructure requirements.
+
+**Example Use Case**: Most users will use `https://x402-bch.fullstack.cash/v5/` as their `restURL` to access x402-protected APIs. However, when the wallet needs to make an x402 payment, it uses the `bchServerURL` (default: `https://bch.fullstack.cash/v6/`) to broadcast the payment transaction. This ensures payment transactions are sent through a reliable BCH infrastructure endpoint.
+
 ### Create new wallets
 
 ```js

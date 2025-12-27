@@ -261,6 +261,75 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
       assert.equal(uut.ar.interface, 'rest-api')
     })
+
+    it('should configure x402 with wif option', () => {
+      const testWif = 'KyGrqLtG5PLf97Lu6RXDMGKg6YbcmRKCemgoiufFXPmvQWyvThvE'
+      const advancedOptions = {
+        wif: testWif
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+      // Verify that bch-js received the wif configuration
+      assert.equal(uut.bchjs.wif, testWif)
+    })
+
+    it('should configure x402 with paymentAmountSats option', () => {
+      const testWif = 'KyGrqLtG5PLf97Lu6RXDMGKg6YbcmRKCemgoiufFXPmvQWyvThvE'
+      const testPaymentAmount = 50000
+      const advancedOptions = {
+        wif: testWif,
+        paymentAmountSats: testPaymentAmount
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+      // Verify that bch-js received the paymentAmountSats configuration
+      assert.equal(uut.bchjs.paymentAmountSats, testPaymentAmount)
+    })
+
+    it('should configure x402 with bchServerURL option', () => {
+      const testWif = 'KyGrqLtG5PLf97Lu6RXDMGKg6YbcmRKCemgoiufFXPmvQWyvThvE'
+      const testBchServerURL = 'https://custom-bch-server.com/v6/'
+      const advancedOptions = {
+        wif: testWif,
+        bchServerURL: testBchServerURL
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+      // Verify that bch-js received the bchServerURL configuration
+      assert.equal(uut.bchjs.bchServerURL, testBchServerURL)
+    })
+
+    it('should configure x402 with all options', () => {
+      const testWif = 'KyGrqLtG5PLf97Lu6RXDMGKg6YbcmRKCemgoiufFXPmvQWyvThvE'
+      const testPaymentAmount = 25000
+      const testBchServerURL = 'https://custom-bch-server.com/v6/'
+      const advancedOptions = {
+        wif: testWif,
+        paymentAmountSats: testPaymentAmount,
+        bchServerURL: testBchServerURL
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+      // Verify that bch-js received all x402 configurations
+      assert.equal(uut.bchjs.wif, testWif)
+      assert.equal(uut.bchjs.paymentAmountSats, testPaymentAmount)
+      assert.equal(uut.bchjs.bchServerURL, testBchServerURL)
+    })
+
+    it('should not configure x402 when wif is not provided', () => {
+      const advancedOptions = {
+        paymentAmountSats: 10000
+      }
+
+      uut = new MinimalBCHWallet(undefined, advancedOptions)
+
+      // Verify that bch-js does not have wif configured
+      assert.equal(uut.bchjs.wif, '')
+    })
   })
 
   describe('#create', () => {
