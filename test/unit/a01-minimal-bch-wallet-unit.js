@@ -202,19 +202,20 @@ describe('#index.js - Minimal BCH Wallet', () => {
 
     it('should accept advanced options', async () => {
       const exampleURL = 'http://somewebsite.com/v3/'
-      const exampleApiToken = 'myapitoken'
+      const exampleBearerToken = 'my-bearer-token'
 
       const advancedOptions = {
         restURL: exampleURL,
-        apiToken: exampleApiToken,
-        authPass: 'test'
+        bearerToken: exampleBearerToken
       }
 
       uut = new MinimalBCHWallet(undefined, advancedOptions)
       await uut.walletInfoPromise
 
       assert.equal(uut.advancedOptions.restURL, exampleURL)
-      assert.equal(uut.advancedOptions.apiToken, exampleApiToken)
+      assert.equal(uut.advancedOptions.bearerToken, exampleBearerToken)
+      // Verify that bch-js received the bearerToken configuration
+      assert.equal(uut.bchjs.bearerToken, exampleBearerToken)
     })
 
     it('should adjust the tx fee', async () => {

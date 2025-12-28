@@ -36,14 +36,9 @@ class MinimalBCHWallet {
       bchjsOptions.restURL = advancedOptions.restURL
     }
 
-    // JWT token for increased rate limits.
-    if (this.advancedOptions.apiToken) {
-      bchjsOptions.apiToken = advancedOptions.apiToken
-    }
-
-    // Basic Auth token for private installations of bch-api.
-    if (this.advancedOptions.authPass) {
-      bchjsOptions.authPass = advancedOptions.authPass
+    // Bearer token for authentication (used by bch-js).
+    if (this.advancedOptions.bearerToken) {
+      bchjsOptions.bearerToken = advancedOptions.bearerToken
     }
 
     // START x402 payment configuration

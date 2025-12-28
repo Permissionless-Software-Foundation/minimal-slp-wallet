@@ -1,9 +1,8 @@
 /*
-  The purpose of this script is test and debug the usage of a Basic Authorization
-  token for connecting minimal-slp-wallet to private instances of bch-api.
-  Private instances of bch-api use Basic Authentiation instead of JWT tokens.
+  The purpose of this script is test and debug the usage of a Bearer token
+  for connecting minimal-slp-wallet to private instances of bch-api.
 
-  It assumes that the Basic Auth token has been placed in the BCHJSAUTHPASS_TEMP
+  It assumes that the Bearer token has been placed in the BCHJSBEARERTOKEN_TEMP
   environment variable.
 */
 
@@ -15,7 +14,7 @@ const BchWallet = require('../../index')
 async function startTest () {
   try {
     const wallet = new BchWallet(undefined, {
-      authPass: process.env.BCHJSAUTHPASS_TEMP,
+      bearerToken: process.env.BCHJSBEARERTOKEN_TEMP,
       restURL: process.env.BCHAPIURL
     })
 
